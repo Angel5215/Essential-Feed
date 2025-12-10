@@ -3,4 +3,4 @@ repos:
     rev: 0.58.7
     hooks:
       - id: swiftformat
-        args: [--config, .swiftformat]
+        args: [--config, .swiftformat, --quiet]

@@ -7,7 +7,7 @@
 # Format Options
 --exponentcase uppercase
 --fractiongrouping enabled
---header \n {file}. Last updated on {year}.\n
+--header \n{file}\nCopyright © {year} Ángel Vázquez. All rights reserved.\n
 --hexliteralcase uppercase
 --importgrouping alpha
 --indent 4

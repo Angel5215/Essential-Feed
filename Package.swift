@@ -1,0 +1,26 @@
+// swift-tools-version: 6.2
+// The swift-tools-version declares the minimum version of Swift required to build this package.
+
+import PackageDescription
+
+let package = Package(
+    name: "EssentialFeed",
+    products: [
+        .singleTargetLibrary(named: "EssentialFeed"),
+    ],
+    targets: [
+        .target(
+            name: "EssentialFeed",
+        ),
+        .testTarget(
+            name: "EssentialFeedTests",
+            dependencies: ["EssentialFeed"],
+        ),
+    ],
+)
+
+extension Product {
+    static func singleTargetLibrary(named name: String) -> Product {
+        .library(name: name, targets: [name])
+    }
+}

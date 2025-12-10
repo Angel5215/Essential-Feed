@@ -1,0 +1,15 @@
+repos:
+  - repo: https://github.com/nicklockwood/SwiftFormat
+    rev: 0.58.7
+    hooks:
+      - id: swiftformat
+        args:
+          [
+            --config,
+            .swiftformat,
+            --quiet,
+            --swift-version,
+            6.2.1,
+            --header,
+            "{file}. Last updated on {year}.",
+          ]

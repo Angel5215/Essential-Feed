@@ -13,7 +13,7 @@
 --indent 4
 --maxwidth 120
 --nospaceoperators ..<,...
---self insert
+--self init-only
 --stripunusedargs closure-only
 --wraparguments before-first
 --wrapcollections before-first

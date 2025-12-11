@@ -8,6 +8,8 @@ import Foundation
 import Testing
 
 struct RemoteFeedLoaderTests {
+    private let leakHelper = MemoryLeakHelper()
+
     @Test
     func `init does not request data from URL`() {
         let (_, client) = makeSUT()
@@ -105,9 +107,12 @@ struct RemoteFeedLoaderTests {
 
     private func makeSUT(
         url: URL = URL(string: "https://a-url.com")!,
+        sourceLocation: SourceLocation = #_sourceLocation,
     ) -> (sut: RemoteFeedLoader, client: HTTPClientSpy) {
         let client = HTTPClientSpy()
         let sut = RemoteFeedLoader(url: url, client: client)
+        leakHelper.track(sut, sourceLocation: sourceLocation)
+        leakHelper.track(client, sourceLocation: sourceLocation)
         return (sut, client)
     }
 
@@ -168,6 +173,36 @@ struct RemoteFeedLoaderTests {
             )!
 
             messages[index].completion(.success(data, response))
+        }
+    }
+}
+
+private final class MemoryLeakHelper {
+    private var references = [WeakReference]()
+
+    func track(_ instance: AnyObject, sourceLocation: SourceLocation) {
+        references.append(WeakReference(object: instance, sourceLocation: sourceLocation))
+    }
+
+    deinit {
+        for reference in references {
+            #expect(
+                reference.object == nil,
+                "Instance should have been deallocated. Potential memory leak.",
+                sourceLocation: reference.sourceLocation,
+            )
+        }
+    }
+
+    // MARK: - Helpers
+
+    private final class WeakReference {
+        weak var object: AnyObject?
+        let sourceLocation: SourceLocation
+
+        init(object: AnyObject? = nil, sourceLocation: SourceLocation) {
+            self.object = object
+            self.sourceLocation = sourceLocation
         }
     }
 }

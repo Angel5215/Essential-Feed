@@ -13,3 +13,4 @@ Repository created to keep track of the iOS Lead Essentials training program. Th
 ## Requirements
 
 1. [Stories and Use Cases (Image Feed Feature)](Docs/specs-image-feed-feature.md)
+2. [Image Feed Feature API specs](Docs/specs-api-model.md)

@@ -39,8 +39,8 @@ struct RemoteFeedLoaderTests {
         var capturedErrors = [RemoteFeedLoader.Error]()
         sut.load { capturedErrors.append($0) }
 
-        let error = NSError(domain: "Test", code: 0)
-        client.completions[0](error)
+        let clientError = NSError(domain: "Test", code: 0)
+        client.complete(with: clientError)
 
         #expect(capturedErrors == [.connectivity])
     }
@@ -66,6 +66,10 @@ struct RemoteFeedLoaderTests {
             }
             completions.append(completion)
             requestedURLs.append(url)
+        }
+
+        func complete(with error: Error, at index: Int = 0) {
+            completions[index](error)
         }
     }
 }

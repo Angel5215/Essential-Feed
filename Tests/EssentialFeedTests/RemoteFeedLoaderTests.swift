@@ -7,17 +7,34 @@
 import Foundation
 import Testing
 
-class RemoteFeedLoader {}
+class RemoteFeedLoader {
+    func load() {
+        HTTPClient.shared.requestedURL = URL(string: "https://a-url.com")
+    }
+}
 
-class HTTPClient {
+@preconcurrency class HTTPClient {
+    static let shared = HTTPClient()
+
+    private init() {}
+
     var requestedURL: URL?
 }
 
 struct RemoteFeedLoaderTests {
     @Test func `init does not request data from URL`() {
-        let client = HTTPClient()
+        let client = HTTPClient.shared
         _ = RemoteFeedLoader()
 
         #expect(client.requestedURL == nil)
+    }
+
+    @Test func `load requests data from URL`() {
+        let client = HTTPClient.shared
+        let sut = RemoteFeedLoader()
+
+        sut.load()
+
+        #expect(client.requestedURL != nil)
     }
 }

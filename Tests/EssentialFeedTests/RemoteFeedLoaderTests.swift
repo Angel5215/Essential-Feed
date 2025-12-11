@@ -8,14 +8,16 @@ import Foundation
 import Testing
 
 class RemoteFeedLoader {
+    let url: URL
     let client: HTTPClient
 
-    init(client: HTTPClient) {
+    init(url: URL, client: HTTPClient) {
+        self.url = url
         self.client = client
     }
 
     func load() {
-        client.get(from: URL(string: "https://a-url.com")!)
+        client.get(from: url)
     }
 }
 
@@ -33,18 +35,20 @@ class HTTPClientSpy: HTTPClient {
 
 struct RemoteFeedLoaderTests {
     @Test func `init does not request data from URL`() {
+        let url = URL(string: "https://a-given-url.com")!
         let client = HTTPClientSpy()
-        _ = RemoteFeedLoader(client: client)
+        _ = RemoteFeedLoader(url: url, client: client)
 
         #expect(client.requestedURL == nil)
     }
 
     @Test func `load requests data from URL`() {
+        let url = URL(string: "https://a-given-url.com")!
         let client = HTTPClientSpy()
-        let sut = RemoteFeedLoader(client: client)
+        let sut = RemoteFeedLoader(url: url, client: client)
 
         sut.load()
 
-        #expect(client.requestedURL != nil)
+        #expect(client.requestedURL == url)
     }
 }

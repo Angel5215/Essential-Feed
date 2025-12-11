@@ -18,7 +18,7 @@ struct RemoteFeedLoaderTests {
         let url = URL(string: "https://a-given-url.com")!
         let (sut, client) = makeSUT(url: url)
 
-        sut.load()
+        sut.load { _ in }
 
         #expect(client.requestedURLs == [url])
     }
@@ -27,8 +27,8 @@ struct RemoteFeedLoaderTests {
         let url = URL(string: "https://a-given-url")!
         let (sut, client) = makeSUT(url: url)
 
-        sut.load()
-        sut.load()
+        sut.load { _ in }
+        sut.load { _ in }
 
         #expect(client.requestedURLs == [url, url])
     }

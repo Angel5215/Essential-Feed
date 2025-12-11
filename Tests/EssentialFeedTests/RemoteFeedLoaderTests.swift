@@ -68,6 +68,13 @@ struct RemoteFeedLoaderTests {
         })
     }
 
+//    @Test
+//    func `load delivers no items on 200 HTTP response with empty JSON list`() {
+//        let (sut, client) = makeSUT()
+//
+//        var captured
+//    }
+
     // MARK: - Helpers
 
     private func makeSUT(
@@ -84,12 +91,12 @@ struct RemoteFeedLoaderTests {
         when action: () -> Void,
         sourceLocation: SourceLocation = #_sourceLocation,
     ) {
-        var capturedErrors = [RemoteFeedLoader.Error]()
-        sut.load { capturedErrors.append($0) }
+        var capturedResults = [RemoteFeedLoader.Result]()
+        sut.load { capturedResults.append($0) }
 
         action()
 
-        #expect(capturedErrors == [error], sourceLocation: sourceLocation)
+        #expect(capturedResults == [.failure(error)], sourceLocation: sourceLocation)
     }
 
     private class HTTPClientSpy: HTTPClient {

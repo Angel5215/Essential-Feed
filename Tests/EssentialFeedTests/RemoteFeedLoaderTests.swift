@@ -8,13 +8,15 @@ import Foundation
 import Testing
 
 struct RemoteFeedLoaderTests {
-    @Test func `init does not request data from URL`() {
+    @Test
+    func `init does not request data from URL`() {
         let (_, client) = makeSUT()
 
         #expect(client.requestedURLs.isEmpty)
     }
 
-    @Test func `load requests data from URL`() {
+    @Test
+    func `load requests data from URL`() {
         let url = URL(string: "https://a-given-url.com")!
         let (sut, client) = makeSUT(url: url)
 
@@ -23,7 +25,8 @@ struct RemoteFeedLoaderTests {
         #expect(client.requestedURLs == [url])
     }
 
-    @Test func `load twice requests data from URL twice`() {
+    @Test
+    func `load twice requests data from URL twice`() {
         let url = URL(string: "https://a-given-url")!
         let (sut, client) = makeSUT(url: url)
 
@@ -33,7 +36,8 @@ struct RemoteFeedLoaderTests {
         #expect(client.requestedURLs == [url, url])
     }
 
-    @Test func `load delivers error on client error`() {
+    @Test
+    func `load delivers error on client error`() {
         let (sut, client) = makeSUT()
 
         var capturedErrors = [RemoteFeedLoader.Error]()
@@ -45,7 +49,8 @@ struct RemoteFeedLoaderTests {
         #expect(capturedErrors == [.connectivity])
     }
 
-    @Test func `load delivers error on non-200 HTTP response`() {
+    @Test
+    func `load delivers error on non-200 HTTP response`() {
         let (sut, client) = makeSUT()
         let samples = [199, 201, 300, 400, 500]
 
@@ -57,6 +62,18 @@ struct RemoteFeedLoaderTests {
 
             #expect(capturedErrors == [.invalidData])
         }
+    }
+
+    @Test
+    func `load delivers error on 200 HTTP response with invalid JSON`() {
+        let (sut, client) = makeSUT()
+        var capturedErrors = [RemoteFeedLoader.Error]()
+        sut.load { capturedErrors.append($0) }
+
+        let invalidJSON = Data("invalid json".utf8)
+        client.complete(withStatusCode: 200, data: invalidJSON)
+
+        #expect(capturedErrors == [.invalidData])
     }
 
     // MARK: - Helpers
@@ -81,7 +98,7 @@ struct RemoteFeedLoaderTests {
             messages[index].completion(.failure(error))
         }
 
-        func complete(withStatusCode code: Int, at index: Int = 0) {
+        func complete(withStatusCode code: Int, data: Data = Data(), at index: Int = 0) {
             let response = HTTPURLResponse(
                 url: requestedURLs[index],
                 statusCode: code,
@@ -89,7 +106,7 @@ struct RemoteFeedLoaderTests {
                 headerFields: nil,
             )!
 
-            messages[index].completion(.success(response))
+            messages[index].completion(.success(data, response))
         }
     }
 }

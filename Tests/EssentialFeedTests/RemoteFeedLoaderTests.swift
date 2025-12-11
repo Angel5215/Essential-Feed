@@ -68,12 +68,18 @@ struct RemoteFeedLoaderTests {
         })
     }
 
-//    @Test
-//    func `load delivers no items on 200 HTTP response with empty JSON list`() {
-//        let (sut, client) = makeSUT()
-//
-//        var captured
-//    }
+    @Test
+    func `load delivers no items on 200 HTTP response with empty JSON list`() {
+        let (sut, client) = makeSUT()
+
+        var capturedResults: [RemoteFeedLoader.Result] = []
+        sut.load { capturedResults.append($0) }
+
+        let emptyListJSON = Data(#"{ "items": [] }"#.utf8)
+        client.complete(withStatusCode: 200, data: emptyListJSON)
+
+        #expect(capturedResults == [.success([])])
+    }
 
     // MARK: - Helpers
 

@@ -11,7 +11,7 @@
 --hexliteralcase uppercase
 --importgrouping alpha
 --indent 4
---maxwidth 120
+--maxwidth 180
 --nospaceoperators ..<,...
 --self init-only
 --stripunusedargs closure-only

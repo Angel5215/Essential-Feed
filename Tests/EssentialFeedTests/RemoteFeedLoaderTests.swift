@@ -3,27 +3,9 @@
 // Copyright © 2025 Ángel Vázquez. All rights reserved.
 //
 
-@testable import EssentialFeed
+import EssentialFeed
 import Foundation
 import Testing
-
-class RemoteFeedLoader {
-    let url: URL
-    let client: HTTPClient
-
-    init(url: URL, client: HTTPClient) {
-        self.url = url
-        self.client = client
-    }
-
-    func load() {
-        client.get(from: url)
-    }
-}
-
-protocol HTTPClient {
-    func get(from url: URL)
-}
 
 struct RemoteFeedLoaderTests {
     @Test func `init does not request data from URL`() {

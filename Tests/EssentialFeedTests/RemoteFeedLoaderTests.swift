@@ -47,14 +47,16 @@ struct RemoteFeedLoaderTests {
 
     @Test func `load delivers error on non-200 HTTP response`() {
         let (sut, client) = makeSUT()
+        let samples = [199, 201, 300, 400, 500]
 
-        var capturedErrors = [RemoteFeedLoader.Error]()
-        sut.load { capturedErrors.append($0) }
+        for (index, code) in samples.enumerated() {
+            var capturedErrors = [RemoteFeedLoader.Error]()
+            sut.load { capturedErrors.append($0) }
 
-        let clientError = NSError(domain: "Test", code: 0)
-        client.complete(withStatusCode: 400)
+            client.complete(withStatusCode: code, at: index)
 
-        #expect(capturedErrors == [.invalidData])
+            #expect(capturedErrors == [.invalidData])
+        }
     }
 
     // MARK: - Helpers

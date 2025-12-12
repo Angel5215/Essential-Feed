@@ -5,7 +5,7 @@
 
 import Foundation
 
-public struct FeedItem: Equatable {
+public struct FeedItem: Equatable, Sendable {
     public let id: UUID
     public let description: String?
     public let location: String?

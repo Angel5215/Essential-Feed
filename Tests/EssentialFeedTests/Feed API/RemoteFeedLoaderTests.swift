@@ -38,51 +38,51 @@ struct RemoteFeedLoaderTests {
         #expect(client.requestedURLs == [url, url])
     }
 
-    @Test
-    func `load delivers error on client error`() {
+    @Test(.timeLimit(.minutes(1)))
+    func `load delivers error on client error`() async {
         let (sut, client) = makeSUT()
 
-        expect(sut, toCompleteWith: .failure(.connectivity), when: {
+        await expect(sut, toCompleteWith: .failure(RemoteFeedLoader.Error.connectivity), when: {
             let clientError = NSError(domain: "Test", code: 0)
             client.complete(with: clientError)
         })
     }
 
-    @Test
-    func `load delivers error on non-200 HTTP response`() {
+    @Test(.timeLimit(.minutes(1)))
+    func `load delivers error on non-200 HTTP response`() async {
         let (sut, client) = makeSUT()
         let samples = [199, 201, 300, 400, 500]
 
         for (index, code) in samples.enumerated() {
-            expect(sut, toCompleteWith: .failure(.invalidData), when: {
+            await expect(sut, toCompleteWith: .failure(RemoteFeedLoader.Error.invalidData), when: {
                 let json = makeItemsJSON([])
                 client.complete(withStatusCode: code, data: json, at: index)
             })
         }
     }
 
-    @Test
-    func `load delivers error on 200 HTTP response with invalid JSON`() {
+    @Test(.timeLimit(.minutes(1)))
+    func `load delivers error on 200 HTTP response with invalid JSON`() async {
         let (sut, client) = makeSUT()
 
-        expect(sut, toCompleteWith: .failure(.invalidData), when: {
+        await expect(sut, toCompleteWith: .failure(RemoteFeedLoader.Error.invalidData), when: {
             let invalidJSON = Data("invalid json".utf8)
             client.complete(withStatusCode: 200, data: invalidJSON)
         })
     }
 
-    @Test
-    func `load delivers no items on 200 HTTP response with empty JSON list`() {
+    @Test(.timeLimit(.minutes(1)))
+    func `load delivers no items on 200 HTTP response with empty JSON list`() async {
         let (sut, client) = makeSUT()
 
-        expect(sut, toCompleteWith: .success([]), when: {
+        await expect(sut, toCompleteWith: .success([]), when: {
             let emptyListJSON = makeItemsJSON([])
             client.complete(withStatusCode: 200, data: emptyListJSON)
         })
     }
 
-    @Test
-    func `load delivers items on 200 HTTP response with JSON items`() {
+    @Test(.timeLimit(.minutes(1)))
+    func `load delivers items on 200 HTTP response with JSON items`() async {
         let (sut, client) = makeSUT()
         let item1 = makeItem(
             id: UUID(),
@@ -97,7 +97,7 @@ struct RemoteFeedLoaderTests {
         )
         let items = [item1.model, item2.model]
 
-        expect(sut, toCompleteWith: .success(items), when: {
+        await expect(sut, toCompleteWith: .success(items), when: {
             let json = makeItemsJSON([item1.json, item2.json])
             client.complete(withStatusCode: 200, data: json)
         })
@@ -155,16 +155,23 @@ struct RemoteFeedLoaderTests {
 
     private func expect(
         _ sut: RemoteFeedLoader,
-        toCompleteWith result: RemoteFeedLoader.Result,
+        toCompleteWith expectedResult: RemoteFeedLoader.Result,
         when action: () -> Void,
         sourceLocation: SourceLocation = #_sourceLocation,
-    ) {
-        var capturedResults = [RemoteFeedLoader.Result]()
-        sut.load { capturedResults.append($0) }
+    ) async {
+        let receivedResult = await withCheckedContinuation { continuation in
+            sut.load { continuation.resume(returning: $0) }
+            action()
+        }
 
-        action()
-
-        #expect(capturedResults == [result], sourceLocation: sourceLocation)
+        switch (receivedResult, expectedResult) {
+        case let (.success(receivedItems), .success(expectedItems)):
+            #expect(receivedItems == expectedItems, sourceLocation: sourceLocation)
+        case let (.failure(receivedError as RemoteFeedLoader.Error), .failure(expectedError as RemoteFeedLoader.Error)):
+            #expect(receivedError == expectedError, sourceLocation: sourceLocation)
+        default:
+            Issue.record("Expected result \(expectedResult), got \(receivedResult) instead", sourceLocation: sourceLocation)
+        }
     }
 
     private class HTTPClientSpy: HTTPClient {

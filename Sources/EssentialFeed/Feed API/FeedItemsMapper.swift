@@ -6,13 +6,13 @@
 import Foundation
 
 enum FeedItemsMapper {
-    static func map(_ data: Data, response: HTTPURLResponse) throws -> [FeedItem] {
-        guard response.statusCode == StatusCode.ok else {
-            throw RemoteFeedLoader.Error.invalidData
+    static func map(_ data: Data, from response: HTTPURLResponse) -> RemoteFeedLoader.Result {
+        guard response.statusCode == StatusCode.ok,
+              let root = try? JSONDecoder().decode(Root.self, from: data) else {
+            return .failure(.invalidData)
         }
 
-        let json = try JSONDecoder().decode(Root.self, from: data)
-        return json.items.map(\.item)
+        return .success(root.feed)
     }
 
     // MARK: - Helpers
@@ -23,6 +23,10 @@ enum FeedItemsMapper {
 
     private struct Root: Decodable {
         let items: [Item]
+
+        var feed: [FeedItem] {
+            items.map(\.item)
+        }
     }
 
     private struct Item: Decodable {

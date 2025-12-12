@@ -103,6 +103,21 @@ struct RemoteFeedLoaderTests {
         })
     }
 
+    @Test
+    func `load does not deliver result after SUT instance has been deallocated`() {
+        let url = URL(string: "https://any-url.com")!
+        let client = HTTPClientSpy()
+        var sut: RemoteFeedLoader? = RemoteFeedLoader(url: url, client: client)
+
+        var capturedResults = [RemoteFeedLoader.Result]()
+        sut?.load { capturedResults.append($0) }
+
+        sut = nil
+        client.complete(withStatusCode: 200, data: makeItemsJSON([]))
+
+        #expect(capturedResults.isEmpty)
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(

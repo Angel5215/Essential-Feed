@@ -19,16 +19,6 @@ class URLSessionHTTPClient {
 }
 
 struct URLSessionHTTPClientTests {
-    @Test func `get from URL creates data task with URL`() {
-        let url = URL(string: "https://any-url.com")!
-        let session = URLSessionSpy()
-        let sut = URLSessionHTTPClient(session: session)
-
-        sut.get(from: url)
-
-        #expect(session.receivedURLs == [url])
-    }
-
     @Test func `get from URL resumes data task with URL`() {
         let url = URL(string: "https://any-url.com")!
         let session = URLSessionSpy()
@@ -44,12 +34,10 @@ struct URLSessionHTTPClientTests {
     // MARK: - Helpers
 
     private class URLSessionSpy: URLSession {
-        var receivedURLs = [URL]()
         private var stubs = [URL: URLSessionDataTask]()
 
         override func dataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, (any Error)?) -> Void) -> URLSessionDataTask {
-            receivedURLs.append(url)
-            return stubs[url] ?? FakeURLSessionDataTask()
+            stubs[url] ?? FakeURLSessionDataTask()
         }
 
         func stub(url: URL, task: URLSessionDataTask) {

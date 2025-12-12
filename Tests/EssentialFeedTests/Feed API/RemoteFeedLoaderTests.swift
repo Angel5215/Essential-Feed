@@ -42,7 +42,7 @@ struct RemoteFeedLoaderTests {
     func `load delivers error on client error`() async {
         let (sut, client) = makeSUT()
 
-        await expect(sut, toCompleteWith: .failure(RemoteFeedLoader.Error.connectivity), when: {
+        await expect(sut, toCompleteWith: failure(.connectivity), when: {
             let clientError = NSError(domain: "Test", code: 0)
             client.complete(with: clientError)
         })
@@ -54,7 +54,7 @@ struct RemoteFeedLoaderTests {
         let samples = [199, 201, 300, 400, 500]
 
         for (index, code) in samples.enumerated() {
-            await expect(sut, toCompleteWith: .failure(RemoteFeedLoader.Error.invalidData), when: {
+            await expect(sut, toCompleteWith: failure(.invalidData), when: {
                 let json = makeItemsJSON([])
                 client.complete(withStatusCode: code, data: json, at: index)
             })
@@ -65,7 +65,7 @@ struct RemoteFeedLoaderTests {
     func `load delivers error on 200 HTTP response with invalid JSON`() async {
         let (sut, client) = makeSUT()
 
-        await expect(sut, toCompleteWith: .failure(RemoteFeedLoader.Error.invalidData), when: {
+        await expect(sut, toCompleteWith: failure(.invalidData), when: {
             let invalidJSON = Data("invalid json".utf8)
             client.complete(withStatusCode: 200, data: invalidJSON)
         })
@@ -172,6 +172,10 @@ struct RemoteFeedLoaderTests {
         default:
             Issue.record("Expected result \(expectedResult), got \(receivedResult) instead", sourceLocation: sourceLocation)
         }
+    }
+
+    private func failure(_ error: RemoteFeedLoader.Error) -> LoadFeedResult {
+        .failure(error)
     }
 
     private class HTTPClientSpy: HTTPClient {

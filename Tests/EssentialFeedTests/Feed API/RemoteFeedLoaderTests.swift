@@ -159,7 +159,7 @@ struct RemoteFeedLoaderTests {
         when action: () -> Void,
         sourceLocation: SourceLocation = #_sourceLocation,
     ) async {
-        await confirmation(sourceLocation: sourceLocation) { confirm in
+        await withCheckedContinuation { continuation in
             sut.load { receivedResult in
                 switch (receivedResult, expectedResult) {
                 case let (.success(receivedItems), .success(expectedItems)):
@@ -169,7 +169,7 @@ struct RemoteFeedLoaderTests {
                 default:
                     Issue.record("Expected result \(expectedResult), got \(receivedResult) instead", sourceLocation: sourceLocation)
                 }
-                confirm()
+                continuation.resume()
             }
             action()
         }

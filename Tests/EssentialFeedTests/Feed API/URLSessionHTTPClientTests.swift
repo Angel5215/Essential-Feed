@@ -5,7 +5,7 @@
 
 import EssentialFeed
 import Foundation
-import Testing
+import XCTest
 
 final class URLSessionHTTPClient {
     private let session: URLSession
@@ -23,10 +23,8 @@ final class URLSessionHTTPClient {
     }
 }
 
-@Suite(.timeLimit(.minutes(1)))
-struct URLSessionHTTPClientTests {
-    @Test
-    func `get from URL fails on request error`() async {
+final class URLSessionHTTPClientTests: XCTestCase {
+    func test_getFromURL_failsOnRequestError() {
         URLProtocolStub.startInterceptingRequests()
 
         let url = URL(string: "https://any-url.com")!
@@ -35,19 +33,22 @@ struct URLSessionHTTPClientTests {
 
         let sut = URLSessionHTTPClient()
 
-        await withCheckedContinuation { continuation in
-            sut.get(from: url) { result in
-                switch result {
-                case let .failure(receivedError as NSError):
-                    #expect(receivedError.domain == error.domain)
-                    #expect(receivedError.code == error.code)
-                default:
-                    Issue.record("Expected failure with error \(error), got \(result) instead.")
-                }
+        let exp = expectation(description: "Wait for completion")
 
-                continuation.resume()
+        sut.get(from: url) { result in
+            switch result {
+            case let .failure(receivedError as NSError):
+                XCTAssertEqual(receivedError.domain, error.domain)
+                XCTAssertEqual(receivedError.code, error.code)
+            default:
+                XCTFail("Expected failure with error \(error), got \(result) instead.")
             }
+
+            exp.fulfill()
         }
+
+        wait(for: [exp], timeout: 1.0)
+
         URLProtocolStub.stopInterceptingRequests()
     }
 

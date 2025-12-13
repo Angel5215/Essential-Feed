@@ -45,21 +45,17 @@ struct URLSessionHTTPClientTests {
         session.stub(url: url, error: error)
         let sut = URLSessionHTTPClient(session: session)
 
-        await withTaskTimeoutHandler(timeout: .seconds(1)) {
-            _ = await withCheckedContinuation { continuation in
-                sut.get(from: url) { result in
-                    switch result {
-                    case let .failure(receivedError as NSError):
-                        #expect(receivedError.domain == error.domain)
-                        #expect(receivedError.code == error.code)
-                    default:
-                        Issue.record("Expected failure with error \(error), got \(result) instead.")
-                    }
-                    continuation.resume(returning: ())
+        await confirmation { confirm in
+            sut.get(from: url) { result in
+                switch result {
+                case let .failure(receivedError as NSError):
+                    #expect(receivedError.domain == error.domain)
+                    #expect(receivedError.code == error.code)
+                default:
+                    Issue.record("Expected failure with error \(error), got \(result) instead.")
                 }
+                confirm()
             }
-        } onTimeout: {
-            Issue.record("Task did not complete in the allotted time.")
         }
     }
 
@@ -99,33 +95,4 @@ struct URLSessionHTTPClientTests {
             resumeCallCount += 1
         }
     }
-}
-
-func withTaskTimeoutHandler<Success: Sendable>(
-    timeout: Duration,
-    operation: @Sendable @escaping () async throws -> Success,
-    onTimeout handler: @Sendable @escaping () throws -> Success,
-    isolation: isolated (any Actor)? = #isolation,
-) async rethrows -> Success {
-    try await withThrowingTaskGroup(returning: Success.self) { group in
-        _ = group.addTaskUnlessCancelled {
-            try await operation()
-        }
-
-        _ = group.addTaskUnlessCancelled { () -> Success in
-            try await Task<Never, Never>.sleep(for: timeout, clock: .continuous)
-            return try handler()
-        }
-
-        guard let result = try await group.next() else {
-            throw TaskTimeoutError.missingValue
-        }
-
-        group.cancelAll()
-        return result
-    }
-}
-
-enum TaskTimeoutError: Error {
-    case missingValue
 }

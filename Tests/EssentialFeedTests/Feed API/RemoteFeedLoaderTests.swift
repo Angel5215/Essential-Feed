@@ -38,7 +38,7 @@ struct RemoteFeedLoaderTests {
         #expect(client.requestedURLs == [url, url])
     }
 
-    @Test(.timeLimit(.minutes(1)))
+    @Test
     func `load delivers error on client error`() async {
         let (sut, client) = makeSUT()
 
@@ -48,7 +48,7 @@ struct RemoteFeedLoaderTests {
         })
     }
 
-    @Test(.timeLimit(.minutes(1)))
+    @Test
     func `load delivers error on non-200 HTTP response`() async {
         let (sut, client) = makeSUT()
         let samples = [199, 201, 300, 400, 500]
@@ -61,7 +61,7 @@ struct RemoteFeedLoaderTests {
         }
     }
 
-    @Test(.timeLimit(.minutes(1)))
+    @Test
     func `load delivers error on 200 HTTP response with invalid JSON`() async {
         let (sut, client) = makeSUT()
 
@@ -71,7 +71,7 @@ struct RemoteFeedLoaderTests {
         })
     }
 
-    @Test(.timeLimit(.minutes(1)))
+    @Test
     func `load delivers no items on 200 HTTP response with empty JSON list`() async {
         let (sut, client) = makeSUT()
 
@@ -81,7 +81,7 @@ struct RemoteFeedLoaderTests {
         })
     }
 
-    @Test(.timeLimit(.minutes(1)))
+    @Test
     func `load delivers items on 200 HTTP response with JSON items`() async {
         let (sut, client) = makeSUT()
         let item1 = makeItem(
@@ -159,18 +159,19 @@ struct RemoteFeedLoaderTests {
         when action: () -> Void,
         sourceLocation: SourceLocation = #_sourceLocation,
     ) async {
-        let receivedResult = await withCheckedContinuation { continuation in
-            sut.load { continuation.resume(returning: $0) }
+        await confirmation(sourceLocation: sourceLocation) { confirm in
+            sut.load { receivedResult in
+                switch (receivedResult, expectedResult) {
+                case let (.success(receivedItems), .success(expectedItems)):
+                    #expect(receivedItems == expectedItems, sourceLocation: sourceLocation)
+                case let (.failure(receivedError as RemoteFeedLoader.Error), .failure(expectedError as RemoteFeedLoader.Error)):
+                    #expect(receivedError == expectedError, sourceLocation: sourceLocation)
+                default:
+                    Issue.record("Expected result \(expectedResult), got \(receivedResult) instead", sourceLocation: sourceLocation)
+                }
+                confirm()
+            }
             action()
-        }
-
-        switch (receivedResult, expectedResult) {
-        case let (.success(receivedItems), .success(expectedItems)):
-            #expect(receivedItems == expectedItems, sourceLocation: sourceLocation)
-        case let (.failure(receivedError as RemoteFeedLoader.Error), .failure(expectedError as RemoteFeedLoader.Error)):
-            #expect(receivedError == expectedError, sourceLocation: sourceLocation)
-        default:
-            Issue.record("Expected result \(expectedResult), got \(receivedResult) instead", sourceLocation: sourceLocation)
         }
     }
 

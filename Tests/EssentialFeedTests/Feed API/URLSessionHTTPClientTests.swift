@@ -7,10 +7,18 @@ import EssentialFeed
 import Foundation
 import Testing
 
-final class URLSessionHTTPClient: Sendable {
-    private let session: URLSession
+protocol HTTPSession {
+    func dataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> HTTPSessionTask
+}
 
-    init(session: URLSession) {
+protocol HTTPSessionTask {
+    func resume()
+}
+
+final class URLSessionHTTPClient {
+    private let session: HTTPSession
+
+    init(session: HTTPSession) {
         self.session = session
     }
 
@@ -27,7 +35,7 @@ struct URLSessionHTTPClientTests {
     @Test
     func `get from URL resumes data task with URL`() {
         let url = URL(string: "https://any-url.com")!
-        let session = URLSessionSpy()
+        let session = HTTPSessionSpy()
         let task = URLSessionDataTaskSpy()
         session.stub(url: url, task: task)
         let sut = URLSessionHTTPClient(session: session)
@@ -40,7 +48,7 @@ struct URLSessionHTTPClientTests {
     @Test
     func `get from URL fails on request error`() async {
         let url = URL(string: "https://any-url.com")!
-        let session = URLSessionSpy()
+        let session = HTTPSessionSpy()
         let error = NSError(domain: "any error", code: 1)
         session.stub(url: url, error: error)
         let sut = URLSessionHTTPClient(session: session)
@@ -61,10 +69,10 @@ struct URLSessionHTTPClientTests {
 
     // MARK: - Helpers
 
-    private class URLSessionSpy: URLSession, @unchecked Sendable {
+    private class HTTPSessionSpy: HTTPSession {
         private var stubs = [URL: Stub]()
 
-        override func dataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, (any Error)?) -> Void) -> URLSessionDataTask {
+        func dataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, (any Error)?) -> Void) -> HTTPSessionTask {
             guard let stub = stubs[url] else {
                 fatalError("Could not find stub for \(url)")
             }
@@ -74,24 +82,24 @@ struct URLSessionHTTPClientTests {
 
         // MARK: - Helpers
 
-        func stub(url: URL, task: URLSessionDataTask = FakeURLSessionDataTask(), error: Error? = nil) {
+        func stub(url: URL, task: HTTPSessionTask = FakeURLSessionDataTask(), error: Error? = nil) {
             stubs[url] = Stub(task: task, error: error)
         }
 
         private struct Stub {
-            let task: URLSessionDataTask
+            let task: HTTPSessionTask
             let error: Error?
         }
     }
 
-    private class FakeURLSessionDataTask: URLSessionDataTask {
-        override func resume() {}
+    private class FakeURLSessionDataTask: HTTPSessionTask {
+        func resume() {}
     }
 
-    private class URLSessionDataTaskSpy: URLSessionDataTask {
+    private class URLSessionDataTaskSpy: HTTPSessionTask {
         private(set) var resumeCallCount = 0
 
-        override func resume() {
+        func resume() {
             resumeCallCount += 1
         }
     }

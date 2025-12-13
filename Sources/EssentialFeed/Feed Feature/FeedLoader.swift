@@ -3,7 +3,7 @@
 // Copyright © 2025 Ángel Vázquez. All rights reserved.
 //
 
-public enum LoadFeedResult: Sendable {
+public enum LoadFeedResult {
     case success([FeedItem])
     case failure(Error)
 }

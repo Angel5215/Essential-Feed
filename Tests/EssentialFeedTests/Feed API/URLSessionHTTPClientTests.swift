@@ -18,9 +18,15 @@ final class URLSessionHTTPClient {
         session.dataTask(with: url) { _, _, error in
             if let error {
                 completion(.failure(error))
+            } else {
+                completion(.failure(UnexpectedValuesRepresentation()))
             }
         }.resume()
     }
+
+    // MARK: - Helpers
+
+    struct UnexpectedValuesRepresentation: Error {}
 }
 
 @MainActor
@@ -33,6 +39,20 @@ final class URLSessionHTTPClientTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
         URLProtocolStub.stopInterceptingRequests()
+    }
+
+    func test_getFromURL_performsGETRequestWithURL() {
+        let url = anyURL()
+        let exp = expectation(description: "Wait for request")
+        URLProtocolStub.observeRequests { request in
+            XCTAssertEqual(request.url, url)
+            XCTAssertEqual(request.httpMethod, "GET")
+            exp.fulfill()
+        }
+
+        makeSUT().get(from: url) { _ in }
+
+        wait(for: [exp], timeout: 1.0)
     }
 
     func test_getFromURL_failsOnRequestError() {
@@ -58,16 +78,23 @@ final class URLSessionHTTPClientTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
 
-    func test_getFromURL_performsGETRequestWithURL() {
-        let url = anyURL()
-        let exp = expectation(description: "Wait for request")
-        URLProtocolStub.observeRequests { request in
-            XCTAssertEqual(request.url, url)
-            XCTAssertEqual(request.httpMethod, "GET")
+    func test_getFromURL_failsOnAllNilValues() {
+        URLProtocolStub.stub(data: nil, response: nil, error: nil)
+
+        let sut = makeSUT()
+
+        let exp = expectation(description: "Wait for completion")
+
+        sut.get(from: anyURL()) { result in
+            switch result {
+            case .failure:
+                break
+            default:
+                XCTFail("Expected failure, got \(result) instead.")
+            }
+
             exp.fulfill()
         }
-
-        makeSUT().get(from: url) { _ in }
 
         wait(for: [exp], timeout: 1.0)
     }

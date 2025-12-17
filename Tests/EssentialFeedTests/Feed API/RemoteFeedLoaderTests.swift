@@ -179,7 +179,7 @@ struct RemoteFeedLoaderTests {
         .failure(error)
     }
 
-    private class HTTPClientSpy: HTTPClient {
+    private final class HTTPClientSpy: HTTPClient {
         private(set) var messages = [(url: URL, completion: (HTTPClientResult) -> Void)]()
         var requestedURLs: [URL] { messages.map(\.url) }
 

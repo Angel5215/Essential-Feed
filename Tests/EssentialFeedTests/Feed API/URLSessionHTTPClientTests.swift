@@ -90,6 +90,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
                 XCTAssertEqual(receivedData, data)
                 XCTAssertEqual(receivedResponse.url, response.url)
                 XCTAssertEqual(receivedResponse.statusCode, response.statusCode)
+
             default:
                 XCTFail("Expected success, got \(result) instead")
             }
@@ -111,6 +112,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
                 XCTAssertEqual(receivedData, emptyData)
                 XCTAssertEqual(receivedResponse.url, response.url)
                 XCTAssertEqual(receivedResponse.statusCode, response.statusCode)
+
             default:
                 XCTFail("Expected success, got \(result) instead")
             }
@@ -177,7 +179,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         HTTPURLResponse(url: anyURL(), statusCode: 200, httpVersion: nil, headerFields: nil)!
     }
 
-    private class URLProtocolStub: URLProtocol {
+    private final class URLProtocolStub: URLProtocol {
         override class func canInit(with request: URLRequest) -> Bool {
             requestObserver?(request)
             return true

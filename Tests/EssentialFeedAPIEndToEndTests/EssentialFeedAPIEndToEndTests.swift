@@ -10,18 +10,7 @@ import Testing
 final class EssentialFeedAPIEndToEndTests {
     @Test
     func `end to end test server GET feed result matches fixed test account data`() async {
-        let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
-        let client = URLSessionHTTPClient()
-        let loader = RemoteFeedLoader(url: testServerURL, client: client)
-
-        let receivedResult = await withCheckedContinuation { continuation in
-            loader.load { result in
-                nonisolated(unsafe) let result = result
-                continuation.resume(returning: result)
-            }
-        }
-
-        switch receivedResult {
+        switch await getFeedResult() {
         case let .success(items):
             #expect(items.count == 8, "Expected 8 items in the test account feed")
             #expect(items[0] == expectedItem(at: 0))
@@ -35,6 +24,21 @@ final class EssentialFeedAPIEndToEndTests {
 
         case let .failure(error):
             Issue.record("Expected successful feed result, got \(error) instead")
+        }
+    }
+
+    // MARK: - Helpers
+
+    private func getFeedResult() async -> LoadFeedResult {
+        let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
+        let client = URLSessionHTTPClient()
+        let loader = RemoteFeedLoader(url: testServerURL, client: client)
+
+        return await withCheckedContinuation { continuation in
+            loader.load { result in
+                nonisolated(unsafe) let result = result
+                continuation.resume(returning: result)
+            }
         }
     }
 

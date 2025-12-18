@@ -16,6 +16,10 @@ let package = Package(
             name: "EssentialFeedTests",
             dependencies: ["EssentialFeed"],
         ),
+        .testTarget(
+            name: "EssentialFeedAPIEndToEndTests",
+            dependencies: ["EssentialFeed"],
+        ),
     ],
 )
 

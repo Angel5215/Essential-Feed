@@ -7,7 +7,9 @@ import EssentialFeed
 import Foundation
 import Testing
 
-final class EssentialFeedAPIEndToEndTests {
+struct EssentialFeedAPIEndToEndTests {
+    private let leakHelper = MemoryLeakHelper()
+
     @Test
     func `end to end test server GET feed result matches fixed test account data`() async {
         switch await getFeedResult() {
@@ -29,10 +31,13 @@ final class EssentialFeedAPIEndToEndTests {
 
     // MARK: - Helpers
 
-    private func getFeedResult() async -> LoadFeedResult {
+    private func getFeedResult(sourceLocation: SourceLocation = #_sourceLocation) async -> LoadFeedResult {
         let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
         let client = URLSessionHTTPClient()
         let loader = RemoteFeedLoader(url: testServerURL, client: client)
+
+        leakHelper.track(client, sourceLocation: sourceLocation)
+        leakHelper.track(loader, sourceLocation: sourceLocation)
 
         return await withCheckedContinuation { continuation in
             loader.load { result in

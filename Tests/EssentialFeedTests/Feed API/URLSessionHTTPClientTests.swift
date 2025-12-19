@@ -7,6 +7,7 @@ import EssentialFeed
 import Foundation
 import Testing
 
+@Suite(.timeLimit(.minutes(1)))
 final class URLSessionHTTPClientTests {
     private let leakHelper = MemoryLeakHelper()
 

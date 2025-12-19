@@ -1,0 +1,31 @@
+name: ci
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: macos-26
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Select Xcode (26.2)
+        run: |
+          sudo xcode-select -switch /Applications/Xcode_26.2.app
+          /usr/bin/xcodebuild -version
+
+      - name: Build and Test
+        run: |
+          set -o pipefail
+          xcodebuild clean build test \
+            -scheme "CI" \
+            -sdk macosx \
+            -destination "platform=macOS" \
+            -enableThreadSanitizer YES \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            ONLY_ACTIVE_ARCH=YES | xcbeautify --disable-logging --renderer github-actions

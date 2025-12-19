@@ -163,8 +163,7 @@ final class URLSessionHTTPClientTests {
 
     private final class URLProtocolStub: URLProtocol {
         override class func canInit(with request: URLRequest) -> Bool {
-            requestObserver?(request)
-            return true
+            true
         }
 
         override class func canonicalRequest(for request: URLRequest) -> URLRequest {
@@ -172,6 +171,11 @@ final class URLSessionHTTPClientTests {
         }
 
         override func startLoading() {
+            if let requestObserver = Self.requestObserver {
+                client?.urlProtocolDidFinishLoading(self)
+                return requestObserver(request)
+            }
+
             if let data = Self.stub?.data {
                 client?.urlProtocol(self, didLoad: data)
             }

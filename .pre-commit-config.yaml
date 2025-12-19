@@ -4,3 +4,12 @@ repos:
     hooks:
       - id: swiftformat
         args: [--config, .swiftformat, --quiet]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: pretty-format-json
+        args: [--autofix]
+      - id: check-yaml
+        args: []
+      - id: check-xml
+        args: []

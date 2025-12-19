@@ -11,9 +11,9 @@
 --hexliteralcase uppercase
 --importgrouping alpha
 --indent 4
---maxwidth 120
+--maxwidth 180
 --nospaceoperators ..<,...
---self insert
+--self init-only
 --stripunusedargs closure-only
 --wraparguments before-first
 --wrapcollections before-first
@@ -25,3 +25,22 @@
 # --disable hoistTry
 --disable preferSwiftTesting
 --disable wrapMultilineStatementBraces
+
+--enable acronyms
+--enable blankLineAfterSwitchCase
+--enable blankLinesBetweenImports
+--enable blockComments
+--enable emptyExtensions
+--enable environmentEntry
+--enable isEmpty
+# --enable noForceTryInTests
+# --enable noForceUnwrapInTests
+--enable noGuardInTests
+--enable preferFinalClasses
+--enable privateStateVariables
+--enable redundantEquatable
+--enable redundantMemberwiseInit
+--enable redundantProperty
+# --enable singlePropertyPerLine
+--enable wrapEnumCases
+--enable wrapMultilineFunctionChains

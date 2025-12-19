@@ -34,7 +34,8 @@ struct EssentialFeedAPIEndToEndTests {
 
     private func getFeedResult(sourceLocation: SourceLocation = #_sourceLocation) async -> LoadFeedResult {
         let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
-        let client = URLSessionHTTPClient()
+        let session = URLSession(configuration: .ephemeral)
+        let client = URLSessionHTTPClient(session: session)
         let loader = RemoteFeedLoader(url: testServerURL, client: client)
 
         leakHelper.track(client, sourceLocation: sourceLocation)

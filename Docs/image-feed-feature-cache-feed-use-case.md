@@ -5,13 +5,13 @@
 
 **Data**:
 
-- Feed Items
+- Image Feed
 
 **Primary course (happy path)**:
 
-1. Execute "Save Feed Items" command with above data. 
+1. Execute "Save Image Feed" command with above data. 
 2. System deletes old cache data.
-3. System encodes feed items. 
+3. System encodes image feed. 
 4. System timestamps the new cache. 
 5. System saves new cache date. 
 6. System delivers success message.

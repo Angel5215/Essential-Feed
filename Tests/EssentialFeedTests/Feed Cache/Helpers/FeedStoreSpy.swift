@@ -49,6 +49,10 @@ final class FeedStoreSpy: FeedStore {
         retrievalCompletions[index](error)
     }
 
+    func completeRetrievalWithEmptyCache(at index: Int = 0) {
+        retrievalCompletions[index](nil)
+    }
+
     enum ReceivedMessage: Equatable {
         case deleteCachedFeed
         case insert([LocalFeedImage], Date)

@@ -1,7 +1,7 @@
 
 # Image Feed Feature
 
-## Load Feed Use Case
+## Load Feed From Remote Use Case
 
 **Data**:
 - URL
@@ -16,8 +16,8 @@
 
 **Invalid data - error course (sad path)**:
 
-1. System delivers error.
+1. System delivers invalid data error.
 
 **No connectivity - error course (sad path)**:
 
-1. System delivers error.
+1. System delivers connectivity error.

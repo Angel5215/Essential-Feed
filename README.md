@@ -11,17 +11,17 @@ Repository created to keep track of the iOS Lead Essentials training program. Th
 
 - [Story: Customer requests to see their image feed][bdd-specs]
 - Use cases:
-  - [Load Feed Use Case][load-feed-use-case]
-  - [Load Feed Fallback Use Case][load-feed-fallback-use-case]
-  - [Save Feed Items Use Case][save-feed-items-use-case]
+  - [Load Feed From Remote Use Case][load-feed-from-remote-use-case]
+  - [Load Feed From Cache Use Case][load-feed-from-cache-use-case]
+  - [Cache Feed Use Case][cache-feed-use-case]
 - [API model][api-model]
 
 <!-- Start Link section -->
 [bdd-specs]: Docs/image-feed-feature-story.md
 [api-model]: Docs/image-feed-feature-api-model.md
-[load-feed-use-case]: Docs/image-feed-feature-load-feed-use-case.md
-[load-feed-fallback-use-case]: Docs/image-feed-feature-load-feed-fallback-use-case.md
-[save-feed-items-use-case]: Docs/image-feed-feature-save-feed-items-use-case.md
+[load-feed-from-remote-use-case]: Docs/image-feed-feature-load-feed-from-remote-use-case.md
+[load-feed-from-cache-use-case]: Docs/image-feed-feature-load-feed-from-cache-use-case.md
+[cache-feed-use-case]: Docs/image-feed-feature-cache-feed-use-case.md
 <!-- End Link section -->
 
 ## Architecture

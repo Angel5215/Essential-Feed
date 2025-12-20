@@ -1,5 +1,5 @@
 //
-// RemoteFeedLoaderTests.swift
+// LoadFeedFromRemoteUseCaseTests.swift
 // Copyright © 2025 Ángel Vázquez. All rights reserved.
 //
 
@@ -7,7 +7,7 @@ import EssentialFeed
 import Foundation
 import Testing
 
-struct RemoteFeedLoaderTests {
+struct LoadFeedFromRemoteUseCaseTests {
     private let leakHelper = MemoryLeakHelper()
 
     @Test

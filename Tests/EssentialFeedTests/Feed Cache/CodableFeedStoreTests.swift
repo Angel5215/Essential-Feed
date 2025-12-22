@@ -63,12 +63,12 @@ final class CodableFeedStore {
 final class CodableFeedStoreTests: XCTestCase {
     override func setUp() {
         super.setUp()
-        try? FileManager.default.removeItem(at: testSpecificStoreURL())
+        setupEmptyStoreState()
     }
 
     override func tearDown() {
         super.tearDown()
-        try? FileManager.default.removeItem(at: testSpecificStoreURL())
+        undoStoreSideEffects()
     }
 
     func test_retrieve_deliversEmptyOnEmptyCache() {
@@ -140,5 +140,17 @@ final class CodableFeedStoreTests: XCTestCase {
         FileManager.default
             .urls(for: .cachesDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("\(type(of: self)).store")
+    }
+
+    private nonisolated func setupEmptyStoreState() {
+        deleteStoreArtifacts()
+    }
+
+    private nonisolated func undoStoreSideEffects() {
+        deleteStoreArtifacts()
+    }
+
+    private nonisolated func deleteStoreArtifacts() {
+        try? FileManager.default.removeItem(at: testSpecificStoreURL())
     }
 }

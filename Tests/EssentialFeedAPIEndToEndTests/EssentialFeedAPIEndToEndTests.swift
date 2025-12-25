@@ -33,7 +33,7 @@ struct EssentialFeedAPIEndToEndTests {
     // MARK: - Helpers
 
     private func getFeedResult(sourceLocation: SourceLocation = #_sourceLocation) async -> LoadFeedResult {
-        let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
+        let testServerURL = URL(string: "https://gist.githubusercontent.com/Angel5215/bf2130a77e27fd39739c354d935b2916/raw/58d4ea46bf75d8804fb66ccf2eb28304323fe49a/test_api_feed")!
         let session = URLSession(configuration: .ephemeral)
         let client = URLSessionHTTPClient(session: session)
         let loader = RemoteFeedLoader(url: testServerURL, client: client)

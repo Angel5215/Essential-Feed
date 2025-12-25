@@ -1,14 +1,14 @@
 
 # Model Specs
 
-## Feed Item
+## Feed Image
 
 | Property      | Type                |
 |:-------------:|:-------------------:|
 | `id`          | `UUID`              |
 | `description` | `String (optional)` |
 | `location`    | `String (optional)` |
-| `imageURL`    | `URL`               |
+| `url`         | `URL`               |
 
 ## Payload Contract
 

@@ -14,16 +14,16 @@ struct EssentialFeedAPIEndToEndTests {
     @Test
     func `end to end test server GET feed result matches fixed test account data`() async {
         switch await getFeedResult() {
-        case let .success(items):
-            #expect(items.count == 8, "Expected 8 items in the test account feed")
-            #expect(items[0] == expectedItem(at: 0))
-            #expect(items[1] == expectedItem(at: 1))
-            #expect(items[2] == expectedItem(at: 2))
-            #expect(items[3] == expectedItem(at: 3))
-            #expect(items[4] == expectedItem(at: 4))
-            #expect(items[5] == expectedItem(at: 5))
-            #expect(items[6] == expectedItem(at: 6))
-            #expect(items[7] == expectedItem(at: 7))
+        case let .success(imageFeed):
+            #expect(imageFeed.count == 8, "Expected 8 images in the test account image feed")
+            #expect(imageFeed[0] == expectedImage(at: 0))
+            #expect(imageFeed[1] == expectedImage(at: 1))
+            #expect(imageFeed[2] == expectedImage(at: 2))
+            #expect(imageFeed[3] == expectedImage(at: 3))
+            #expect(imageFeed[4] == expectedImage(at: 4))
+            #expect(imageFeed[5] == expectedImage(at: 5))
+            #expect(imageFeed[6] == expectedImage(at: 6))
+            #expect(imageFeed[7] == expectedImage(at: 7))
 
         case let .failure(error):
             Issue.record("Expected successful feed result, got \(error) instead")
@@ -33,7 +33,7 @@ struct EssentialFeedAPIEndToEndTests {
     // MARK: - Helpers
 
     private func getFeedResult(sourceLocation: SourceLocation = #_sourceLocation) async -> LoadFeedResult {
-        let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
+        let testServerURL = URL(string: "https://gist.githubusercontent.com/Angel5215/bf2130a77e27fd39739c354d935b2916/raw/58d4ea46bf75d8804fb66ccf2eb28304323fe49a/test_api_feed")!
         let session = URLSession(configuration: .ephemeral)
         let client = URLSessionHTTPClient(session: session)
         let loader = RemoteFeedLoader(url: testServerURL, client: client)
@@ -49,12 +49,12 @@ struct EssentialFeedAPIEndToEndTests {
         }
     }
 
-    private func expectedItem(at index: Int) -> FeedItem {
-        FeedItem(
+    private func expectedImage(at index: Int) -> FeedImage {
+        FeedImage(
             id: id(at: index),
             description: description(at: index),
             location: location(at: index),
-            imageURL: imageURL(at: index),
+            url: imageURL(at: index),
         )
     }
 

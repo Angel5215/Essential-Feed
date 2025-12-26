@@ -5,6 +5,10 @@ import PackageDescription
 
 let package = Package(
     name: "EssentialFeed",
+    platforms: [
+        .macOS(.v26),
+        .iOS(.v26),
+    ],
     products: [
         .singleTargetLibrary(named: "EssentialFeed"),
     ],

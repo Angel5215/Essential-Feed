@@ -20,6 +20,10 @@ let package = Package(
             name: "EssentialFeedAPIEndToEndTests",
             dependencies: ["EssentialFeed"],
         ),
+        .testTarget(
+            name: "EssentialFeedCacheIntegrationTests",
+            dependencies: ["EssentialFeed"],
+        ),
     ],
 )
 

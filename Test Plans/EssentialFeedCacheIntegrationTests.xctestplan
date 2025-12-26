@@ -1,8 +1,8 @@
 {
   "configurations": [
     {
-      "id": "FEC35CAC-E903-44B6-9C87-FFF733A17E98",
-      "name": "Configuration 1",
+      "id": "41470C92-6C94-4D63-97E9-42E2A962A369",
+      "name": "Test Scheme Action",
       "options": {}
     }
   ],
@@ -16,6 +16,7 @@
         }
       ]
     },
+    "performanceAntipatternCheckerEnabled": true,
     "testExecutionOrdering": "random"
   },
   "testTargets": [
@@ -23,24 +24,8 @@
       "parallelizable": false,
       "target": {
         "containerPath": "container:",
-        "identifier": "EssentialFeedAPIEndToEndTests",
-        "name": "EssentialFeedAPIEndToEndTests"
-      }
-    },
-    {
-      "parallelizable": false,
-      "target": {
-        "containerPath": "container:",
         "identifier": "EssentialFeedCacheIntegrationTests",
         "name": "EssentialFeedCacheIntegrationTests"
-      }
-    },
-    {
-      "parallelizable": false,
-      "target": {
-        "containerPath": "container:",
-        "identifier": "EssentialFeedTests",
-        "name": "EssentialFeedTests"
       }
     }
   ],

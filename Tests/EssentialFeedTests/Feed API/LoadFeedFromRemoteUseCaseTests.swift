@@ -168,7 +168,7 @@ final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
 
-    private func failure(_ error: RemoteFeedLoader.Error) -> LoadFeedResult {
+    private func failure(_ error: RemoteFeedLoader.Error) -> FeedLoader.Result {
         .failure(error)
     }
 

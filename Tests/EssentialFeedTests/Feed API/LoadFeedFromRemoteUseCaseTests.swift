@@ -5,84 +5,75 @@
 
 import EssentialFeed
 import Foundation
-import Testing
+import XCTest
 
-struct LoadFeedFromRemoteUseCaseTests {
-    private let leakHelper = MemoryLeakHelper()
-
-    @Test
-    func `init does not request data from URL`() {
+@MainActor
+final class LoadFeedFromRemoteUseCaseTests: XCTestCase {
+    func test_init_doesNotRequestDataFromURL() {
         let (_, client) = makeSUT()
 
-        #expect(client.requestedURLs.isEmpty)
+        XCTAssertTrue(client.requestedURLs.isEmpty)
     }
 
-    @Test
-    func `load requests data from URL`() {
+    func test_load_requestsDataFromURL() {
         let url = URL(string: "https://a-given-url.com")!
         let (sut, client) = makeSUT(url: url)
 
         sut.load { _ in }
 
-        #expect(client.requestedURLs == [url])
+        XCTAssertEqual(client.requestedURLs, [url])
     }
 
-    @Test
-    func `load twice requests data from URL twice`() {
+    func test_loadTwice_requestsDataFromURLTwice() {
         let url = URL(string: "https://a-given-url")!
         let (sut, client) = makeSUT(url: url)
 
         sut.load { _ in }
         sut.load { _ in }
 
-        #expect(client.requestedURLs == [url, url])
+        XCTAssertEqual(client.requestedURLs, [url, url])
     }
 
-    @Test
-    func `load delivers error on client error`() async {
+    func test_load_deliversErrorOnClientError() {
         let (sut, client) = makeSUT()
 
-        await expect(sut, toCompleteWith: failure(.connectivity), when: {
+        expect(sut, toCompleteWith: failure(.connectivity)) {
             let clientError = NSError(domain: "Test", code: 0)
             client.complete(with: clientError)
-        })
+        }
     }
 
-    @Test
-    func `load delivers error on non-200 HTTP response`() async {
+    func test_load_deliversErrorOnNon200HTTPResponse() {
         let (sut, client) = makeSUT()
         let samples = [199, 201, 300, 400, 500]
 
         for (index, code) in samples.enumerated() {
-            await expect(sut, toCompleteWith: failure(.invalidData), when: {
+            expect(sut, toCompleteWith: failure(.invalidData)) {
                 let json = makeItemsJSON([])
                 client.complete(withStatusCode: code, data: json, at: index)
-            })
+            }
         }
     }
 
-    @Test
-    func `load delivers error on 200 HTTP response with invalid JSON`() async {
+    func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
         let (sut, client) = makeSUT()
 
-        await expect(sut, toCompleteWith: failure(.invalidData), when: {
+        expect(sut, toCompleteWith: failure(.invalidData)) {
             let invalidJSON = Data("invalid json".utf8)
             client.complete(withStatusCode: 200, data: invalidJSON)
-        })
+        }
     }
 
-    @Test
-    func `load delivers no items on 200 HTTP response with empty JSON list`() async {
+    func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
         let (sut, client) = makeSUT()
 
-        await expect(sut, toCompleteWith: .success([]), when: {
+        expect(sut, toCompleteWith: .success([])) {
             let emptyListJSON = makeItemsJSON([])
             client.complete(withStatusCode: 200, data: emptyListJSON)
-        })
+        }
     }
 
-    @Test
-    func `load delivers items on 200 HTTP response with JSON items`() async {
+    func test_load_deliversItemsOn200HTTPResponseWithJSONItems() {
         let (sut, client) = makeSUT()
         let item1 = makeItem(
             id: UUID(),
@@ -97,14 +88,13 @@ struct LoadFeedFromRemoteUseCaseTests {
         )
         let items = [item1.model, item2.model]
 
-        await expect(sut, toCompleteWith: .success(items), when: {
+        expect(sut, toCompleteWith: .success(items)) {
             let json = makeItemsJSON([item1.json, item2.json])
             client.complete(withStatusCode: 200, data: json)
-        })
+        }
     }
 
-    @Test
-    func `load does not deliver result after SUT instance has been deallocated`() {
+    func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
         let url = URL(string: "https://any-url.com")!
         let client = HTTPClientSpy()
         var sut: RemoteFeedLoader? = RemoteFeedLoader(url: url, client: client)
@@ -115,19 +105,19 @@ struct LoadFeedFromRemoteUseCaseTests {
         sut = nil
         client.complete(withStatusCode: 200, data: makeItemsJSON([]))
 
-        #expect(capturedResults.isEmpty)
+        XCTAssertTrue(capturedResults.isEmpty)
     }
 
     // MARK: - Helpers
 
     private func makeSUT(
         url: URL = URL(string: "https://a-url.com")!,
-        sourceLocation: SourceLocation = #_sourceLocation,
+        file: StaticString = #filePath, line: UInt = #line,
     ) -> (sut: RemoteFeedLoader, client: HTTPClientSpy) {
         let client = HTTPClientSpy()
         let sut = RemoteFeedLoader(url: url, client: client)
-        leakHelper.track(sut, sourceLocation: sourceLocation)
-        leakHelper.track(client, sourceLocation: sourceLocation)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(client, file: file, line: line)
         return (sut, client)
     }
 
@@ -157,22 +147,25 @@ struct LoadFeedFromRemoteUseCaseTests {
         _ sut: RemoteFeedLoader,
         toCompleteWith expectedResult: RemoteFeedLoader.Result,
         when action: () -> Void,
-        sourceLocation: SourceLocation = #_sourceLocation,
-    ) async {
-        await withCheckedContinuation { continuation in
-            sut.load { receivedResult in
-                switch (receivedResult, expectedResult) {
-                case let (.success(receivedItems), .success(expectedItems)):
-                    #expect(receivedItems == expectedItems, sourceLocation: sourceLocation)
-                case let (.failure(receivedError as RemoteFeedLoader.Error), .failure(expectedError as RemoteFeedLoader.Error)):
-                    #expect(receivedError == expectedError, sourceLocation: sourceLocation)
-                default:
-                    Issue.record("Expected result \(expectedResult), got \(receivedResult) instead", sourceLocation: sourceLocation)
-                }
-                continuation.resume()
+        file: StaticString = #filePath, line: UInt = #line,
+    ) {
+        let exp = expectation(description: "Wait for load completion")
+
+        sut.load { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case let (.success(receivedItems), .success(expectedItems)):
+                XCTAssertEqual(receivedItems, expectedItems, file: file, line: line)
+            case let (.failure(receivedError as RemoteFeedLoader.Error), .failure(expectedError as RemoteFeedLoader.Error)):
+                XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+            default:
+                XCTFail("Expected result \(expectedResult), got \(receivedResult) instead", file: file, line: line)
             }
-            action()
+            exp.fulfill()
         }
+
+        action()
+
+        wait(for: [exp], timeout: 1)
     }
 
     private func failure(_ error: RemoteFeedLoader.Error) -> LoadFeedResult {

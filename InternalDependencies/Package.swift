@@ -11,10 +11,14 @@ let package = Package(
     ],
     products: [
         .singleTargetLibrary(named: "EssentialFeed"),
+        .singleTargetLibrary(named: "EssentialFeedMobile"),
     ],
     targets: [
         .target(
             name: "EssentialFeed",
+        ),
+        .target(
+            name: "EssentialFeedMobile",
         ),
         .testTarget(
             name: "EssentialFeedTests",
@@ -27,6 +31,10 @@ let package = Package(
         .testTarget(
             name: "EssentialFeedCacheIntegrationTests",
             dependencies: ["EssentialFeed"],
+        ),
+        .testTarget(
+            name: "EssentialFeedMobileTests",
+            dependencies: ["EssentialFeedMobile"],
         ),
     ],
 )

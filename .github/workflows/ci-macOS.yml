@@ -1,0 +1,39 @@
+name: ci-macOS
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: macos-26
+    timeout-minutes: 10
+
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v6
+
+      - name: Setup Xcode
+        run: |
+          sudo xcode-select -switch /Applications/Xcode_26.2.app
+          /usr/bin/xcodebuild -version
+
+      - name: Build and test
+        run: |
+          set -o pipefail
+          xcodebuild clean build test \
+            -scheme "CI-macOS" \
+            -sdk macosx \
+            -destination "platform=macOS" \
+            -enableThreadSanitizer YES \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            ONLY_ACTIVE_ARCH=YES | xcbeautify --disable-logging --renderer github-actions --quieter --is-ci

@@ -1,0 +1,61 @@
+{
+  "configurations": [
+    {
+      "id": "FEC35CAC-E903-44B6-9C87-FFF733A17E98",
+      "name": "Configuration 1",
+      "options": {}
+    }
+  ],
+  "defaultOptions": {
+    "codeCoverage": {
+      "targets": [
+        {
+          "containerPath": "container:",
+          "identifier": "EssentialFeed",
+          "name": "EssentialFeed"
+        },
+        {
+          "containerPath": "container:",
+          "identifier": "EssentialFeedMobile",
+          "name": "EssentialFeedMobile"
+        }
+      ]
+    },
+    "testExecutionOrdering": "random"
+  },
+  "testTargets": [
+    {
+      "parallelizable": false,
+      "target": {
+        "containerPath": "container:",
+        "identifier": "EssentialFeedTests",
+        "name": "EssentialFeedTests"
+      }
+    },
+    {
+      "parallelizable": false,
+      "target": {
+        "containerPath": "container:",
+        "identifier": "EssentialFeedCacheIntegrationTests",
+        "name": "EssentialFeedCacheIntegrationTests"
+      }
+    },
+    {
+      "parallelizable": false,
+      "target": {
+        "containerPath": "container:",
+        "identifier": "EssentialFeedAPIEndToEndTests",
+        "name": "EssentialFeedAPIEndToEndTests"
+      }
+    },
+    {
+      "parallelizable": false,
+      "target": {
+        "containerPath": "container:",
+        "identifier": "EssentialFeedMobileTests",
+        "name": "EssentialFeedMobileTests"
+      }
+    }
+  ],
+  "version": 1
+}

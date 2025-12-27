@@ -1,0 +1,23 @@
+{
+  "configurations": [
+    {
+      "id": "359F40D6-E2CE-43DF-BCD0-F850DADA6000",
+      "name": "Test Scheme Action",
+      "options": {}
+    }
+  ],
+  "defaultOptions": {
+    "performanceAntipatternCheckerEnabled": true
+  },
+  "testTargets": [
+    {
+      "parallelizable": false,
+      "target": {
+        "containerPath": "container:",
+        "identifier": "EssentialFeedAPIEndToEndTests",
+        "name": "EssentialFeedAPIEndToEndTests"
+      }
+    }
+  ],
+  "version": 1
+}

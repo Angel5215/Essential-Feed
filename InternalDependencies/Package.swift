@@ -4,13 +4,21 @@
 import PackageDescription
 
 let package = Package(
-    name: "EssentialFeed",
+    name: "InternalDependencies",
+    platforms: [
+        .macOS(.v26),
+        .iOS(.v26),
+    ],
     products: [
         .singleTargetLibrary(named: "EssentialFeed"),
+        .singleTargetLibrary(named: "EssentialFeedMobile"),
     ],
     targets: [
         .target(
             name: "EssentialFeed",
+        ),
+        .target(
+            name: "EssentialFeedMobile",
         ),
         .testTarget(
             name: "EssentialFeedTests",
@@ -23,6 +31,10 @@ let package = Package(
         .testTarget(
             name: "EssentialFeedCacheIntegrationTests",
             dependencies: ["EssentialFeed"],
+        ),
+        .testTarget(
+            name: "EssentialFeedMobileTests",
+            dependencies: ["EssentialFeedMobile"],
         ),
     ],
 )

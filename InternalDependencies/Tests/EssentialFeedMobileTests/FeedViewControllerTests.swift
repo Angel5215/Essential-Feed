@@ -3,18 +3,19 @@
 // Copyright © 2025 Ángel Vázquez. All rights reserved.
 //
 
+import EssentialFeed
 import EssentialFeedMobile
 import UIKit
 import XCTest
 
 final class FeedViewController: UIViewController {
-    private var loader: FeedViewControllerTests.LoaderSpy?
+    private var loader: FeedLoader?
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
 
-    convenience init(loader: FeedViewControllerTests.LoaderSpy) {
+    convenience init(loader: FeedLoader?) {
         self.init(nibName: nil, bundle: nil)
         self.loader = loader
     }
@@ -27,7 +28,7 @@ final class FeedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        loader?.load()
+        loader?.load { _ in }
     }
 }
 
@@ -51,10 +52,10 @@ final class FeedViewControllerTests: XCTestCase {
 
     // MARK: - Helpers
 
-    final class LoaderSpy {
+    final class LoaderSpy: FeedLoader {
         private(set) var loadCallCount = 0
 
-        func load() {
+        func load(completion: @escaping (FeedLoader.Result) -> Void) {
             loadCallCount += 1
         }
     }

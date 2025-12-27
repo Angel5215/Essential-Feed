@@ -14,7 +14,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:Test Plans/EssentialFeedAPIEndToEndTests.xctestplan"
+            reference = "container:../Configuration/TestPlans/CI-macOS.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

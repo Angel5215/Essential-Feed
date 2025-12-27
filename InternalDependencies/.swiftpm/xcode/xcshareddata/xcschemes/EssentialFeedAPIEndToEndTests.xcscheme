@@ -14,19 +14,18 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:Test Plans/EssentialFeedCacheIntegrationTests.xctestplan"
+            reference = "container:../Configuration/TestPlans/EssentialFeedAPIEndToEndTests.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
       <Testables>
          <TestableReference
-            skipped = "NO"
-            parallelizable = "NO">
+            skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EssentialFeedCacheIntegrationTests"
-               BuildableName = "EssentialFeedCacheIntegrationTests"
-               BlueprintName = "EssentialFeedCacheIntegrationTests"
+               BlueprintIdentifier = "EssentialFeedAPIEndToEndTests"
+               BuildableName = "EssentialFeedAPIEndToEndTests"
+               BlueprintName = "EssentialFeedAPIEndToEndTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

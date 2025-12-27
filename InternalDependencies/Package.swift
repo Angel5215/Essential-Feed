@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "EssentialFeed",
+    name: "InternalDependencies",
     platforms: [
         .macOS(.v26),
         .iOS(.v26),

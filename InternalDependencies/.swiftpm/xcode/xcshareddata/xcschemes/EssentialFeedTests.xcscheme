@@ -6,22 +6,6 @@
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES"
       buildArchitectures = "Automatic">
-      <BuildActionEntries>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EssentialFeed"
-               BuildableName = "EssentialFeed"
-               BlueprintName = "EssentialFeed"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </BuildActionEntry>
-      </BuildActionEntries>
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
@@ -30,7 +14,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:Test Plans/EssentialFeed.xctestplan"
+            reference = "container:../Configuration/TestPlans/EssentialFeed.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -39,19 +23,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EssentialFeedAPIEndToEndTests"
-               BuildableName = "EssentialFeedAPIEndToEndTests"
-               BlueprintName = "EssentialFeedAPIEndToEndTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EssentialFeedCacheIntegrationTests"
-               BuildableName = "EssentialFeedCacheIntegrationTests"
-               BlueprintName = "EssentialFeedCacheIntegrationTests"
+               BlueprintIdentifier = "EssentialFeedTests"
+               BuildableName = "EssentialFeedTests"
+               BlueprintName = "EssentialFeedTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
@@ -74,15 +48,6 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "EssentialFeed"
-            BuildableName = "EssentialFeed"
-            BlueprintName = "EssentialFeed"
-            ReferencedContainer = "container:">
-         </BuildableReference>
-      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

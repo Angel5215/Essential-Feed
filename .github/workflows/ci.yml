@@ -30,7 +30,7 @@ jobs:
         run: |
           set -o pipefail
           xcodebuild clean build test \
-            -scheme "CI" \
+            -scheme "CI-macOS" \
             -sdk macosx \
             -destination "platform=macOS" \
             -enableThreadSanitizer YES \

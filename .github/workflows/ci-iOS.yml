@@ -1,4 +1,4 @@
-name: ci
+name: ci-iOS
 
 on:
   pull_request:
@@ -30,9 +30,9 @@ jobs:
         run: |
           set -o pipefail
           xcodebuild clean build test \
-            -scheme "CI-macOS" \
-            -sdk macosx \
-            -destination "platform=macOS" \
+            -scheme "CI-iOS" \
+            -sdk iphonesimulator \
+            -destination "platform=iOS Simulator,OS=26.2,name=iPhone 17" \
             -enableThreadSanitizer YES \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \

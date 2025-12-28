@@ -1,0 +1,102 @@
+//
+// FeedViewController+TestHelpers.swift
+// Copyright © 2025 Ángel Vázquez. All rights reserved.
+//
+
+import EssentialFeedMobile
+import UIKit
+
+extension FeedViewController {
+    private var feedImagesSection: Int {
+        0
+    }
+
+    var isShowingLoadingIndicator: Bool {
+        refreshControl?.isRefreshing == true
+    }
+
+    func simulateAppearance() {
+        if !isViewLoaded {
+            loadViewIfNeeded()
+            prepareForFirstAppearance()
+        }
+
+        beginAppearanceTransition(true, animated: false)
+        endAppearanceTransition()
+    }
+
+    func simulateUserInitiatedFeedReload() {
+        refreshControl?.simulatePullToRefresh()
+    }
+
+    func numberOfRenderedFeedImageViews() -> Int {
+        tableView.numberOfRows(inSection: feedImagesSection)
+    }
+
+    func feedImageView(at row: Int) -> UITableViewCell? {
+        let dataSource = tableView.dataSource
+        let index = IndexPath(row: row, section: feedImagesSection)
+        return dataSource?.tableView(tableView, cellForRowAt: index)
+    }
+
+    @discardableResult
+    func simulateFeedImageViewVisible(at index: Int) -> FeedImageCell? {
+        feedImageView(at: index) as? FeedImageCell
+    }
+
+    func simulateFeedImageViewNotVisible(at index: Int) {
+        let view = simulateFeedImageViewVisible(at: index)
+
+        let delegate = tableView.delegate
+        let index = IndexPath(row: index, section: feedImagesSection)
+        delegate?.tableView?(tableView, didEndDisplaying: view!, forRowAt: index)
+    }
+
+    func simulateFeedImageViewNearVisible(at row: Int) {
+        let dataSource = tableView.prefetchDataSource
+        let index = IndexPath(row: row, section: feedImagesSection)
+        dataSource?.tableView(tableView, prefetchRowsAt: [index])
+    }
+
+    func simulateFeedImageViewNotNearVisible(at row: Int) {
+        simulateFeedImageViewNearVisible(at: row)
+
+        let dataSource = tableView.prefetchDataSource
+        let index = IndexPath(row: row, section: feedImagesSection)
+        dataSource?.tableView?(tableView, cancelPrefetchingForRowsAt: [index])
+    }
+
+    // MARK: - Helpers
+
+    private func prepareForFirstAppearance() {
+        replaceRefreshControlWithFakeForiOS17OrLaterSupport()
+    }
+
+    private func replaceRefreshControlWithFakeForiOS17OrLaterSupport() {
+        let fakeRefreshControl = FakeUIRefreshControl()
+
+        refreshControl?.allTargets.forEach { target in
+            refreshControl?.actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
+                fakeRefreshControl.addTarget(target, action: Selector(action), for: .valueChanged)
+            }
+        }
+
+        refreshControl = fakeRefreshControl
+    }
+
+    private final class FakeUIRefreshControl: UIRefreshControl {
+        private var _isRefreshing = false
+
+        override var isRefreshing: Bool {
+            _isRefreshing
+        }
+
+        override func beginRefreshing() {
+            _isRefreshing = true
+        }
+
+        override func endRefreshing() {
+            _isRefreshing = false
+        }
+    }
+}

@@ -7,10 +7,15 @@ import EssentialFeed
 import UIKit
 
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
-    private var feedLoader: FeedLoader?
+    public private(set) var refreshController: FeedRefreshViewController?
     private var imageLoader: FeedImageDataLoader?
     private var onViewIsAppearing: ((FeedViewController) -> Void)?
-    private var tableModel = [FeedImage]()
+    private var tableModel = [FeedImage]() {
+        didSet {
+            tableView.reloadData()
+        }
+    }
+
     private var tasks = [IndexPath: FeedImageDataLoaderTask]()
 
     override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -19,7 +24,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
 
     public convenience init(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) {
         self.init(nibName: nil, bundle: nil)
-        self.feedLoader = feedLoader
+        self.refreshController = FeedRefreshViewController(feedLoader: feedLoader)
         self.imageLoader = imageLoader
     }
 
@@ -31,14 +36,16 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
+        refreshControl = refreshController?.view
+        refreshController?.onRefresh = { [weak self] feed in
+            self?.tableModel = feed
+        }
 
         tableView.prefetchDataSource = self
 
         onViewIsAppearing = { vc in
             vc.onViewIsAppearing = nil
-            vc.load()
+            vc.refreshController?.refresh()
         }
     }
 
@@ -94,17 +101,6 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     }
 
     // MARK: - Helpers
-
-    @objc private func load() {
-        refreshControl?.beginRefreshing()
-        feedLoader?.load { [weak self] result in
-            if let feed = try? result.get() {
-                self?.tableModel = feed
-                self?.tableView.reloadData()
-            }
-            self?.refreshControl?.endRefreshing()
-        }
-    }
 
     private func cancelTask(forRowAt indexPath: IndexPath) {
         tasks[indexPath]?.cancel()

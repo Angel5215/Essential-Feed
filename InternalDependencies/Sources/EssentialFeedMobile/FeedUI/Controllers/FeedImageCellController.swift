@@ -8,7 +8,7 @@ import UIKit
 
 @MainActor
 final class FeedImageCellController {
-    private nonisolated(unsafe) var task: FeedImageDataLoaderTask?
+    private var task: FeedImageDataLoaderTask?
 
     let model: FeedImage
     let imageLoader: FeedImageDataLoader
@@ -48,7 +48,7 @@ final class FeedImageCellController {
         task = imageLoader.loadImageData(from: model.url) { _ in }
     }
 
-    deinit {
+    func cancelLoad() {
         task?.cancel()
     }
 }

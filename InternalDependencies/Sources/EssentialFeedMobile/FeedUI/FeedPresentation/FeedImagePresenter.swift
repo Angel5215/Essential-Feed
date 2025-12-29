@@ -6,23 +6,6 @@
 import EssentialFeed
 import Foundation
 
-struct FeedImageViewModel<Image> {
-    let description: String?
-    let location: String?
-    let image: Image?
-    let isLoading: Bool
-    let shouldRetry: Bool
-
-    var hasLocation: Bool {
-        location != nil
-    }
-}
-
-protocol FeedImageView {
-    associatedtype Image
-    func display(_ model: FeedImageViewModel<Image>)
-}
-
 final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == Image {
     private let view: View
     private let imageTransformer: (Data) -> Image?
@@ -72,5 +55,24 @@ final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == I
                 shouldRetry: true,
             ),
         )
+    }
+}
+
+// MARK: - Views
+
+protocol FeedImageView {
+    associatedtype Image
+    func display(_ model: FeedImageViewModel<Image>)
+}
+
+struct FeedImageViewModel<Image> {
+    let description: String?
+    let location: String?
+    let image: Image?
+    let isLoading: Bool
+    let shouldRetry: Bool
+
+    var hasLocation: Bool {
+        location != nil
     }
 }

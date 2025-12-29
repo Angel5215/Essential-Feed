@@ -5,22 +5,6 @@
 
 import EssentialFeed
 
-struct FeedLoadingViewModel {
-    let isLoading: Bool
-}
-
-protocol FeedLoadingView {
-    func display(_ viewModel: FeedLoadingViewModel)
-}
-
-struct FeedViewModel {
-    let feed: [FeedImage]
-}
-
-protocol FeedView {
-    func display(_ viewModel: FeedViewModel)
-}
-
 final class FeedPresenter {
     let feedView: FeedView
     let loadingView: FeedLoadingView
@@ -42,4 +26,14 @@ final class FeedPresenter {
     func didFinishLoadingFeed(with error: Error) {
         loadingView.display(FeedLoadingViewModel(isLoading: false))
     }
+}
+
+// MARK: - Views
+
+protocol FeedLoadingView {
+    func display(_ viewModel: FeedLoadingViewModel)
+}
+
+protocol FeedView {
+    func display(_ viewModel: FeedViewModel)
 }

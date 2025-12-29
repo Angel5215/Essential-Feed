@@ -16,12 +16,8 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
         }
     }
 
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-    }
-
-    convenience init(refreshController: FeedRefreshViewController) {
-        self.init(nibName: nil, bundle: nil)
+    init(refreshController: FeedRefreshViewController) {
+        super.init(nibName: nil, bundle: nil)
         self.refreshController = refreshController
     }
 

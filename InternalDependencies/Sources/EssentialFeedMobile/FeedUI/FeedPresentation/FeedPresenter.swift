@@ -33,10 +33,6 @@ final class FeedPresenter {
     }
 }
 
-extension FeedPresenter {
-    static var bundle: Bundle { .module }
-}
-
 // MARK: - Views
 
 protocol FeedLoadingView {

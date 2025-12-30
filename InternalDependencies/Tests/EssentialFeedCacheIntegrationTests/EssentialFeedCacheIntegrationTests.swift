@@ -53,7 +53,7 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> LocalFeedLoader {
-        let storeBundle = CoreDataFeedStore.bundle
+        let storeBundle = EssentialFeed.bundle
         let storeURL = testSpecificStoreURL()
         let store = try! CoreDataFeedStore(storeURL: storeURL, bundle: storeBundle)
         let sut = LocalFeedLoader(store: store, currentDate: Date.init)

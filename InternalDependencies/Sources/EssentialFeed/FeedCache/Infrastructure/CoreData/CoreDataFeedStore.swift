@@ -6,6 +6,10 @@
 import CoreData
 import Foundation
 
+public enum EssentialFeed {
+    public static var bundle: Bundle { .module }
+}
+
 public final class CoreDataFeedStore: FeedStore {
     private let container: NSPersistentContainer
     private let context: NSManagedObjectContext

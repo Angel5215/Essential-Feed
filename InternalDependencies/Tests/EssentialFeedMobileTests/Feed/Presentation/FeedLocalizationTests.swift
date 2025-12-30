@@ -9,7 +9,7 @@ import XCTest
 final class FeedLocalizationTests: XCTestCase {
     func test_localizedStrings_haveKeysAndValuesForAllSupportedLocalizations() {
         let table = "Feed"
-        let presentationBundle = FeedPresenter.bundle
+        let presentationBundle = EssentialFeedMobile.bundle
         let localizationBundles = allLocalizationBundles(in: presentationBundle)
         let localizedStringKeys = allLocalizedStringKeys(in: localizationBundles, table: table)
 

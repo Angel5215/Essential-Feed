@@ -6,6 +6,10 @@
 import EssentialFeed
 import UIKit
 
+public enum EssentialFeedMobile {
+    public static var bundle: Bundle { .module }
+}
+
 @MainActor
 public enum FeedUIComposer {
     public static func feedComposedWith(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {
@@ -19,13 +23,9 @@ public enum FeedUIComposer {
     }
 }
 
-public extension FeedViewController {
-    static var bundle: Bundle { .module }
-}
-
 private extension FeedViewController {
     static func makeWith(delegate: FeedViewControllerDelegate, title: String) -> FeedViewController {
-        let storyboard = UIStoryboard(name: "Feed", bundle: FeedViewController.bundle)
+        let storyboard = UIStoryboard(name: "Feed", bundle: EssentialFeedMobile.bundle)
         let feedController = storyboard.instantiateInitialViewController() as! FeedViewController
         feedController.delegate = delegate
         feedController.title = title

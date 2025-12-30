@@ -31,37 +31,6 @@ private extension FeedViewController {
     }
 }
 
-private final class MainQueueDispatchDecorator<Value> {
-    private let value: Value
-
-    init(value: Value) {
-        self.value = value
-    }
-
-    func dispatch(action: @escaping () -> Void) {
-        guard Thread.isMainThread else {
-            return DispatchQueue.main.async(execute: action)
-        }
-        action()
-    }
-}
-
-extension MainQueueDispatchDecorator: FeedLoader where Value == FeedLoader {
-    func load(completion: @escaping (FeedLoader.Result) -> Void) {
-        value.load { [weak self] result in
-            self?.dispatch { completion(result) }
-        }
-    }
-}
-
-extension MainQueueDispatchDecorator: FeedImageDataLoader where Value == FeedImageDataLoader {
-    func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> any FeedImageDataLoaderTask {
-        value.loadImageData(from: url) { [weak self] result in
-            self?.dispatch { completion(result) }
-        }
-    }
-}
-
 private final class WeakReferenceVirtualProxy<Object: AnyObject> {
     private weak var object: Object?
 

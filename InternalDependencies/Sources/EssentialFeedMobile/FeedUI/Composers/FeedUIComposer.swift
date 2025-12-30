@@ -11,7 +11,10 @@ public enum FeedUIComposer {
         let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: MainQueueDispatchDecorator(value: feedLoader))
         let feedController = FeedViewController.makeWith(delegate: presentationAdapter, title: FeedPresenter.title)
         presentationAdapter.presenter = FeedPresenter(
-            feedView: FeedViewAdapter(controller: feedController, imageLoader: imageLoader),
+            feedView: FeedViewAdapter(
+                controller: feedController,
+                imageLoader: MainQueueDispatchDecorator(value: imageLoader),
+            ),
             loadingView: WeakReferenceVirtualProxy(feedController),
         )
         return feedController
@@ -46,6 +49,14 @@ private final class MainQueueDispatchDecorator<Value> {
 extension MainQueueDispatchDecorator: FeedLoader where Value == FeedLoader {
     func load(completion: @escaping (FeedLoader.Result) -> Void) {
         value.load { [weak self] result in
+            self?.dispatch { completion(result) }
+        }
+    }
+}
+
+extension MainQueueDispatchDecorator: FeedImageDataLoader where Value == FeedImageDataLoader {
+    func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> any FeedImageDataLoaderTask {
+        value.loadImageData(from: url) { [weak self] result in
             self?.dispatch { completion(result) }
         }
     }

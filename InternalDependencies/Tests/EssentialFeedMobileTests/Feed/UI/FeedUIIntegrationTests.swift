@@ -85,6 +85,8 @@ final class FeedUIIntegrationTests: XCTestCase {
         assertThat(sut, isRendering: [image0])
     }
 
+    // MARK: - Concurrency
+
     func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
         let image = makeImage()
         let (sut, loader) = makeSUT()
@@ -93,6 +95,20 @@ final class FeedUIIntegrationTests: XCTestCase {
         let exp = expectation(description: "Wait for background queue")
         DispatchQueue.global().async {
             loader.completeFeedLoading(with: [image], at: 0)
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1)
+    }
+
+    func test_loadImageDataCompletion_dispatchesBackgroundToMainThread() {
+        let (sut, loader) = makeSUT()
+        sut.simulateAppearance()
+        loader.completeFeedLoading(with: [makeImage()], at: 0)
+        _ = sut.simulateFeedImageViewVisible(at: 0)
+
+        let exp = expectation(description: "Wait for background queue work")
+        DispatchQueue.global().async {
+            loader.completeImageLoading(with: self.anyImageData(), at: 0)
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1)

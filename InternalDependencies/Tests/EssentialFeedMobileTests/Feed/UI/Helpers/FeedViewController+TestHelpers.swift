@@ -16,7 +16,7 @@ extension FeedViewController {
     }
 
     var errorMessage: String? {
-        errorView.message
+        errorView?.message
     }
 
     func simulateAppearance() {

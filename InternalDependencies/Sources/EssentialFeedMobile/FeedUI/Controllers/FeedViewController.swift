@@ -17,7 +17,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     private var onViewIsAppearing: ((FeedViewController) -> Void)?
 
     var delegate: FeedViewControllerDelegate?
-    public let errorView = ErrorView()
+    @IBOutlet public private(set) var errorView: ErrorView?
 
     var tableModel = [FeedImageCellController]() {
         didSet {
@@ -87,6 +87,6 @@ extension FeedViewController: FeedLoadingView {
 
 extension FeedViewController: FeedErrorView {
     func display(_ viewModel: FeedErrorViewModel) {
-        errorView.message = viewModel.message
+        errorView?.message = viewModel.message
     }
 }

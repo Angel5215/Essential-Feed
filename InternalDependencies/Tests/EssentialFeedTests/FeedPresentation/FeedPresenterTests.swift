@@ -6,10 +6,26 @@
 import XCTest
 
 final class FeedPresenter {
-    let view: FeedPresenterTests.ViewSpy
+    let errorView: FeedErrorView
 
-    init(view: FeedPresenterTests.ViewSpy) {
-        self.view = view
+    init(errorView: FeedErrorView) {
+        self.errorView = errorView
+    }
+
+    func didStartLoadingFeed() {
+        errorView.display(.noError)
+    }
+}
+
+protocol FeedErrorView {
+    func display(_ viewModel: FeedErrorViewModel)
+}
+
+struct FeedErrorViewModel {
+    let message: String?
+
+    static var noError: FeedErrorViewModel {
+        FeedErrorViewModel(message: nil)
     }
 }
 
@@ -20,17 +36,33 @@ final class FeedPresenterTests: XCTestCase {
         XCTAssertTrue(view.messages.isEmpty, "Expected no view messages")
     }
 
+    func test_didStartLoadingFeed_displaysNoErrorMessage() {
+        let (sut, view) = makeSUT()
+
+        sut.didStartLoadingFeed()
+
+        XCTAssertEqual(view.messages, [.display(errorMessage: nil)])
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (FeedPresenter, ViewSpy) {
         let view = ViewSpy()
-        let sut = FeedPresenter(view: view)
+        let sut = FeedPresenter(errorView: view)
         trackForMemoryLeaks(view, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, view)
     }
 
-    final class ViewSpy {
-        let messages = [Any]()
+    final class ViewSpy: FeedErrorView {
+        enum Message: Equatable {
+            case display(errorMessage: String?)
+        }
+
+        private(set) var messages = [Message]()
+
+        func display(_ viewModel: FeedErrorViewModel) {
+            messages.append(.display(errorMessage: viewModel.message))
+        }
     }
 }

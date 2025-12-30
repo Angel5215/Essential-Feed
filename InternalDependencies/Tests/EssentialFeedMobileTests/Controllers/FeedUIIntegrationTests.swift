@@ -1,5 +1,5 @@
 //
-// FeedViewControllerTests.swift
+// FeedUIIntegrationTests.swift
 // Copyright © 2025 Ángel Vázquez. All rights reserved.
 //
 
@@ -8,7 +8,7 @@ import EssentialFeedMobile
 import XCTest
 
 @MainActor
-final class FeedViewControllerTests: XCTestCase {
+final class FeedUIIntegrationTests: XCTestCase {
     // MARK: - Localization
 
     func test_feedView_hasTitle() {

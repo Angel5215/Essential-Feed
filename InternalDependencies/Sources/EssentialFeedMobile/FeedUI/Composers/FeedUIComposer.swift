@@ -31,29 +31,6 @@ private extension FeedViewController {
     }
 }
 
-private final class FeedViewAdapter: FeedView {
-    private weak var controller: FeedViewController?
-    private let imageLoader: FeedImageDataLoader
-
-    init(controller: FeedViewController? = nil, imageLoader: FeedImageDataLoader) {
-        self.controller = controller
-        self.imageLoader = imageLoader
-    }
-
-    func display(_ viewModel: FeedViewModel) {
-        typealias ImagePresentationAdapter = FeedImageDataLoaderPresentationAdapter<WeakReferenceVirtualProxy<FeedImageCellController>, UIImage>
-        controller?.tableModel = viewModel.feed.map { model in
-            let adapter = ImagePresentationAdapter(model: model, imageLoader: imageLoader)
-            let view = FeedImageCellController(delegate: adapter)
-            adapter.presenter = FeedImagePresenter(
-                view: WeakReferenceVirtualProxy(view),
-                imageTransformer: UIImage.init,
-            )
-            return view
-        }
-    }
-}
-
 private final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
     private let feedLoader: FeedLoader
     var presenter: FeedPresenter?
@@ -75,7 +52,7 @@ private final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
     }
 }
 
-private final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: FeedImageCellControllerDelegate where View.Image == Image {
+final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: FeedImageCellControllerDelegate where View.Image == Image {
     private let model: FeedImage
     private let imageLoader: FeedImageDataLoader
     private var task: FeedImageDataLoaderTask?

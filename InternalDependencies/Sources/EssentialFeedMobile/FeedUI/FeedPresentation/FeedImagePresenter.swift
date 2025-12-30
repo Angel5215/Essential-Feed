@@ -64,15 +64,3 @@ protocol FeedImageView {
     associatedtype Image
     func display(_ model: FeedImageViewModel<Image>)
 }
-
-struct FeedImageViewModel<Image> {
-    let description: String?
-    let location: String?
-    let image: Image?
-    let isLoading: Bool
-    let shouldRetry: Bool
-
-    var hasLocation: Bool {
-        location != nil
-    }
-}

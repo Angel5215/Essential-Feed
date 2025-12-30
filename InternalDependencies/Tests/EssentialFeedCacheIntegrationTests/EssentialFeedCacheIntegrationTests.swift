@@ -6,7 +6,6 @@
 @_spi(Bundle) import EssentialFeed
 import XCTest
 
-@MainActor
 final class EssentialFeedCacheIntegrationTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -100,23 +99,23 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
 
-    private nonisolated func testSpecificStoreURL() -> URL {
+    private func testSpecificStoreURL() -> URL {
         cachesDirectory().appending(path: "\(type(of: self)).store")
     }
 
-    private nonisolated func cachesDirectory() -> URL {
+    private func cachesDirectory() -> URL {
         FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
     }
 
-    private nonisolated func setupEmptyStoreState() {
+    private func setupEmptyStoreState() {
         deleteStoreArtifacts()
     }
 
-    private nonisolated func undoStoreSideEffects() {
+    private func undoStoreSideEffects() {
         deleteStoreArtifacts()
     }
 
-    private nonisolated func deleteStoreArtifacts() {
+    private func deleteStoreArtifacts() {
         try? FileManager.default.removeItem(at: testSpecificStoreURL())
     }
 }

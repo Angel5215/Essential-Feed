@@ -3,7 +3,6 @@
 // Copyright © 2025 Ángel Vázquez. All rights reserved.
 //
 
-@MainActor
 protocol FeedStoreSpecs {
     func test_retrieve_deliversEmptyOnEmptyCache()
     func test_retrieve_hasNoSideEffectsOnEmptyCache()

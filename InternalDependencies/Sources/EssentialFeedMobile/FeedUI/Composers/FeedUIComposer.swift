@@ -6,7 +6,6 @@
 import EssentialFeed
 import UIKit
 
-@MainActor
 public enum FeedUIComposer {
     public static func feedComposedWith(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {
         let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader)
@@ -49,8 +48,7 @@ extension WeakReferenceVirtualProxy: FeedImageView where Object: FeedImageView, 
     }
 }
 
-@MainActor
-private final class FeedViewAdapter: @preconcurrency FeedView {
+private final class FeedViewAdapter: FeedView {
     private weak var controller: FeedViewController?
     private let imageLoader: FeedImageDataLoader
 

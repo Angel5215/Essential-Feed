@@ -10,8 +10,7 @@ protocol FeedImageCellControllerDelegate {
     func didCancelImageRequest()
 }
 
-@MainActor
-final class FeedImageCellController: @preconcurrency FeedImageView {
+final class FeedImageCellController: FeedImageView {
     private let delegate: FeedImageCellControllerDelegate
     private var cell: FeedImageCell?
 

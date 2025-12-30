@@ -7,7 +7,6 @@ import EssentialFeed
 import EssentialFeedMobile
 import XCTest
 
-@MainActor
 final class FeedUIIntegrationTests: XCTestCase {
     // MARK: - Localization
 
@@ -84,6 +83,19 @@ final class FeedUIIntegrationTests: XCTestCase {
         sut.simulateUserInitiatedFeedReload()
         loader.completeFeedLoadingWithError(at: 1)
         assertThat(sut, isRendering: [image0])
+    }
+
+    func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
+        let image = makeImage()
+        let (sut, loader) = makeSUT()
+        sut.simulateAppearance()
+
+        let exp = expectation(description: "Wait for background queue")
+        DispatchQueue.global().async {
+            loader.completeFeedLoading(with: [image], at: 0)
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1)
     }
 
     // MARK: - Feed Image View

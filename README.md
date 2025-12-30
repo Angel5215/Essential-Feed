@@ -19,12 +19,12 @@ Repository created to keep track of the iOS Lead Essentials training program. Th
 - [API model][api-model]
 
 <!-- Start Link section -->
-[bdd-specs]: Docs/image-feed-feature-story.md
-[api-model]: Docs/image-feed-feature-api-model.md
-[load-feed-from-remote-use-case]: Docs/image-feed-feature-load-feed-from-remote-use-case.md
-[load-feed-from-cache-use-case]: Docs/image-feed-feature-load-feed-from-cache-use-case.md
-[cache-feed-use-case]: Docs/image-feed-feature-cache-feed-use-case.md
-[validate-feed-cache-use-case]: Docs/image-feed-feature-validate-feed-cache-use-case.md
+[bdd-specs]: Docs/image-feed-feature/user-story.md
+[api-model]: Docs/image-feed-feature/api-model.md
+[load-feed-from-remote-use-case]: Docs/image-feed-feature/load-feed-from-remote-use-case.md
+[load-feed-from-cache-use-case]: Docs/image-feed-feature/load-feed-from-cache-use-case.md
+[cache-feed-use-case]: Docs/image-feed-feature/cache-feed-use-case.md
+[validate-feed-cache-use-case]: Docs/image-feed-feature/validate-feed-cache-use-case.md
 <!-- End Link section -->
 
 ## Architecture

@@ -3,11 +3,18 @@
 // Copyright © 2025 Ángel Vázquez. All rights reserved.
 //
 
+import EssentialFeed
 import UIKit
 
+protocol FeedViewControllerDelegate {
+    func didRequestFeedRefresh()
+}
+
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
-    public private(set) var refreshController: FeedRefreshViewController?
     private var onViewIsAppearing: ((FeedViewController) -> Void)?
+
+    var delegate: FeedViewControllerDelegate?
+    @IBOutlet public private(set) var errorView: ErrorView?
 
     var tableModel = [FeedImageCellController]() {
         didSet {
@@ -15,26 +22,16 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
         }
     }
 
-    init(refreshController: FeedRefreshViewController) {
-        super.init(nibName: nil, bundle: nil)
-        self.refreshController = refreshController
-    }
-
-    @available(*, unavailable)
-    public required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
     override public func viewDidLoad() {
         super.viewDidLoad()
-
-        refreshControl = refreshController?.view
-        tableView.prefetchDataSource = self
-
         onViewIsAppearing = { vc in
             vc.onViewIsAppearing = nil
-            vc.refreshController?.refresh()
+            vc.refresh()
         }
+    }
+
+    @IBAction private func refresh() {
+        delegate?.didRequestFeedRefresh()
     }
 
     override public func viewIsAppearing(_ animated: Bool) {
@@ -47,7 +44,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     }
 
     override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        cellController(forRowAt: indexPath).view()
+        cellController(forRowAt: indexPath).view(in: tableView)
     }
 
     override public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -72,5 +69,17 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
 
     private func cancelCellControllerLoad(forRowAt indexPath: IndexPath) {
         cellController(forRowAt: indexPath).cancelLoad()
+    }
+}
+
+extension FeedViewController: FeedLoadingView {
+    public func display(_ viewModel: FeedLoadingViewModel) {
+        refreshControl?.update(isRefreshing: viewModel.isLoading)
+    }
+}
+
+extension FeedViewController: FeedErrorView {
+    public func display(_ viewModel: FeedErrorViewModel) {
+        errorView?.message = viewModel.message
     }
 }

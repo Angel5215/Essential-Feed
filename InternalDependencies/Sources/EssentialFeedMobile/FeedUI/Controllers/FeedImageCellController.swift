@@ -3,6 +3,7 @@
 // Copyright © 2025 Ángel Vázquez. All rights reserved.
 //
 
+import EssentialFeed
 import UIKit
 
 protocol FeedImageCellControllerDelegate {
@@ -10,18 +11,18 @@ protocol FeedImageCellControllerDelegate {
     func didCancelImageRequest()
 }
 
-@MainActor
-final class FeedImageCellController: @preconcurrency FeedImageView {
+final class FeedImageCellController: FeedImageView {
     private let delegate: FeedImageCellControllerDelegate
-    private lazy var cell = FeedImageCell()
+    private var cell: FeedImageCell?
 
     init(delegate: FeedImageCellControllerDelegate) {
         self.delegate = delegate
     }
 
-    func view() -> UITableViewCell {
+    func view(in tableView: UITableView) -> UITableViewCell {
+        cell = tableView.dequeueReusableCell()
         delegate.didRequestImage()
-        return cell
+        return cell!
     }
 
     func preload() {
@@ -29,16 +30,21 @@ final class FeedImageCellController: @preconcurrency FeedImageView {
     }
 
     func cancelLoad() {
+        releaseCellForReuse()
         delegate.didCancelImageRequest()
     }
 
     func display(_ model: FeedImageViewModel<UIImage>) {
-        cell.locationContainer.isHidden = !model.hasLocation
-        cell.locationLabel.text = model.location
-        cell.descriptionLabel.text = model.description
-        cell.feedImageView.image = model.image
-        cell.feedImageContainer.isShimmering = model.isLoading
-        cell.feedImageRetryButton.isHidden = !model.shouldRetry
-        cell.onRetry = delegate.didRequestImage
+        cell?.locationContainer.isHidden = !model.hasLocation
+        cell?.locationLabel.text = model.location
+        cell?.descriptionLabel.text = model.description
+        cell?.feedImageView.setImageAnimated(model.image)
+        cell?.feedImageContainer.isShimmering = model.isLoading
+        cell?.feedImageRetryButton.isHidden = !model.shouldRetry
+        cell?.onRetry = delegate.didRequestImage
+    }
+
+    private func releaseCellForReuse() {
+        cell = nil
     }
 }

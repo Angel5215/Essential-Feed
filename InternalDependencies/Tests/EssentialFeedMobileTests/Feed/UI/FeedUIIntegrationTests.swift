@@ -1,5 +1,5 @@
 //
-// FeedViewControllerTests.swift
+// FeedUIIntegrationTests.swift
 // Copyright © 2025 Ángel Vázquez. All rights reserved.
 //
 
@@ -7,8 +7,17 @@ import EssentialFeed
 import EssentialFeedMobile
 import XCTest
 
-@MainActor
-final class FeedViewControllerTests: XCTestCase {
+final class FeedUIIntegrationTests: XCTestCase {
+    // MARK: - Localization
+
+    func test_feedView_hasTitle() {
+        let (sut, _) = makeSUT()
+
+        sut.simulateAppearance()
+
+        XCTAssertEqual(sut.title, localized("FEED_VIEW_TITLE"))
+    }
+
     // MARK: - Load Feed Actions
 
     func test_loadFeedActions_requestFeedFromLoader() {
@@ -74,6 +83,48 @@ final class FeedViewControllerTests: XCTestCase {
         sut.simulateUserInitiatedFeedReload()
         loader.completeFeedLoadingWithError(at: 1)
         assertThat(sut, isRendering: [image0])
+    }
+
+    func test_loadFeedCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+        let (sut, loader) = makeSUT()
+
+        sut.simulateAppearance()
+        XCTAssertNil(sut.errorMessage)
+
+        loader.completeFeedLoadingWithError(at: 0)
+        XCTAssertEqual(sut.errorMessage, localized("FEED_VIEW_CONNECTION_ERROR"))
+
+        sut.simulateUserInitiatedFeedReload()
+        XCTAssertNil(sut.errorMessage)
+    }
+
+    // MARK: - Concurrency
+
+    func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
+        let image = makeImage()
+        let (sut, loader) = makeSUT()
+        sut.simulateAppearance()
+
+        let exp = expectation(description: "Wait for background queue")
+        DispatchQueue.global().async {
+            loader.completeFeedLoading(with: [image], at: 0)
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1)
+    }
+
+    func test_loadImageDataCompletion_dispatchesBackgroundToMainThread() {
+        let (sut, loader) = makeSUT()
+        sut.simulateAppearance()
+        loader.completeFeedLoading(with: [makeImage()], at: 0)
+        _ = sut.simulateFeedImageViewVisible(at: 0)
+
+        let exp = expectation(description: "Wait for background queue work")
+        DispatchQueue.global().async {
+            loader.completeImageLoading(with: self.anyImageData(), at: 0)
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1)
     }
 
     // MARK: - Feed Image View
@@ -244,6 +295,17 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.cancelledImageURLs, [image0.url, image1.url], "Expected second cancelled image URL request once second image is not near visible anymore")
     }
 
+    func test_feedImageView_doesNotRenderLoadedImageWhenNotVisibleAnymore() {
+        let (sut, loader) = makeSUT()
+        sut.simulateAppearance()
+        loader.completeFeedLoading(with: [makeImage()])
+
+        let view = sut.simulateFeedImageViewNotVisible(at: 0)
+        loader.completeImageLoading(with: anyImageData(), at: 0)
+
+        XCTAssertNil(view?.renderedImage, "Expected no rendered image when an image load finishes after the view is not visible anymore")
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loader: LoaderSpy) {
@@ -260,5 +322,9 @@ final class FeedViewControllerTests: XCTestCase {
         url: URL = URL(string: "https://any-url.com")!,
     ) -> FeedImage {
         FeedImage(id: UUID(), description: description, location: location, url: url)
+    }
+
+    private func anyImageData() -> Data {
+        UIImage.make(withColor: .red).pngData()!
     }
 }

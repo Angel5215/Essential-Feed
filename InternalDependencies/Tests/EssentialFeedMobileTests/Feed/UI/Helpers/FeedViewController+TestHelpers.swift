@@ -15,6 +15,10 @@ extension FeedViewController {
         refreshControl?.isRefreshing == true
     }
 
+    var errorMessage: String? {
+        errorView?.message
+    }
+
     func simulateAppearance() {
         if !isViewLoaded {
             loadViewIfNeeded()
@@ -44,12 +48,15 @@ extension FeedViewController {
         feedImageView(at: index) as? FeedImageCell
     }
 
-    func simulateFeedImageViewNotVisible(at index: Int) {
+    @discardableResult
+    func simulateFeedImageViewNotVisible(at index: Int) -> FeedImageCell? {
         let view = simulateFeedImageViewVisible(at: index)
 
         let delegate = tableView.delegate
         let index = IndexPath(row: index, section: feedImagesSection)
         delegate?.tableView?(tableView, didEndDisplaying: view!, forRowAt: index)
+
+        return view
     }
 
     func simulateFeedImageViewNearVisible(at row: Int) {
@@ -81,7 +88,6 @@ extension FeedViewController {
             }
         }
 
-        refreshController?.view = fakeRefreshControl
         refreshControl = fakeRefreshControl
     }
 

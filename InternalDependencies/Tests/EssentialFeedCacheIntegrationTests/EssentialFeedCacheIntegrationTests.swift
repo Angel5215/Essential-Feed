@@ -3,10 +3,9 @@
 // Copyright © 2025 Ángel Vázquez. All rights reserved.
 //
 
-import EssentialFeed
+@_spi(Bundle) import EssentialFeed
 import XCTest
 
-@MainActor
 final class EssentialFeedCacheIntegrationTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -53,7 +52,7 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> LocalFeedLoader {
-        let storeBundle = CoreDataFeedStore.bundle
+        let storeBundle = EssentialFeed.bundle
         let storeURL = testSpecificStoreURL()
         let store = try! CoreDataFeedStore(storeURL: storeURL, bundle: storeBundle)
         let sut = LocalFeedLoader(store: store, currentDate: Date.init)
@@ -100,23 +99,23 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
 
-    private nonisolated func testSpecificStoreURL() -> URL {
+    private func testSpecificStoreURL() -> URL {
         cachesDirectory().appending(path: "\(type(of: self)).store")
     }
 
-    private nonisolated func cachesDirectory() -> URL {
+    private func cachesDirectory() -> URL {
         FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
     }
 
-    private nonisolated func setupEmptyStoreState() {
+    private func setupEmptyStoreState() {
         deleteStoreArtifacts()
     }
 
-    private nonisolated func undoStoreSideEffects() {
+    private func undoStoreSideEffects() {
         deleteStoreArtifacts()
     }
 
-    private nonisolated func deleteStoreArtifacts() {
+    private func deleteStoreArtifacts() {
         try? FileManager.default.removeItem(at: testSpecificStoreURL())
     }
 }

@@ -38,7 +38,3 @@ private extension NSManagedObjectModel {
         }
     }
 }
-
-public extension CoreDataFeedStore {
-    static let bundle = Bundle.module
-}

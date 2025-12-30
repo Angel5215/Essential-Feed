@@ -7,7 +7,6 @@ import EssentialFeed
 import Foundation
 import XCTest
 
-@MainActor
 final class URLSessionHTTPClientTests: XCTestCase {
     override func setUp() {
         URLProtocolStub.startInterceptingRequests()
@@ -182,7 +181,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
 
         // MARK: - Helpers
 
-        private nonisolated(unsafe) static var _stub: Stub?
+        private static var _stub: Stub?
         private static var stub: Stub? {
             get { queue.sync { _stub } }
             set { queue.sync { _stub = newValue } }

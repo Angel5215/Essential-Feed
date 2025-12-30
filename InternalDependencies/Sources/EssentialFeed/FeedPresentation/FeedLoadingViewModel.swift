@@ -3,6 +3,6 @@
 // Copyright © 2025 Ángel Vázquez. All rights reserved.
 //
 
-struct FeedLoadingViewModel {
-    let isLoading: Bool
+public struct FeedLoadingViewModel {
+    public let isLoading: Bool
 }

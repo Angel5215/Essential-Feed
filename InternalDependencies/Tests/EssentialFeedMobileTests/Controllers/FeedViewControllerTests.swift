@@ -9,6 +9,16 @@ import XCTest
 
 @MainActor
 final class FeedViewControllerTests: XCTestCase {
+    // MARK: - Localization
+
+    func test_feedView_hasTitle() {
+        let (sut, _) = makeSUT()
+
+        sut.simulateAppearance()
+
+        XCTAssertEqual(sut.title, "My Feed")
+    }
+
     // MARK: - Load Feed Actions
 
     func test_loadFeedActions_requestFeedFromLoader() {

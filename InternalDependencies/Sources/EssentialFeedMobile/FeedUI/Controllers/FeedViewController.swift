@@ -3,6 +3,7 @@
 // Copyright © 2025 Ángel Vázquez. All rights reserved.
 //
 
+import EssentialFeed
 import UIKit
 
 protocol FeedViewControllerDelegate {
@@ -72,13 +73,13 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
 }
 
 extension FeedViewController: FeedLoadingView {
-    func display(_ viewModel: FeedLoadingViewModel) {
+    public func display(_ viewModel: FeedLoadingViewModel) {
         refreshControl?.update(isRefreshing: viewModel.isLoading)
     }
 }
 
 extension FeedViewController: FeedErrorView {
-    func display(_ viewModel: FeedErrorViewModel) {
+    public func display(_ viewModel: FeedErrorViewModel) {
         errorView?.message = viewModel.message
     }
 }

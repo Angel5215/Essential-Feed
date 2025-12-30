@@ -3,13 +3,13 @@
 // Copyright © 2025 Ángel Vázquez. All rights reserved.
 //
 
-@_spi(Bundle) import EssentialFeedMobile
+@_spi(Bundle) import EssentialFeed
 import XCTest
 
 final class FeedLocalizationTests: XCTestCase {
     func test_localizedStrings_haveKeysAndValuesForAllSupportedLocalizations() {
         let table = "Feed"
-        let presentationBundle = EssentialFeedMobile.bundle
+        let presentationBundle = EssentialFeed.bundle
         let localizationBundles = allLocalizationBundles(in: presentationBundle)
         let localizedStringKeys = allLocalizedStringKeys(in: localizationBundles, table: table)
 

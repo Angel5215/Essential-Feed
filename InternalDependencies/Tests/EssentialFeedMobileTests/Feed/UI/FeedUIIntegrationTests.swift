@@ -85,6 +85,19 @@ final class FeedUIIntegrationTests: XCTestCase {
         assertThat(sut, isRendering: [image0])
     }
 
+    func test_loadFeedCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+        let (sut, loader) = makeSUT()
+
+        sut.simulateAppearance()
+        XCTAssertNil(sut.errorMessage)
+
+        loader.completeFeedLoadingWithError(at: 0)
+        XCTAssertEqual(sut.errorMessage, localized("FEED_VIEW_CONNECTION_ERROR"))
+
+        sut.simulateUserInitiatedFeedReload()
+        XCTAssertNil(sut.errorMessage)
+    }
+
     // MARK: - Concurrency
 
     func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
@@ -291,21 +304,6 @@ final class FeedUIIntegrationTests: XCTestCase {
         loader.completeImageLoading(with: anyImageData(), at: 0)
 
         XCTAssertNil(view?.renderedImage, "Expected no rendered image when an image load finishes after the view is not visible anymore")
-    }
-
-    // MARK: - Error view
-
-    func test_errorView_doesNotRenderErrorOnLoad() {
-        let (sut, loader) = makeSUT()
-
-        sut.simulateAppearance()
-        XCTAssertNil(sut.errorMessage)
-
-        loader.completeFeedLoadingWithError(at: 0)
-        XCTAssertEqual(sut.errorMessage, localized("FEED_VIEW_CONNECTION_ERROR"))
-
-        sut.simulateUserInitiatedFeedReload()
-        XCTAssertNil(sut.errorMessage)
     }
 
     // MARK: - Helpers

@@ -10,7 +10,7 @@ final class FeedPresenter {
     let loadingView: FeedLoadingView
 
     static var title: String {
-        "My Feed"
+        String(localized: "FEED_VIEW_TITLE", table: "Feed", bundle: .module, comment: "Title for the feed view")
     }
 
     init(feedView: FeedView, loadingView: FeedLoadingView) {

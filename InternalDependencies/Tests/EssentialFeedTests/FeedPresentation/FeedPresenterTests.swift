@@ -11,6 +11,10 @@ final class FeedPresenter {
     let loadingView: FeedLoadingView
     let errorView: FeedErrorView
 
+    static var title: String {
+        String(localized: "FEED_VIEW_TITLE", table: "Feed", bundle: .module, comment: "Title for the feed view")
+    }
+
     private var feedLoadError: String {
         String(localized: "FEED_VIEW_CONNECTION_ERROR", table: "Feed", bundle: .module, comment: "Error message displayed when we can't load the image feed from the server")
     }
@@ -70,6 +74,10 @@ struct FeedErrorViewModel {
 }
 
 final class FeedPresenterTests: XCTestCase {
+    func test_title_isLocalized() {
+        XCTAssertEqual(FeedPresenter.title, localized("FEED_VIEW_TITLE"))
+    }
+
     func test_init_doesNotSendMessagesToView() {
         let (_, view) = makeSUT()
 

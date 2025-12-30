@@ -4,6 +4,7 @@
 //
 
 import EssentialFeed
+import Foundation
 
 final class FeedPresenter {
     let feedView: FeedView
@@ -30,6 +31,10 @@ final class FeedPresenter {
     func didFinishLoadingFeed(with error: Error) {
         loadingView.display(FeedLoadingViewModel(isLoading: false))
     }
+}
+
+extension FeedPresenter {
+    static var bundle: Bundle { .module }
 }
 
 // MARK: - Views

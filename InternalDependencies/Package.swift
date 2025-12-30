@@ -38,6 +38,7 @@ let package = Package(
             dependencies: ["EssentialFeedMobile"],
         ),
     ],
+    swiftLanguageModes: [.v5],
 )
 
 extension Product {

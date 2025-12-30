@@ -9,14 +9,20 @@ import Foundation
 final class FeedPresenter {
     let feedView: FeedView
     let loadingView: FeedLoadingView
+    let errorView: FeedErrorView
 
     static var title: String {
         String(localized: "FEED_VIEW_TITLE", table: "Feed", bundle: .module, comment: "Title for the feed view")
     }
 
-    init(feedView: FeedView, loadingView: FeedLoadingView) {
+    private var feedLoadError: String {
+        String(localized: "FEED_VIEW_CONNECTION_ERROR", table: "Feed", bundle: .module, comment: "Error message displayed when we can't load the image feed from the server")
+    }
+
+    init(feedView: FeedView, loadingView: FeedLoadingView, errorView: FeedErrorView) {
         self.feedView = feedView
         self.loadingView = loadingView
+        self.errorView = errorView
     }
 
     func didStartLoadingFeed() {
@@ -30,6 +36,7 @@ final class FeedPresenter {
 
     func didFinishLoadingFeed(with error: Error) {
         loadingView.display(FeedLoadingViewModel(isLoading: false))
+        errorView.display(FeedErrorViewModel(message: feedLoadError))
     }
 }
 
@@ -41,4 +48,12 @@ protocol FeedLoadingView {
 
 protocol FeedView {
     func display(_ viewModel: FeedViewModel)
+}
+
+struct FeedErrorViewModel {
+    let message: String
+}
+
+protocol FeedErrorView {
+    func display(_ viewModel: FeedErrorViewModel)
 }

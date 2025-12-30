@@ -16,6 +16,7 @@ public enum FeedUIComposer {
                 imageLoader: MainQueueDispatchDecorator(value: imageLoader),
             ),
             loadingView: WeakReferenceVirtualProxy(feedController),
+            errorView: WeakReferenceVirtualProxy(feedController),
         )
         return feedController
     }

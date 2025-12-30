@@ -3,7 +3,7 @@
 // Copyright © 2025 Ángel Vázquez. All rights reserved.
 //
 
-import EssentialFeedMobile
+@_spi(Bundle) import EssentialFeedMobile
 import XCTest
 
 extension FeedUIIntegrationTests {

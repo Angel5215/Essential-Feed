@@ -6,10 +6,6 @@
 import EssentialFeed
 import UIKit
 
-public enum EssentialFeedMobile {
-    public static var bundle: Bundle { .module }
-}
-
 @MainActor
 public enum FeedUIComposer {
     public static func feedComposedWith(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {

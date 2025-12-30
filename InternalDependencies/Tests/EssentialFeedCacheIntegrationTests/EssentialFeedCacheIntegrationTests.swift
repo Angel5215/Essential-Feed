@@ -3,7 +3,7 @@
 // Copyright © 2025 Ángel Vázquez. All rights reserved.
 //
 
-import EssentialFeed
+@_spi(Bundle) import EssentialFeed
 import XCTest
 
 @MainActor

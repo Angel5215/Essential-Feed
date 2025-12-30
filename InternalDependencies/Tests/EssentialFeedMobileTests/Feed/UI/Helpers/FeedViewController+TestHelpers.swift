@@ -15,6 +15,10 @@ extension FeedViewController {
         refreshControl?.isRefreshing == true
     }
 
+    var errorMessage: String? {
+        errorView.message
+    }
+
     func simulateAppearance() {
         if !isViewLoaded {
             loadViewIfNeeded()

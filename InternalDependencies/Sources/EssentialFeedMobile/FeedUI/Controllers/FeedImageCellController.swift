@@ -3,6 +3,7 @@
 // Copyright © 2025 Ángel Vázquez. All rights reserved.
 //
 
+import EssentialFeed
 import UIKit
 
 protocol FeedImageCellControllerDelegate {

@@ -10,16 +10,21 @@ import UIKit
 public enum FeedUIComposer {
     public static func feedComposedWith(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {
         let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader)
-        let storyboard = UIStoryboard(name: "Feed", bundle: .module)
-        let feedController = storyboard.instantiateInitialViewController() as! FeedViewController
-
-        feedController.delegate = presentationAdapter
-        feedController.title = FeedPresenter.title
-
+        let feedController = FeedViewController.makeWith(delegate: presentationAdapter, title: "My Feed")
         presentationAdapter.presenter = FeedPresenter(
             feedView: FeedViewAdapter(controller: feedController, imageLoader: imageLoader),
             loadingView: WeakReferenceVirtualProxy(feedController),
         )
+        return feedController
+    }
+}
+
+private extension FeedViewController {
+    static func makeWith(delegate: FeedViewControllerDelegate, title: String) -> FeedViewController {
+        let storyboard = UIStoryboard(name: "Feed", bundle: .module)
+        let feedController = storyboard.instantiateInitialViewController() as! FeedViewController
+        feedController.delegate = delegate
+        feedController.title = FeedPresenter.title
         return feedController
     }
 }
@@ -55,8 +60,9 @@ private final class FeedViewAdapter: @preconcurrency FeedView {
     }
 
     func display(_ viewModel: FeedViewModel) {
+        typealias ImagePresentationAdapter = FeedImageDataLoaderPresentationAdapter<WeakReferenceVirtualProxy<FeedImageCellController>, UIImage>
         controller?.tableModel = viewModel.feed.map { model in
-            let adapter = FeedImageDataLoaderPresentationAdapter<WeakReferenceVirtualProxy<FeedImageCellController>, UIImage>(model: model, imageLoader: imageLoader)
+            let adapter = ImagePresentationAdapter(model: model, imageLoader: imageLoader)
             let view = FeedImageCellController(delegate: adapter)
             adapter.presenter = FeedImagePresenter(
                 view: WeakReferenceVirtualProxy(view),

@@ -17,8 +17,17 @@ final class RemoteFeedImageDataLoader {
         case invalidData
     }
 
-    func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) {
-        client.get(from: url) { [weak self] result in
+    private struct HTTPTaskWrapper: FeedImageDataLoaderTask {
+        let wrappedTask: HTTPClientTask
+
+        func cancel() {
+            wrappedTask.cancel()
+        }
+    }
+
+    @discardableResult
+    func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
+        HTTPTaskWrapper(wrappedTask: client.get(from: url) { [weak self] result in
             guard self != nil else { return }
             switch result {
             case let .success((data, response)):
@@ -31,7 +40,7 @@ final class RemoteFeedImageDataLoader {
             case let .failure(error):
                 completion(.failure(error))
             }
-        }
+        })
     }
 }
 
@@ -167,8 +176,9 @@ final class RemoteFeedImageDataLoaderTests: XCTestCase {
             messages.map(\.url)
         }
 
-        func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
+        func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
             messages.append((url, completion))
+            return Task()
         }
 
         func complete(with error: Error, at index: Int = 0) {
@@ -183,6 +193,10 @@ final class RemoteFeedImageDataLoaderTests: XCTestCase {
                 headerFields: nil,
             )!
             messages[index].completion(.success((data, response)))
+        }
+
+        private struct Task: HTTPClientTask {
+            func cancel() {}
         }
     }
 }

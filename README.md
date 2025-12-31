@@ -12,10 +12,12 @@ Repository created to keep track of the iOS Lead Essentials training program. Th
 
 - [Story: Customer requests to see their image feed][bdd-specs]
 - Use cases:
-  - [Load Feed From Remote Use Case][load-feed-from-remote-use-case]
-  - [Load Feed From Cache Use Case][load-feed-from-cache-use-case]
-  - [Cache Feed Use Case][cache-feed-use-case]
-  - [Validate Feed Cache Use Case][validate-feed-cache-use-case]
+    - [Load Feed From Remote Use Case][load-feed-from-remote-use-case]
+    - [Load Feed From Cache Use Case][load-feed-from-cache-use-case]
+    - [Cache Feed Use Case][cache-feed-use-case]
+    - [Validate Feed Cache Use Case][validate-feed-cache-use-case]
+    - [Load Feed Image Data From Remote Use Case][load-feed-image-data-from-remote-use-case]
+    - [Load Feed Image Data From Cache Use Case][load-feed-image-data-from-cache-use-case]
 - [API model][api-model]
 
 <!-- Start Link section -->
@@ -25,6 +27,8 @@ Repository created to keep track of the iOS Lead Essentials training program. Th
 [load-feed-from-cache-use-case]: Docs/image-feed-feature/load-feed-from-cache-use-case.md
 [cache-feed-use-case]: Docs/image-feed-feature/cache-feed-use-case.md
 [validate-feed-cache-use-case]: Docs/image-feed-feature/validate-feed-cache-use-case.md
+[load-feed-image-data-from-remote-use-case]: Docs/image-feed-feature/load-feed-image-data-from-remote-use-case.md
+[load-feed-image-data-from-cache-use-case]: Docs/image-feed-feature/load-feed-image-data-from-cache-use-case.md
 <!-- End Link section -->
 
 ## Architecture

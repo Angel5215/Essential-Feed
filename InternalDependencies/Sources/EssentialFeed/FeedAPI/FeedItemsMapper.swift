@@ -7,8 +7,7 @@ import Foundation
 
 enum FeedItemsMapper {
     static func map(_ data: Data, from response: HTTPURLResponse) throws(RemoteFeedLoader.Error) -> [RemoteFeedItem] {
-        guard response.statusCode == StatusCode.ok,
-              let root = try? JSONDecoder().decode(Root.self, from: data) else {
+        guard response.isOK, let root = try? JSONDecoder().decode(Root.self, from: data) else {
             throw .invalidData
         }
 
@@ -16,10 +15,6 @@ enum FeedItemsMapper {
     }
 
     // MARK: - Helpers
-
-    private enum StatusCode {
-        static let ok = 200
-    }
 
     private struct Root: Decodable {
         let items: [RemoteFeedItem]

@@ -6,7 +6,7 @@
 import EssentialFeed
 import XCTest
 
-final class LocalFeedImageDataLoaderTests: XCTestCase {
+final class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
     func test_init_doesNotMessageStoreUponCreation() {
         let (_, store) = makeSUT()
 
@@ -75,16 +75,6 @@ final class LocalFeedImageDataLoaderTests: XCTestCase {
         store.completeRetrieval(with: anyData())
 
         XCTAssertTrue(receivedResults.isEmpty, "Expected no received results after instance has been deallocated")
-    }
-
-    func test_saveImageDataForURL_requestsImageDataInsertionForURL() {
-        let (sut, store) = makeSUT()
-        let url = anyURL()
-        let data = anyData()
-
-        sut.save(data, for: url) { _ in }
-
-        XCTAssertEqual(store.receivedMessages, [.insert(data: data, for: url)])
     }
 
     // MARK: - Helpers

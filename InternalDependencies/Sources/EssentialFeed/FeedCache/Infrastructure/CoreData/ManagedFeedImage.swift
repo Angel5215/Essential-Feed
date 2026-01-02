@@ -1,6 +1,6 @@
 //
 // ManagedFeedImage.swift
-// Copyright © 2025 Ángel Vázquez. All rights reserved.
+// Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
 import CoreData
@@ -11,6 +11,7 @@ final class ManagedFeedImage: NSManagedObject {
     @NSManaged var imageDescription: String?
     @NSManaged var location: String?
     @NSManaged var url: URL
+    @NSManaged var data: Data?
     @NSManaged var cache: ManagedCache
 }
 

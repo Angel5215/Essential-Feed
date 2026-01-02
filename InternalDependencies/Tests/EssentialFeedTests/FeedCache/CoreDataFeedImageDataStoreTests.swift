@@ -6,14 +6,6 @@
 @_spi(Bundle) import EssentialFeed
 import XCTest
 
-extension CoreDataFeedStore: FeedImageDataStore {
-    public func retrieve(dataForURL url: URL, completion: @escaping (FeedImageDataStore.RetrievalResult) -> Void) {
-        completion(.success(nil))
-    }
-
-    public func insert(_ data: Data, for url: URL, completion: @escaping (FeedImageDataStore.InsertionResult) -> Void) {}
-}
-
 final class CoreDataFeedImageDataStoreTests: XCTestCase {
     func test_retrieveImageData_deliversImageDatanotFoundWhenEmpty() {
         let sut = makeSUT()

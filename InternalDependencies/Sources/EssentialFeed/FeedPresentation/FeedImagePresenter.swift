@@ -1,6 +1,6 @@
 //
 // FeedImagePresenter.swift
-// Copyright © 2025 Ángel Vázquez. All rights reserved.
+// Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
 import Foundation
@@ -22,7 +22,7 @@ public final class FeedImagePresenter<View: FeedImageView, Image> where View.Ima
                 image: nil,
                 isLoading: true,
                 shouldRetry: false,
-            ),
+            )
         )
     }
 
@@ -35,7 +35,7 @@ public final class FeedImagePresenter<View: FeedImageView, Image> where View.Ima
                 image: image,
                 isLoading: false,
                 shouldRetry: image == nil,
-            ),
+            )
         )
     }
 
@@ -47,7 +47,7 @@ public final class FeedImagePresenter<View: FeedImageView, Image> where View.Ima
                 image: nil,
                 isLoading: false,
                 shouldRetry: true,
-            ),
+            )
         )
     }
 }

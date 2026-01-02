@@ -20,7 +20,12 @@ public extension LocalFeedImageDataLoader {
 
     func save(_ data: Data, for url: URL, completion: @escaping (SaveResult) -> Void) {
         store.insert(data, for: url) { _ in
+            completion(.failure(SaveError.failed))
         }
+    }
+
+    enum SaveError: Error {
+        case failed
     }
 }
 

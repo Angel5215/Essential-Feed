@@ -3,7 +3,7 @@
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
-@_spi(Bundle) import EssentialFeed
+import EssentialFeed
 import XCTest
 
 final class CoreDataFeedImageDataStoreTests: XCTestCase {
@@ -70,9 +70,8 @@ final class CoreDataFeedImageDataStoreTests: XCTestCase {
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> CoreDataFeedStore {
-        let storeBundle = EssentialFeed.bundle
         let storeURL = URL(filePath: "/dev/null")
-        let sut = try! CoreDataFeedStore(storeURL: storeURL, bundle: storeBundle)
+        let sut = try! CoreDataFeedStore(storeURL: storeURL)
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }

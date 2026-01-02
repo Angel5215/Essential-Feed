@@ -1,6 +1,6 @@
 //
 // FeedUIComposer.swift
-// Copyright © 2025 Ángel Vázquez. All rights reserved.
+// Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
 import EssentialFeed
@@ -22,7 +22,7 @@ public enum FeedUIComposer {
     }
 
     private static func makeFeedViewController(delegate: FeedViewControllerDelegate, title: String) -> FeedViewController {
-        let storyboard = UIStoryboard(name: "Feed", bundle: EssentialFeedMobile.bundle)
+        let storyboard = UIStoryboard(name: "Feed", bundle: .module)
         let feedController = storyboard.instantiateInitialViewController() as! FeedViewController
         feedController.delegate = delegate
         feedController.title = title

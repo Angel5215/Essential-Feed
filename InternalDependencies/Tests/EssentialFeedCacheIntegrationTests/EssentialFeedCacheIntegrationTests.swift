@@ -1,9 +1,9 @@
 //
 // EssentialFeedCacheIntegrationTests.swift
-// Copyright © 2025 Ángel Vázquez. All rights reserved.
+// Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
-@_spi(Bundle) import EssentialFeed
+import EssentialFeed
 import XCTest
 
 final class EssentialFeedCacheIntegrationTests: XCTestCase {
@@ -52,9 +52,8 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> LocalFeedLoader {
-        let storeBundle = EssentialFeed.bundle
         let storeURL = testSpecificStoreURL()
-        let store = try! CoreDataFeedStore(storeURL: storeURL, bundle: storeBundle)
+        let store = try! CoreDataFeedStore(storeURL: storeURL)
         let sut = LocalFeedLoader(store: store, currentDate: Date.init)
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(store, file: file, line: line)

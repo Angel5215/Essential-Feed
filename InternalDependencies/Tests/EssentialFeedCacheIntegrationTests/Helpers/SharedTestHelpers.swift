@@ -1,6 +1,6 @@
 //
 // SharedTestHelpers.swift
-// Copyright © 2025 Ángel Vázquez. All rights reserved.
+// Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
 import Foundation
@@ -11,4 +11,8 @@ func anyNSError() -> NSError {
 
 func anyURL() -> URL {
     URL(string: "https://any-url.com")!
+}
+
+func anyData() -> Data {
+    Data("any data".utf8)
 }

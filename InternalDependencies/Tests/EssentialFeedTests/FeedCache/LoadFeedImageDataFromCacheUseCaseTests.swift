@@ -1,5 +1,5 @@
 //
-// LocalFeedImageDataLoaderTests.swift
+// LoadFeedImageDataFromCacheUseCaseTests.swift
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 

@@ -23,7 +23,7 @@ public extension LocalFeedImageDataLoader {
             guard self != nil else { return }
             completion(
                 result
-                    .mapError { _ in SaveError.failed },
+                    .mapError { _ in SaveError.failed }
             )
         }
     }
@@ -43,7 +43,7 @@ extension LocalFeedImageDataLoader: FeedImageDataLoader {
                     .mapError { _ in LoadError.failed }
                     .flatMap { data in
                         data.map { .success($0) } ?? .failure(LoadError.notFound)
-                    },
+                    }
             )
         }
         return task

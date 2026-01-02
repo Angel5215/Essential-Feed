@@ -1,6 +1,6 @@
 //
 // LocalFeedLoader.swift
-// Copyright © 2025 Ángel Vázquez. All rights reserved.
+// Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
 import Foundation
@@ -63,16 +63,18 @@ extension LocalFeedLoader: FeedLoader {
 // MARK: - Validate cache
 
 public extension LocalFeedLoader {
-    func validateCache() {
+    typealias ValidationResult = Result<Void, Error>
+
+    func validateCache(completion: @escaping (ValidationResult) -> Void) {
         store.retrieve { [weak self] result in
             guard let self else { return }
             switch result {
             case .failure:
-                store.deleteCachedFeed { _ in }
+                store.deleteCachedFeed(completion: completion)
             case let .success(cache?) where !FeedCachePolicy.validate(cache.timestamp, against: currentDate()):
-                store.deleteCachedFeed { _ in }
+                store.deleteCachedFeed(completion: completion)
             case .success:
-                break
+                completion(.success(()))
             }
         }
     }

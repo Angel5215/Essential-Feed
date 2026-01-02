@@ -1,6 +1,6 @@
 //
 // ManagedFeedImage.swift
-// Copyright © 2025 Ángel Vázquez. All rights reserved.
+// Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
 import CoreData
@@ -11,6 +11,7 @@ final class ManagedFeedImage: NSManagedObject {
     @NSManaged var imageDescription: String?
     @NSManaged var location: String?
     @NSManaged var url: URL
+    @NSManaged var data: Data?
     @NSManaged var cache: ManagedCache
 }
 
@@ -24,6 +25,14 @@ extension ManagedFeedImage {
             managed.url = local.url
             return managed
         })
+    }
+
+    static func first(with url: URL, in context: NSManagedObjectContext) throws -> ManagedFeedImage? {
+        let request = NSFetchRequest<ManagedFeedImage>(entityName: entity().name!)
+        request.predicate = NSPredicate(format: "%K = %@", argumentArray: [#keyPath(ManagedFeedImage.url), url])
+        request.returnsObjectsAsFaults = false
+        request.fetchLimit = 1
+        return try context.fetch(request).first
     }
 
     var local: LocalFeedImage {

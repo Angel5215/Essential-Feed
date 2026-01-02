@@ -18,6 +18,7 @@ Repository created to keep track of the iOS Lead Essentials training program. Th
     - [Validate Feed Cache Use Case][validate-feed-cache-use-case]
     - [Load Feed Image Data From Remote Use Case][load-feed-image-data-from-remote-use-case]
     - [Load Feed Image Data From Cache Use Case][load-feed-image-data-from-cache-use-case]
+    - [Cache Feed Image Data Use Case][cache-feed-image-data-use-case]
 - [API model][api-model]
 
 <!-- Start Link section -->
@@ -29,6 +30,7 @@ Repository created to keep track of the iOS Lead Essentials training program. Th
 [validate-feed-cache-use-case]: Docs/image-feed-feature/validate-feed-cache-use-case.md
 [load-feed-image-data-from-remote-use-case]: Docs/image-feed-feature/load-feed-image-data-from-remote-use-case.md
 [load-feed-image-data-from-cache-use-case]: Docs/image-feed-feature/load-feed-image-data-from-cache-use-case.md
+[cache-feed-image-data-use-case]: Docs/image-feed-feature/cache-feed-image-data-use-case.md
 <!-- End Link section -->
 
 ## Architecture

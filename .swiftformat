@@ -15,6 +15,7 @@
 --nospaceoperators ..<,...
 --self init-only
 --stripunusedargs closure-only
+--trailingcommas multi-element-lists
 --wraparguments before-first
 --wrapcollections before-first
 --wrapparameters before-first

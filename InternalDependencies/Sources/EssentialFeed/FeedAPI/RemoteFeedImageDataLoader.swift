@@ -1,6 +1,6 @@
 //
 // RemoteFeedImageDataLoader.swift
-// Copyright © 2025 Ángel Vázquez. All rights reserved.
+// Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
 import Foundation
@@ -30,7 +30,7 @@ public final class RemoteFeedImageDataLoader: FeedImageDataLoader {
                     .flatMap { data, response in
                         let isValidResponse = response.isOK && !data.isEmpty
                         return isValidResponse ? .success(data) : .failure(Error.invalidData)
-                    },
+                    }
             )
         }
         return task

@@ -1,6 +1,6 @@
 //
 // FeedUIIntegrationTests+Localization.swift
-// Copyright © 2025 Ángel Vázquez. All rights reserved.
+// Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
 @_spi(Bundle) import EssentialFeed

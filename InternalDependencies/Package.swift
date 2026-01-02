@@ -15,7 +15,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "EssentialFeed",
+            name: "EssentialFeed"
         ),
         .target(
             name: "EssentialFeedMobile",
@@ -39,7 +39,7 @@ let package = Package(
         ),
     ],
     swiftLanguageModes: [
-        .v5,
+        .v5
     ],
 )
 

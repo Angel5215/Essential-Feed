@@ -16,7 +16,14 @@ final class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
     }
 
     func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
-        _ = primary.loadImageData(from: url, completion: completion)
+        _ = primary.loadImageData(from: url) { [weak self] result in
+            switch result {
+            case .success:
+                completion(result)
+            case .failure:
+                _ = self?.fallback.loadImageData(from: url, completion: completion)
+            }
+        }
         return Task()
     }
 
@@ -41,6 +48,17 @@ final class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
 
         XCTAssertEqual(primaryLoader.loadedURLs, [url], "Expected to load URL from primary loader")
         XCTAssertTrue(fallbackLoader.loadedURLs.isEmpty, "Expected no loaded URLs in the fallback loader")
+    }
+
+    func test_loadImageData_loadsFromFallbackLoaderOnPrimaryLoaderFailure() {
+        let url = anyURL()
+        let (sut, primaryLoader, fallbackLoader) = makeSUT()
+
+        _ = sut.loadImageData(from: url) { _ in }
+        primaryLoader.complete(with: anyNSError())
+
+        XCTAssertEqual(primaryLoader.loadedURLs, [url], "Expected to load URL from primary loader")
+        XCTAssertEqual(fallbackLoader.loadedURLs, [url], "Expected to load URL from fallback loader")
     }
 
     // MARK: - Helpers
@@ -70,6 +88,10 @@ final class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
             return Task()
         }
 
+        func complete(with error: Error, at index: Int = 0) {
+            messages[index].completion(.failure(error))
+        }
+
         private final class Task: FeedImageDataLoaderTask {
             func cancel() {}
         }
@@ -77,5 +99,9 @@ final class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
 
     private func anyURL() -> URL {
         URL(string: "https://any-url.com")!
+    }
+
+    private func anyNSError() -> NSError {
+        NSError(domain: "any error", code: 0)
     }
 }

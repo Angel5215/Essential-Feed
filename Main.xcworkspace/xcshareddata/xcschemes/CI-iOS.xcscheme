@@ -18,7 +18,7 @@
                BlueprintIdentifier = "EssentialFeed"
                BuildableName = "EssentialFeed"
                BlueprintName = "EssentialFeed"
-               ReferencedContainer = "container:">
+               ReferencedContainer = "container:InternalDependencies">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -32,7 +32,21 @@
                BlueprintIdentifier = "EssentialFeedMobile"
                BuildableName = "EssentialFeedMobile"
                BlueprintName = "EssentialFeedMobile"
-               ReferencedContainer = "container:">
+               ReferencedContainer = "container:InternalDependencies">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "FABFD7292F08D40E000D6D19"
+               BuildableName = "EssentialAppCaseStudy.app"
+               BlueprintName = "EssentialAppCaseStudy"
+               ReferencedContainer = "container:EssentialAppCaseStudy/EssentialAppCaseStudy.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -44,7 +58,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../Configuration/TestPlans/CI-iOS.xctestplan"
+            reference = "container:Configuration/TestPlans/CI-iOS.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -72,7 +86,7 @@
             BlueprintIdentifier = "EssentialFeed"
             BuildableName = "EssentialFeed"
             BlueprintName = "EssentialFeed"
-            ReferencedContainer = "container:">
+            ReferencedContainer = "container:InternalDependencies">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

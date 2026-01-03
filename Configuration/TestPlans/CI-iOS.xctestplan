@@ -10,12 +10,17 @@
     "codeCoverage": {
       "targets": [
         {
-          "containerPath": "container:",
+          "containerPath": "container:EssentialAppCaseStudy/EssentialAppCaseStudy.xcodeproj",
+          "identifier": "FABFD7292F08D40E000D6D19",
+          "name": "EssentialAppCaseStudy"
+        },
+        {
+          "containerPath": "container:InternalDependencies",
           "identifier": "EssentialFeed",
           "name": "EssentialFeed"
         },
         {
-          "containerPath": "container:",
+          "containerPath": "container:InternalDependencies",
           "identifier": "EssentialFeedMobile",
           "name": "EssentialFeedMobile"
         }
@@ -27,7 +32,7 @@
     {
       "parallelizable": false,
       "target": {
-        "containerPath": "container:",
+        "containerPath": "container:InternalDependencies",
         "identifier": "EssentialFeedTests",
         "name": "EssentialFeedTests"
       }
@@ -35,7 +40,7 @@
     {
       "parallelizable": false,
       "target": {
-        "containerPath": "container:",
+        "containerPath": "container:InternalDependencies",
         "identifier": "EssentialFeedCacheIntegrationTests",
         "name": "EssentialFeedCacheIntegrationTests"
       }
@@ -43,7 +48,15 @@
     {
       "parallelizable": false,
       "target": {
-        "containerPath": "container:",
+        "containerPath": "container:EssentialAppCaseStudy/EssentialAppCaseStudy.xcodeproj",
+        "identifier": "FABFD73F2F08D40F000D6D19",
+        "name": "EssentialAppCaseStudyTests"
+      }
+    },
+    {
+      "parallelizable": false,
+      "target": {
+        "containerPath": "container:InternalDependencies",
         "identifier": "EssentialFeedAPIEndToEndTests",
         "name": "EssentialFeedAPIEndToEndTests"
       }
@@ -51,7 +64,7 @@
     {
       "parallelizable": false,
       "target": {
-        "containerPath": "container:",
+        "containerPath": "container:InternalDependencies",
         "identifier": "EssentialFeedMobileTests",
         "name": "EssentialFeedMobileTests"
       }

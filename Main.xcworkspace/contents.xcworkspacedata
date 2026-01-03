@@ -15,6 +15,9 @@
       location = "group:InternalDependencies">
    </FileRef>
    <FileRef
+      location = "group:EssentialAppCaseStudy/EssentialAppCaseStudy.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Prototype/Prototype.xcodeproj">
    </FileRef>
 </Workspace>

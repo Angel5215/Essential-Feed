@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		FABFD7762F08D525000D6D19 /* EssentialFeed in Frameworks */ = {isa = PBXBuildFile; productRef = FABFD7752F08D525000D6D19 /* EssentialFeed */; };
+		FABFD7782F08D525000D6D19 /* EssentialFeedMobile in Frameworks */ = {isa = PBXBuildFile; productRef = FABFD7772F08D525000D6D19 /* EssentialFeedMobile */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		FABFD7412F08D40F000D6D19 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +70,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FABFD7762F08D525000D6D19 /* EssentialFeed in Frameworks */,
+				FABFD7782F08D525000D6D19 /* EssentialFeedMobile in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,6 +98,7 @@
 				FABFD72C2F08D40E000D6D19 /* EssentialAppCaseStudy */,
 				FABFD7432F08D40F000D6D19 /* EssentialAppCaseStudyTests */,
 				FABFD74D2F08D40F000D6D19 /* EssentialAppCaseStudyUITests */,
+				FABFD7742F08D525000D6D19 /* Frameworks */,
 				FABFD72B2F08D40E000D6D19 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -103,6 +111,13 @@
 				FABFD74A2F08D40F000D6D19 /* EssentialAppCaseStudyUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		FABFD7742F08D525000D6D19 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -125,6 +140,8 @@
 			);
 			name = EssentialAppCaseStudy;
 			packageProductDependencies = (
+				FABFD7752F08D525000D6D19 /* EssentialFeed */,
+				FABFD7772F08D525000D6D19 /* EssentialFeedMobile */,
 			);
 			productName = EssentialAppCaseStudy;
 			productReference = FABFD72A2F08D40E000D6D19 /* EssentialAppCaseStudy.app */;
@@ -583,6 +600,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FABFD7752F08D525000D6D19 /* EssentialFeed */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EssentialFeed;
+		};
+		FABFD7772F08D525000D6D19 /* EssentialFeedMobile */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EssentialFeedMobile;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FABFD7222F08D40E000D6D19 /* Project object */;
 }

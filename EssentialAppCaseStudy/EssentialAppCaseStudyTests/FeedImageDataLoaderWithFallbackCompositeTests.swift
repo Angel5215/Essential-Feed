@@ -89,6 +89,15 @@ final class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         XCTAssertEqual(fallbackLoader.cancelledURLs, [url], "Expected to cancel URL loading from fallback loader")
     }
 
+    func test_loadImageData_deliversPrimaryDataOnPrimaryLoaderSuccess() {
+        let primaryData = anyData()
+        let (sut, primaryLoader, _) = makeSUT()
+
+        expect(sut, toCompleteWith: .success(primaryData)) {
+            primaryLoader.complete(with: primaryData)
+        }
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
@@ -124,6 +133,10 @@ final class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
             messages[index].completion(.failure(error))
         }
 
+        func complete(with data: Data, at index: Int = 0) {
+            messages[index].completion(.success(data))
+        }
+
         private struct Task: FeedImageDataLoaderTask {
             let callback: () -> Void
 
@@ -133,11 +146,41 @@ final class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         }
     }
 
+    private func expect(
+        _ sut: FeedImageDataLoader,
+        toCompleteWith expectedResult: FeedImageDataLoader.Result,
+        when action: () -> Void,
+        file: StaticString = #filePath,
+        line: UInt = #line,
+    ) {
+        let exp = expectation(description: "Wait for load completion")
+
+        _ = sut.loadImageData(from: anyURL()) { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case let (.success(receivedFeed), .success(expectedFeed)):
+                XCTAssertEqual(receivedFeed, expectedFeed, file: file, line: line)
+            case (.failure, .failure):
+                break
+            default:
+                XCTFail("Expected \(expectedResult), got \(receivedResult) instead", file: file, line: line)
+            }
+            exp.fulfill()
+        }
+
+        action()
+
+        wait(for: [exp], timeout: 1)
+    }
+
     private func anyURL() -> URL {
         URL(string: "https://any-url.com")!
     }
 
     private func anyNSError() -> NSError {
         NSError(domain: "any error", code: 0)
+    }
+
+    private func anyData() -> Data {
+        Data("any data".utf8)
     }
 }

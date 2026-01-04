@@ -3,6 +3,7 @@
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
+import EssentialFeed
 import Foundation
 
 func anyNSError() -> NSError {
@@ -15,4 +16,10 @@ func anyURL() -> URL {
 
 func anyData() -> Data {
     Data("any data".utf8)
+}
+
+func uniqueFeed() -> [FeedImage] {
+    [
+        FeedImage(id: UUID(), description: "any", location: "any", url: URL(string: "https://any-url.com")!)
+    ]
 }

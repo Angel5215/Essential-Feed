@@ -30,19 +30,10 @@
   },
   "testTargets": [
     {
-      "parallelizable": false,
       "target": {
-        "containerPath": "container:InternalDependencies",
-        "identifier": "EssentialFeedTests",
-        "name": "EssentialFeedTests"
-      }
-    },
-    {
-      "parallelizable": false,
-      "target": {
-        "containerPath": "container:InternalDependencies",
-        "identifier": "EssentialFeedCacheIntegrationTests",
-        "name": "EssentialFeedCacheIntegrationTests"
+        "containerPath": "container:EssentialAppCaseStudy/EssentialAppCaseStudy.xcodeproj",
+        "identifier": "FA9143262F0AFB3C00920EED",
+        "name": "EssentialAppCaseStudyUIAcceptanceTests"
       }
     },
     {
@@ -57,8 +48,16 @@
       "parallelizable": false,
       "target": {
         "containerPath": "container:InternalDependencies",
-        "identifier": "EssentialFeedAPIEndToEndTests",
-        "name": "EssentialFeedAPIEndToEndTests"
+        "identifier": "EssentialFeedCacheIntegrationTests",
+        "name": "EssentialFeedCacheIntegrationTests"
+      }
+    },
+    {
+      "parallelizable": false,
+      "target": {
+        "containerPath": "container:InternalDependencies",
+        "identifier": "EssentialFeedTests",
+        "name": "EssentialFeedTests"
       }
     },
     {
@@ -67,6 +66,14 @@
         "containerPath": "container:InternalDependencies",
         "identifier": "EssentialFeedMobileTests",
         "name": "EssentialFeedMobileTests"
+      }
+    },
+    {
+      "parallelizable": false,
+      "target": {
+        "containerPath": "container:InternalDependencies",
+        "identifier": "EssentialFeedAPIEndToEndTests",
+        "name": "EssentialFeedAPIEndToEndTests"
       }
     }
   ],

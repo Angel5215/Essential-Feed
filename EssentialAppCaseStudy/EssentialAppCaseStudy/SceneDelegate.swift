@@ -16,27 +16,13 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let remoteURL = URL(string: "https://static1.squarespace.com/static/5891c5b8d1758ec68ef5dbc2/t/5db4155a4fbade21d17ecd28/1572083034355/essential_app_feed.json")!
         let remoteClient = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
-        let localStoreURL = NSPersistentContainer.defaultDirectoryURL().appending(path: "feed-store.sqlite")
-        let localStore = try! CoreDataFeedStore(storeURL: localStoreURL)
-
         let remoteFeedLoader = RemoteFeedLoader(url: remoteURL, client: remoteClient)
-        let localFeedLoader = LocalFeedLoader(store: localStore, currentDate: Date.init)
         let remoteImageLoader = RemoteFeedImageDataLoader(client: remoteClient)
-        let localImageLoader = LocalFeedImageDataLoader(store: localStore)
 
         window?.backgroundColor = .systemBackground
         window?.rootViewController = FeedUIComposer.feedComposedWith(
-            feedLoader: FeedLoaderWithFallbackComposite(
-                primary: FeedLoaderCacheDecorator(decoratee: remoteFeedLoader, cache: localFeedLoader),
-                fallback: localFeedLoader,
-            ),
-            imageLoader: FeedImageDataLoaderWithFallbackComposite(
-                primary: localImageLoader,
-                fallback: FeedImageDataLoaderCacheDecorator(
-                    decoratee: remoteImageLoader,
-                    cache: localImageLoader,
-                ),
-            ),
+            feedLoader: remoteFeedLoader,
+            imageLoader: remoteImageLoader,
         )
         window?.makeKeyAndVisible()
     }

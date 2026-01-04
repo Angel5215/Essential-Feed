@@ -57,7 +57,6 @@ final class FeedLoaderCacheDecoratorTests: XCTestCase, FeedLoaderTestCase {
 
     func test_load_doesNotCacheOnLoaderFailure() {
         let cache = CacheSpy()
-        let feed = uniqueFeed()
         let sut = makeSUT(loaderResult: .failure(anyNSError()), cache: cache)
 
         sut.load { _ in }

@@ -30,13 +30,6 @@
   },
   "testTargets": [
     {
-      "target": {
-        "containerPath": "container:EssentialAppCaseStudy/EssentialAppCaseStudy.xcodeproj",
-        "identifier": "FA9143262F0AFB3C00920EED",
-        "name": "EssentialAppCaseStudyUIAcceptanceTests"
-      }
-    },
-    {
       "parallelizable": false,
       "target": {
         "containerPath": "container:EssentialAppCaseStudy/EssentialAppCaseStudy.xcodeproj",

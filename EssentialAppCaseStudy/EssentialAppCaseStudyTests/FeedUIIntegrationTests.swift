@@ -3,6 +3,7 @@
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
+import EssentialAppCaseStudy
 import EssentialFeed
 import EssentialFeedMobile
 import XCTest

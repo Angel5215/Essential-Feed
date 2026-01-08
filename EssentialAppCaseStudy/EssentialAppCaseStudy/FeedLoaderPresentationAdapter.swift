@@ -4,6 +4,7 @@
 //
 
 import EssentialFeed
+import EssentialFeedMobile
 
 final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
     private let feedLoader: FeedLoader

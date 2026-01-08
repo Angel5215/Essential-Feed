@@ -4,6 +4,7 @@
 //
 
 import EssentialFeed
+import EssentialFeedMobile
 import UIKit
 
 public enum FeedUIComposer {
@@ -22,8 +23,7 @@ public enum FeedUIComposer {
     }
 
     private static func makeFeedViewController(delegate: FeedViewControllerDelegate, title: String) -> FeedViewController {
-        let storyboard = UIStoryboard(name: "Feed", bundle: .module)
-        let feedController = storyboard.instantiateInitialViewController() as! FeedViewController
+        let feedController = UIStoryboard.feed.instantiateInitialViewController() as! FeedViewController
         feedController.delegate = delegate
         feedController.title = title
         return feedController

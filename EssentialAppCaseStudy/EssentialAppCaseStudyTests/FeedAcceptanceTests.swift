@@ -31,13 +31,15 @@ final class FeedAcceptanceTests: XCTestCase {
         XCTAssertEqual(offlineFeed.renderedFeedImageData(at: 1), makeImageData())
     }
 
-    func test_onLaunch_displaysEmptyFeedWhenCustomerHasNoConnectivityAndNoCache() {}
+    func test_onLaunch_displaysEmptyFeedWhenCustomerHasNoConnectivityAndNoCache() throws {
+        let feed = try launch(httpClient: .offline, store: .empty)
+
+        XCTAssertEqual(feed.numberOfRenderedFeedImageViews(), 0)
+    }
 
     // MARK: - Helpers
 
-    private func launch(httpClient: HTTPClientStub = .offline, store: InMemoryFeedStore = .empty) throws -> FeedViewController {
-        let store = InMemoryFeedStore.empty
-        let httpClient = HTTPClientStub.online(response(for:))
+    private func launch(httpClient: HTTPClientStub, store: InMemoryFeedStore) throws -> FeedViewController {
         let sut = SceneDelegate(httpClient: httpClient, store: store)
         sut.window = try UIWindowSpy.make()
         sut.configureWindow()
@@ -45,6 +47,7 @@ final class FeedAcceptanceTests: XCTestCase {
         let nav = sut.window?.rootViewController as? UINavigationController
         let feed = nav?.topViewController as! FeedViewController
         feed.simulateAppearance()
+
         return feed
     }
 

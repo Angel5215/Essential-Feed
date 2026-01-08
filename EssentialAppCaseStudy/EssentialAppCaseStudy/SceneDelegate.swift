@@ -8,8 +8,7 @@ import EssentialFeed
 import EssentialFeedMobile
 import UIKit
 
-// swiftformat:disable:next preferFinalClasses
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     private lazy var httpClient = makeRemoteClient()

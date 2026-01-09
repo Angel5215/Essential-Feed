@@ -13,7 +13,8 @@ final class FeedSnapshotTests: XCTestCase {
 
         sut.display(emptyFeed())
 
-        assert(snapshot: sut.snapshot(), named: "EMPTY_FEED")
+        assert(snapshot: sut.snapshot(for: .iPhone(style: .light)), named: "EMPTY_FEED_light")
+        assert(snapshot: sut.snapshot(for: .iPhone(style: .dark)), named: "EMPTY_FEED_dark")
     }
 
     func test_feedWithContent() {
@@ -21,7 +22,8 @@ final class FeedSnapshotTests: XCTestCase {
 
         sut.display(feedWithContent())
 
-        assert(snapshot: sut.snapshot(), named: "FEED_WITH_CONTENT")
+        assert(snapshot: sut.snapshot(for: .iPhone(style: .light)), named: "FEED_WITH_CONTENT_light")
+        assert(snapshot: sut.snapshot(for: .iPhone(style: .dark)), named: "FEED_WITH_CONTENT_dark")
     }
 
     func test_feedWithErrorMessage() {
@@ -34,7 +36,8 @@ final class FeedSnapshotTests: XCTestCase {
 
         sut.display(.error(message: errorMessage))
 
-        assert(snapshot: sut.snapshot(), named: "FEED_WITH_ERROR_MESSAGE")
+        assert(snapshot: sut.snapshot(for: .iPhone(style: .light)), named: "FEED_WITH_ERROR_MESSAGE_light")
+        assert(snapshot: sut.snapshot(for: .iPhone(style: .dark)), named: "FEED_WITH_ERROR_MESSAGE_dark")
     }
 
     func test_feedWithFailedImageLoading() {
@@ -42,7 +45,8 @@ final class FeedSnapshotTests: XCTestCase {
 
         sut.display(feedWithFailedImageLoading())
 
-        assert(snapshot: sut.snapshot(), named: "FEED_WITH_FAILED_IMAGE_LOADING")
+        assert(snapshot: sut.snapshot(for: .iPhone(style: .light)), named: "FEED_WITH_FAILED_IMAGE_LOADING_light")
+        assert(snapshot: sut.snapshot(for: .iPhone(style: .dark)), named: "FEED_WITH_FAILED_IMAGE_LOADING_dark")
     }
 
     // MARK: - Helpers
@@ -50,6 +54,8 @@ final class FeedSnapshotTests: XCTestCase {
     private func makeSUT() -> FeedViewController {
         let controller = UIStoryboard.feed.instantiateInitialViewController() as! FeedViewController
         controller.loadViewIfNeeded()
+        controller.tableView.showsVerticalScrollIndicator = false
+        controller.tableView.showsHorizontalScrollIndicator = false
         return controller
     }
 
@@ -89,7 +95,7 @@ final class FeedSnapshotTests: XCTestCase {
     private func makeSnapshotURL(named name: String, file: StaticString) -> URL {
         URL(filePath: String(describing: file))
             .deletingLastPathComponent()
-            .appending(path: "snapshots")
+            .appending(path: "Snapshots")
             .appending(path: "\(name).png")
     }
 
@@ -106,12 +112,12 @@ final class FeedSnapshotTests: XCTestCase {
             ImageStub(
                 description: "The East Side Gallery is an open-air gallery in Berlin. It consists of a series of murals painted directly on a 1,316 m long remnant of the Berlin Wall, located near the centre of Berlin, on Mühlenstraße in Friedrichshain-Kreuzberg. The gallery has official status as a Denkmal, or heritage-protected landmark.",
                 location: "East Side Gallery\nMemorial in Berlin, Germany",
-                image: .make(withColor: .red),
+                image: .make(withColor: .systemRed),
             ),
             ImageStub(
                 description: "Garth Pier is a Grade II listed structure in Bangor, Gwynedd, North Wales.",
                 location: "Garth Pier",
-                image: .make(withColor: .green),
+                image: .make(withColor: .systemGreen),
             ),
         ]
     }
@@ -133,10 +139,62 @@ final class FeedSnapshotTests: XCTestCase {
 }
 
 extension UIViewController {
+    func snapshot(for configuration: SnapshotConfiguration) -> UIImage {
+        SnapshotWindow(configuration: configuration, root: self).snapshot()
+    }
+}
+
+struct SnapshotConfiguration {
+    let size: CGSize
+    let safeAreaInsets: UIEdgeInsets
+    let layoutMargins: UIEdgeInsets
+    let traitCollection: UITraitCollection
+
+    static func iPhone(style: UIUserInterfaceStyle) -> SnapshotConfiguration {
+        SnapshotConfiguration(
+            size: CGSize(width: 402, height: 874),
+            safeAreaInsets: UIEdgeInsets(top: 62, left: 0, bottom: 34, right: 0),
+            layoutMargins: UIEdgeInsets(top: 62, left: 16, bottom: 34, right: 16),
+            traitCollection: UITraitCollection(mutations: { traits in
+                traits.forceTouchCapability = .unavailable
+                traits.layoutDirection = .leftToRight
+                traits.preferredContentSizeCategory = .medium
+                traits.userInterfaceIdiom = .phone
+                traits.horizontalSizeClass = .compact
+                traits.verticalSizeClass = .regular
+                traits.displayScale = 3
+                traits.displayGamut = .P3
+                traits.userInterfaceStyle = style
+            }),
+        )
+    }
+}
+
+private final class SnapshotWindow: UIWindow {
+    private var configuration = SnapshotConfiguration.iPhone(style: .light)
+
+    convenience init(configuration: SnapshotConfiguration, root: UIViewController) {
+        let dummyScene = (UIWindowScene.self as NSObject.Type).init() as! UIWindowScene
+        self.init(windowScene: dummyScene)
+        self.frame = CGRect(origin: .zero, size: configuration.size)
+        self.configuration = configuration
+        self.layoutMargins = configuration.layoutMargins
+        self.rootViewController = root
+        self.isHidden = false
+        root.view.layoutMargins = configuration.layoutMargins
+    }
+
+    override var safeAreaInsets: UIEdgeInsets {
+        configuration.safeAreaInsets
+    }
+
+    override var traitCollection: UITraitCollection {
+        configuration.traitCollection
+    }
+
     func snapshot() -> UIImage {
-        let renderer = UIGraphicsImageRenderer(bounds: view.bounds)
-        return renderer.image { action in
-            view.layer.render(in: action.cgContext)
+        UIGraphicsImageRenderer(bounds: bounds, format: UIGraphicsImageRendererFormat(for: traitCollection)).image { action in
+            layer.render(in: action.cgContext)
         }
     }
 }

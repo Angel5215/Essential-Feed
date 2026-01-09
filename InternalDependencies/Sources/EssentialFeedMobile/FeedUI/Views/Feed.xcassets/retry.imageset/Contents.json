@@ -1,6 +1,16 @@
 {
   "images": [
     {
+      "filename": "retry-dark.pdf",
+      "idiom": "universal"
+    },
+    {
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
       "filename": "retry.pdf",
       "idiom": "universal"
     }

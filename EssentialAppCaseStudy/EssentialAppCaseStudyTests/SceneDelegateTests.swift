@@ -22,14 +22,28 @@ final class SceneDelegateTests: XCTestCase {
         XCTAssertTrue(topController is FeedViewController, "Expected a feed controller as top view controller, got \(String(describing: topController)) instead")
     }
 
+    func test_configureWindow_setsUpWindowAsKeyAndVisible() throws {
+        let window = try UIWindowSpy.make()
+        let sut = SceneDelegate()
+        sut.window = window
+
+        sut.configureWindow()
+
+        XCTAssertEqual(window.makeKeyAndVisibleCallCount, 1)
+    }
+
     // MARK: - Helpers
 
     private final class UIWindowSpy: UIWindow {
+        private(set) var makeKeyAndVisibleCallCount = 0
+
         static func make(file: StaticString = #filePath, line: UInt = #line) throws -> UIWindowSpy {
             let dummyScene = try XCTUnwrap((UIWindowScene.self as NSObject.Type).init() as? UIWindowScene)
             return UIWindowSpy(windowScene: dummyScene)
         }
 
-        override func makeKeyAndVisible() {}
+        override func makeKeyAndVisible() {
+            makeKeyAndVisibleCallCount += 1
+        }
     }
 }

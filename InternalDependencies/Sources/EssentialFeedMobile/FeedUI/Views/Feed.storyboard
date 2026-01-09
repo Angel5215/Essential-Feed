@@ -21,7 +21,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mx4-EY-fyD">
-                                    <rect key="frame" x="0.0" y="0.0" width="385" height="34"/>
+                                    <rect key="frame" x="0.0" y="8" width="385" height="18"/>
                                     <viewLayoutGuide key="safeArea" id="FGO-fm-Jbl"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -31,9 +31,9 @@
                             <color key="backgroundColor" red="0.99951404330000004" green="0.41759261489999999" blue="0.4154433012" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <gestureRecognizers/>
                             <constraints>
-                                <constraint firstItem="mx4-EY-fyD" firstAttribute="top" secondItem="h0t-6x-h3U" secondAttribute="top" id="1oF-Mw-QCV"/>
+                                <constraint firstItem="mx4-EY-fyD" firstAttribute="top" secondItem="h0t-6x-h3U" secondAttribute="top" constant="8" id="1oF-Mw-QCV"/>
                                 <constraint firstItem="mx4-EY-fyD" firstAttribute="leading" secondItem="h0t-6x-h3U" secondAttribute="leading" id="8tM-iE-r4a"/>
-                                <constraint firstAttribute="bottom" secondItem="mx4-EY-fyD" secondAttribute="bottom" id="OqN-mu-zM5"/>
+                                <constraint firstAttribute="bottom" secondItem="mx4-EY-fyD" secondAttribute="bottom" constant="8" id="OqN-mu-zM5"/>
                                 <constraint firstAttribute="trailingMargin" secondItem="mx4-EY-fyD" secondAttribute="trailing" id="P9m-oE-W6X"/>
                             </constraints>
                             <connections>
@@ -82,7 +82,7 @@
                                                             <string key="text">Location, 
 Location</string>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                            <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="textColor" systemColor="secondaryLabelColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
@@ -103,7 +103,7 @@ Location</string>
                                                             </connections>
                                                         </button>
                                                     </subviews>
-                                                    <color key="backgroundColor" red="0.89019607840000003" green="0.89019607840000003" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstItem="aAm-k3-yNJ" firstAttribute="top" secondItem="nTK-qt-AOS" secondAttribute="top" id="1Kq-aq-2Ba"/>
                                                         <constraint firstAttribute="bottom" secondItem="aAm-k3-yNJ" secondAttribute="bottom" id="85x-Zp-WtR"/>
@@ -125,7 +125,7 @@ Location</string>
                                                     <rect key="frame" x="0.0" y="423.33333333333331" width="349" height="114.66666666666669"/>
                                                     <string key="text">Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description </string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" red="0.2901960784" green="0.2901960784" blue="0.2901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="textColor" systemColor="secondaryLabelColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -183,6 +183,12 @@ Location</string>
     <resources>
         <image name="location" width="48" height="48"/>
         <image name="retry" width="48" height="48"/>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="secondarySystemBackgroundColor">
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

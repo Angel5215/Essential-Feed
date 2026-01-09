@@ -9,6 +9,8 @@ import XCTest
 
 extension FeedUIIntegrationTests {
     func assertThat(_ sut: FeedViewController, isRendering feed: [FeedImage], file: StaticString = #filePath, line: UInt = #line) {
+        sut.enforceLayoutCycleToRenderTable()
+
         guard sut.numberOfRenderedFeedImageViews() == feed.count else {
             return XCTFail("Expected \(feed.count) images, got \(sut.numberOfRenderedFeedImageViews()) instead", file: file, line: line)
         }
@@ -49,5 +51,17 @@ extension FeedUIIntegrationTests {
             file: file,
             line: line,
         )
+    }
+
+    private func enforceLayoutCycle(on sut: FeedViewController) {
+        sut.tableView.layoutIfNeeded()
+        RunLoop.main.run(until: Date())
+    }
+}
+
+private extension FeedViewController {
+    func enforceLayoutCycleToRenderTable() {
+        tableView.layoutIfNeeded()
+        RunLoop.current.run(until: Date())
     }
 }

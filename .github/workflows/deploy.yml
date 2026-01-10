@@ -1,0 +1,45 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: macos-26
+    timeout-minutes: 10
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v6
+
+      - name: Install Apple certificate and Provisioning Profile
+        env:
+          CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE }}
+          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+          PROVISIONING_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          EXPORT_OPTIONS_BASE64: ${{ secrets.EXPORT_OPTIONS }}
+        run: |
+          bin/provisioning.sh
+
+      - name: Setup Xcode
+        run: |
+          bin/setup-xcode.sh
+      
+      - name: Set build number
+        run: |
+          bin/build-number.sh
+      
+      - name: Archive
+        run: |
+          bin/archive.sh
+      
+      - name: Export archive
+        run: |
+          bin/export-archive.sh
+      
+      - name: Deploy to AppStore Connect
+        env: 
+          USERNAME: ${{ secrets.APPSTORE_USERNAME }}
+          PASSWORD: ${{ secrets.APPSTORE_PASSWORD }}
+        run: |
+          bin/deploy.sh

@@ -20,17 +20,12 @@ jobs:
 
       - name: Setup Xcode
         run: |
-          sudo xcode-select -switch /Applications/Xcode_26.2.app
-          /usr/bin/xcodebuild -version
+          bin/setup-xcode.sh
 
       - name: Build and test
+        env:
+          SCHEME: "CI-iOS"
+          PLATFORM_DESTINATION: "platform=iOS Simulator,OS=26.2,name=iPhone 17"
+          TARGET_SDK: "iphonesimulator"
         run: |
-          set -o pipefail
-          xcodebuild clean build test \
-            -scheme "CI-iOS" \
-            -sdk iphonesimulator \
-            -destination "platform=iOS Simulator,OS=26.2,name=iPhone 17" \
-            -enableThreadSanitizer YES \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            ONLY_ACTIVE_ARCH=YES | xcbeautify --disable-logging --renderer github-actions --quieter --is-ci
+          bin/build-and-test.sh

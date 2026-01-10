@@ -12,7 +12,7 @@ concurrency:
 jobs:
   build-and-test:
     runs-on: macos-26
-    timeout-minutes: 10
+    timeout-minutes: 5
 
     steps:
       - name: Fetch Sources
@@ -20,17 +20,12 @@ jobs:
 
       - name: Setup Xcode
         run: |
-          sudo xcode-select -switch /Applications/Xcode_26.2.app
-          /usr/bin/xcodebuild -version
+          bin/setup-xcode.sh
 
       - name: Build and test
+        env:
+          SCHEME: "CI-macOS"
+          PLATFORM_DESTINATION: "platform=macOS"
+          TARGET_SDK: "macosx"
         run: |
-          set -o pipefail
-          xcodebuild clean build test \
-            -scheme "CI-macOS" \
-            -sdk macosx \
-            -destination "platform=macOS" \
-            -enableThreadSanitizer YES \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            ONLY_ACTIVE_ARCH=YES | xcbeautify --disable-logging --renderer github-actions --quieter --is-ci
+          bin/build-and-test.sh

@@ -20,8 +20,7 @@ jobs:
 
       - name: Setup Xcode
         run: |
-          sudo xcode-select -switch /Applications/Xcode_26.2.app
-          /usr/bin/xcodebuild -version
+          bin/setup-xcode.sh
 
       - name: Build and test
         env:

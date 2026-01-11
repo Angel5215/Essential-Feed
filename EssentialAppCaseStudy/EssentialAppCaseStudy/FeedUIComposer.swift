@@ -3,18 +3,26 @@
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
+import Combine
 import EssentialFeed
 import EssentialFeedMobile
 import UIKit
 
 public enum FeedUIComposer {
-    public static func feedComposedWith(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {
-        let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: MainQueueDispatchDecorator(value: feedLoader))
+    public static func feedComposedWith(
+        feedLoader: @escaping () -> FeedLoader.Publisher,
+        imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher,
+    ) -> FeedViewController {
+        let presentationAdapter = FeedLoaderPresentationAdapter(
+            feedLoader: feedLoader().dispatchOnMainQueue()
+        )
         let feedController = makeFeedViewController(delegate: presentationAdapter, title: FeedPresenter.title)
         presentationAdapter.presenter = FeedPresenter(
             feedView: FeedViewAdapter(
                 controller: feedController,
-                imageLoader: MainQueueDispatchDecorator(value: imageLoader),
+                imageLoader: { url in
+                    imageLoader(url).dispatchOnMainQueue()
+                },
             ),
             loadingView: WeakReferenceVirtualProxy(feedController),
             errorView: WeakReferenceVirtualProxy(feedController),

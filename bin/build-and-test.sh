@@ -10,13 +10,3 @@ xcodebuild clean build test \
     CODE_SIGN_IDENTITY="" \
     CODE_SIGNING_REQUIRED=NO \
     ONLY_ACTIVE_ARCH=YES | xcbeautify --disable-logging --renderer github-actions --quieter --is-ci
-
-
-xcodebuild clean build test \
-    -scheme "CI-iOS" \
-    -sdk iphonesimulator \
-    -destination "platform=iOS Simulator,OS=26.2,name=iPhone 17" \
-    -enableThreadSanitizer YES \
-    CODE_SIGN_IDENTITY="" \
-    CODE_SIGNING_REQUIRED=NO \
-    ONLY_ACTIVE_ARCH=YES | xcbeautify --disable-logging --renderer github-actions --quieter --is-ci

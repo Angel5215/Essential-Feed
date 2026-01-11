@@ -3,6 +3,7 @@
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
+import Combine
 import EssentialFeed
 import Foundation
 
@@ -18,14 +19,6 @@ final class MainQueueDispatchDecorator<Value> {
             return DispatchQueue.main.async(execute: action)
         }
         action()
-    }
-}
-
-extension MainQueueDispatchDecorator: FeedLoader where Value == FeedLoader {
-    func load(completion: @escaping (FeedLoader.Result) -> Void) {
-        value.load { [weak self] result in
-            self?.dispatch { completion(result) }
-        }
     }
 }
 

@@ -7,7 +7,7 @@ import Foundation
 
 enum ImageCommentsMapper {
     static func map(_ data: Data, from response: HTTPURLResponse) throws(RemoteImageCommentsLoader.Error) -> [RemoteFeedItem] {
-        guard response.isOK, let root = try? JSONDecoder().decode(Root.self, from: data) else {
+        guard isOK(response), let root = try? JSONDecoder().decode(Root.self, from: data) else {
             throw .invalidData
         }
 
@@ -15,6 +15,10 @@ enum ImageCommentsMapper {
     }
 
     // MARK: - Helpers
+
+    private static func isOK(_ response: HTTPURLResponse) -> Bool {
+        (200..<300).contains(response.statusCode)
+    }
 
     private struct Root: Decodable {
         let items: [RemoteFeedItem]

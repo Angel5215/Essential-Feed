@@ -6,12 +6,14 @@
 import Foundation
 
 enum ImageCommentsMapper {
-    static func map(_ data: Data, from response: HTTPURLResponse) throws(RemoteImageCommentsLoader.Error) -> [RemoteFeedItem] {
-        guard isOK(response), let root = try? JSONDecoder().decode(Root.self, from: data) else {
+    static func map(_ data: Data, from response: HTTPURLResponse) throws(RemoteImageCommentsLoader.Error) -> [ImageComment] {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        guard isOK(response), let root = try? decoder.decode(Root.self, from: data) else {
             throw .invalidData
         }
 
-        return root.items
+        return root.comments
     }
 
     // MARK: - Helpers
@@ -21,6 +23,36 @@ enum ImageCommentsMapper {
     }
 
     private struct Root: Decodable {
-        let items: [RemoteFeedItem]
+        private let items: [Item]
+
+        var comments: [ImageComment] {
+            items.map { item in
+                ImageComment(id: item.id, message: item.message, creationDate: item.creationDate, username: item.author.username)
+            }
+        }
+    }
+
+    private struct Item: Decodable {
+        let id: UUID
+        let message: String
+        let creationDate: Date
+        let author: Author
+
+        enum CodingKeys: String, CodingKey {
+            case id
+            case message
+            case creationDate = "created_at"
+            case author
+        }
+    }
+
+    private struct Author: Decodable {
+        let username: String
+    }
+}
+
+private extension [RemoteFeedItem] {
+    func toModels() -> [FeedImage] {
+        map { FeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.image) }
     }
 }

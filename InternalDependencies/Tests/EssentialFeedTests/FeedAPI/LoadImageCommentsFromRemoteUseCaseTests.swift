@@ -81,14 +81,16 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
         let (sut, client) = makeSUT()
         let item1 = makeItem(
             id: UUID(),
-            imageURL: URL(string: "https://a-url.com")!,
+            message: "a message",
+            creationDate: (Date(timeIntervalSince1970: 1_598_627_222), "2020-08-28T15:07:02+00:00"),
+            username: "a username",
         )
 
         let item2 = makeItem(
             id: UUID(),
-            description: "a description",
-            location: "a location",
-            imageURL: URL(string: "https://another-url.com")!,
+            message: "another message",
+            creationDate: (Date(timeIntervalSince1970: 1_577_881_882), "2020-01-01T12:31:22+00:00"),
+            username: "another username",
         )
         let items = [item1.model, item2.model]
         let samples = [200, 201, 250, 280, 299]
@@ -130,17 +132,19 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
 
     private func makeItem(
         id: UUID,
-        description: String? = nil,
-        location: String? = nil,
-        imageURL: URL,
-    ) -> (model: FeedImage, json: [String: Any]) {
-        let item = FeedImage(id: id, description: description, location: location, url: imageURL)
-        let json = [
+        message: String,
+        creationDate: (date: Date, iso8601String: String),
+        username: String,
+    ) -> (model: ImageComment, json: [String: Any]) {
+        let item = ImageComment(id: id, message: message, creationDate: creationDate.date, username: username)
+        let json: [String: Any] = [
             "id": id.uuidString,
-            "description": description,
-            "location": location,
-            "image": imageURL.absoluteString,
-        ].compactMapValues(\.self)
+            "message": message,
+            "created_at": creationDate.iso8601String,
+            "author": [
+                "username": username
+            ],
+        ]
 
         return (item, json)
     }
@@ -175,7 +179,7 @@ final class LoadImageCommentsFromRemoteUseCaseTests: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
 
-    private func failure(_ error: RemoteImageCommentsLoader.Error) -> FeedLoader.Result {
+    private func failure(_ error: RemoteImageCommentsLoader.Error) -> RemoteImageCommentsLoader.Result {
         .failure(error)
     }
 }

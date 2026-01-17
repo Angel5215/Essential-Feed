@@ -21,7 +21,7 @@
 ```json
 // GET /image/{image-id}/comments
 
-// 200 RESPONSE
+// 2xx RESPONSE
 
 {
 	"items": [

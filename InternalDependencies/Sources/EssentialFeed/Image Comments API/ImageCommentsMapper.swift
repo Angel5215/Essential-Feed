@@ -5,8 +5,8 @@
 
 import Foundation
 
-enum ImageCommentsMapper {
-    static func map(_ data: Data, from response: HTTPURLResponse) throws(RemoteImageCommentsLoader.Error) -> [ImageComment] {
+public enum ImageCommentsMapper {
+    public static func map(_ data: Data, from response: HTTPURLResponse) throws(RemoteImageCommentsLoader.Error) -> [ImageComment] {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         guard isOK(response), let root = try? decoder.decode(Root.self, from: data) else {

@@ -5,8 +5,8 @@
 
 import Foundation
 
-enum FeedItemsMapper {
-    static func map(_ data: Data, from response: HTTPURLResponse) throws(RemoteFeedLoader.Error) -> [FeedImage] {
+public enum FeedItemsMapper {
+    public static func map(_ data: Data, from response: HTTPURLResponse) throws(RemoteFeedLoader.Error) -> [FeedImage] {
         guard response.isOK, let root = try? JSONDecoder().decode(Root.self, from: data) else {
             throw .invalidData
         }

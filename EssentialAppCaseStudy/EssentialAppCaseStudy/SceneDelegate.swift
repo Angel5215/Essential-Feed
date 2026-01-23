@@ -3,6 +3,7 @@
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
+import Combine
 import CoreData
 import EssentialFeed
 import EssentialFeedMobile
@@ -14,7 +15,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var httpClient = makeRemoteClient()
     private lazy var store = makeLocalStore()
     private lazy var localFeedLoader = makeLocalFeedLoader()
-    private lazy var remoteFeedLoader = makeRemoteFeedLoader()
 
     convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
         self.init()
@@ -56,18 +56,14 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         )
     }
 
-    private func makeRemoteFeedLoader() -> RemoteLoader<[FeedImage]> {
-        let remoteURL = URL(string: "https://static1.squarespace.com/static/5891c5b8d1758ec68ef5dbc2/t/5db4155a4fbade21d17ecd28/1572083034355/essential_app_feed.json")!
-        return RemoteLoader(url: remoteURL, client: httpClient, mapper: FeedItemsMapper.map)
-    }
-
     private func makeLocalFeedLoader() -> LocalFeedLoader {
         LocalFeedLoader(store: store, currentDate: Date.init)
     }
 
     private func makeRemoteFeedLoaderWithLocalFallback() -> FeedLoader.Publisher {
-        remoteFeedLoader
-            .loadPublisher()
+        httpClient
+            .getPublisher(from: URL(string: "https://static1.squarespace.com/static/5891c5b8d1758ec68ef5dbc2/t/5db4155a4fbade21d17ecd28/1572083034355/essential_app_feed.json")!)
+            .tryMap(FeedItemsMapper.map)
             .caching(to: localFeedLoader)
             .fallback(to: localFeedLoader.loadPublisher)
     }
@@ -85,5 +81,3 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
     }
 }
-
-extension RemoteLoader: FeedLoader where Resource == [FeedImage] {}

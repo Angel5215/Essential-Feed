@@ -6,7 +6,7 @@
 import Foundation
 
 public enum ImageCommentsMapper {
-    public static func map(_ data: Data, from response: HTTPURLResponse) throws(RemoteImageCommentsLoader.Error) -> [ImageComment] {
+    public static func map(_ data: Data, from response: HTTPURLResponse) throws(Error) -> [ImageComment] {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         guard isOK(response), let root = try? decoder.decode(Root.self, from: data) else {
@@ -17,6 +17,10 @@ public enum ImageCommentsMapper {
     }
 
     // MARK: - Helpers
+
+    public enum Error: Swift.Error {
+        case invalidData
+    }
 
     private static func isOK(_ response: HTTPURLResponse) -> Bool {
         (200..<300).contains(response.statusCode)

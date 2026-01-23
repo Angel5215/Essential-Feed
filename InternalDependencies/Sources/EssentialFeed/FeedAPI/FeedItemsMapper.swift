@@ -6,7 +6,7 @@
 import Foundation
 
 public enum FeedItemsMapper {
-    public static func map(_ data: Data, from response: HTTPURLResponse) throws(RemoteFeedLoader.Error) -> [FeedImage] {
+    public static func map(_ data: Data, from response: HTTPURLResponse) throws(Error) -> [FeedImage] {
         guard response.isOK, let root = try? JSONDecoder().decode(Root.self, from: data) else {
             throw .invalidData
         }
@@ -15,6 +15,10 @@ public enum FeedItemsMapper {
     }
 
     // MARK: - Helpers
+
+    public enum Error: Swift.Error {
+        case invalidData
+    }
 
     private struct Root: Decodable {
         let items: [RemoteFeedItem]

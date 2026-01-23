@@ -56,9 +56,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         )
     }
 
-    private func makeRemoteFeedLoader() -> RemoteFeedLoader {
+    private func makeRemoteFeedLoader() -> RemoteLoader<[FeedImage]> {
         let remoteURL = URL(string: "https://static1.squarespace.com/static/5891c5b8d1758ec68ef5dbc2/t/5db4155a4fbade21d17ecd28/1572083034355/essential_app_feed.json")!
-        return RemoteFeedLoader(url: remoteURL, client: httpClient)
+        return RemoteLoader(url: remoteURL, client: httpClient, mapper: FeedItemsMapper.map)
     }
 
     private func makeLocalFeedLoader() -> LocalFeedLoader {

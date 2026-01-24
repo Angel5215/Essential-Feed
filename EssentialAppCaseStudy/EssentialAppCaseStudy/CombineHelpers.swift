@@ -7,14 +7,33 @@ import Combine
 import EssentialFeed
 import Foundation
 
-// Wraps any implementation of `FeedLoader` into a Combine `Publisher`
-public extension FeedLoader {
+// Wraps the `LocalFeedLoader` into a Combine `Publisher`
+// The `FeedLoader` was no longer necessary as we don't require the strategy (remote/local) anymore.
+public extension LocalFeedLoader {
     typealias Publisher = AnyPublisher<[FeedImage], Error>
 
     func loadPublisher() -> Publisher {
         Deferred {
             Future(self.load)
         }
+        .eraseToAnyPublisher()
+    }
+}
+
+extension HTTPClient {
+    typealias Publisher = AnyPublisher<(Data, HTTPURLResponse), Error>
+
+    func getPublisher(from url: URL) -> Publisher {
+        var task: HTTPClientTask?
+
+        return Deferred {
+            Future { completion in
+                task = self.get(from: url, completion: completion)
+            }
+        }
+        .handleEvents(receiveCancel: {
+            task?.cancel()
+        })
         .eraseToAnyPublisher()
     }
 }

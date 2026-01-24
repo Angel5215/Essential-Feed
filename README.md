@@ -10,7 +10,7 @@ Repository created to keep track of the iOS Lead Essentials training program. Th
 
 ### Image Feed Feature
 
-- [Story: Customer requests to see their image feed][bdd-specs]
+- [Story: Customer requests to see their image feed][image-feed-feature-bdd-specs]
 - Use cases:
     - [Load Feed From Remote Use Case][load-feed-from-remote-use-case]
     - [Load Feed From Cache Use Case][load-feed-from-cache-use-case]
@@ -19,18 +19,37 @@ Repository created to keep track of the iOS Lead Essentials training program. Th
     - [Load Feed Image Data From Remote Use Case][load-feed-image-data-from-remote-use-case]
     - [Load Feed Image Data From Cache Use Case][load-feed-image-data-from-cache-use-case]
     - [Cache Feed Image Data Use Case][cache-feed-image-data-use-case]
-- [API model][api-model]
+- [API model][image-feed-feature-api-model]
+
+### Image Comments Feature
+
+- [Story: Image Comments][image-comments-bdd-specs]
+- Use cases:
+    - [Load Image Comments From Remote Use Case][load-image-comments-from-remote-use-case]
+- [API model][image-comments-api-model]
+- [UI Specs][image-comments-ui-specs]
+
 
 <!-- Start Link section -->
-[bdd-specs]: Docs/image-feed-feature/user-story.md
-[api-model]: Docs/image-feed-feature/api-model.md
+[image-feed-feature-bdd-specs]: Docs/image-feed-feature/user-story.md
+[image-feed-feature-api-model]: Docs/image-feed-feature/api-model.md
+
+[image-comments-bdd-specs]: Docs/image-comments-feature/user-story.md
+[image-comments-api-model]: Docs/image-comments-feature/api-model.md
+[image-comments-ui-specs]: Docs/image-comments-feature/ui-specs.md
+
 [load-feed-from-remote-use-case]: Docs/image-feed-feature/load-feed-from-remote-use-case.md
 [load-feed-from-cache-use-case]: Docs/image-feed-feature/load-feed-from-cache-use-case.md
+
 [cache-feed-use-case]: Docs/image-feed-feature/cache-feed-use-case.md
 [validate-feed-cache-use-case]: Docs/image-feed-feature/validate-feed-cache-use-case.md
+
 [load-feed-image-data-from-remote-use-case]: Docs/image-feed-feature/load-feed-image-data-from-remote-use-case.md
 [load-feed-image-data-from-cache-use-case]: Docs/image-feed-feature/load-feed-image-data-from-cache-use-case.md
+
 [cache-feed-image-data-use-case]: Docs/image-feed-feature/cache-feed-image-data-use-case.md
+
+[load-image-comments-from-remote-use-case]: Docs/image-comments-feature/load-image-comments-from-remote-use-case.md
 <!-- End Link section -->
 
 ## Architecture
@@ -40,8 +59,3 @@ Repository created to keep track of the iOS Lead Essentials training program. Th
 ## Flowchart
 
 <img src="Docs/flow-diagram.png" height="500px" alt="Proposed architecture diagram"/>
-
-## Requirements
-
-1. [Stories and Use Cases (Image Feed Feature)](Docs/specs-image-feed-feature.md)
-2. [Image Feed Feature API specs](Docs/specs-api-model.md)

@@ -3,52 +3,12 @@
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
-public final class FeedPresenter {
-    private let feedView: FeedView
-    private let loadingView: ResourceLoadingView
-    private let errorView: ResourceErrorView
-
+public enum FeedPresenter {
     public static var title: String {
         String(localized: "FEED_VIEW_TITLE", table: "Feed", bundle: .module, comment: "Title for the feed view")
-    }
-
-    private var feedLoadError: String {
-        String(
-            localized: "GENERIC_CONNECTION_ERROR",
-            table: "Shared",
-            bundle: .module,
-            comment: "Error message displayed when we can't load the image feed from the server",
-        )
-    }
-
-    public init(feedView: FeedView, loadingView: ResourceLoadingView, errorView: ResourceErrorView) {
-        self.feedView = feedView
-        self.loadingView = loadingView
-        self.errorView = errorView
-    }
-
-    public func didStartLoadingFeed() {
-        errorView.display(.noError)
-        loadingView.display(ResourceLoadingViewModel(isLoading: true))
-    }
-
-    public func didFinishLoadingFeed(with feed: [FeedImage]) {
-        feedView.display(Self.map(feed))
-        loadingView.display(ResourceLoadingViewModel(isLoading: false))
-    }
-
-    public func didFinishLoadingFeed(with error: Error) {
-        loadingView.display(ResourceLoadingViewModel(isLoading: false))
-        errorView.display(.error(message: feedLoadError))
     }
 
     public static func map(_ feed: [FeedImage]) -> FeedViewModel {
         FeedViewModel(feed: feed)
     }
-}
-
-// MARK: - Helpers
-
-public protocol FeedView {
-    func display(_ viewModel: FeedViewModel)
 }

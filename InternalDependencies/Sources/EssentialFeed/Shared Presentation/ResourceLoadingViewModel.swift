@@ -1,8 +1,8 @@
 //
-// FeedLoadingViewModel.swift
+// ResourceLoadingViewModel.swift
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
-public struct FeedLoadingViewModel {
+public struct ResourceLoadingViewModel {
     public let isLoading: Bool
 }

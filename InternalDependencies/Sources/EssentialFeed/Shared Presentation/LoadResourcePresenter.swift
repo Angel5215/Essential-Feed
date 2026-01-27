@@ -8,10 +8,6 @@ public final class LoadResourcePresenter {
     private let loadingView: FeedLoadingView
     private let errorView: FeedErrorView
 
-    public static var title: String {
-        String(localized: "FEED_VIEW_TITLE", table: "Feed", bundle: .module, comment: "Title for the feed view")
-    }
-
     private var feedLoadError: String {
         String(localized: "FEED_VIEW_CONNECTION_ERROR", table: "Feed", bundle: .module, comment: "Error message displayed when we can't load the image feed from the server")
     }

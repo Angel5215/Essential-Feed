@@ -16,7 +16,7 @@ final class FeedUIIntegrationTests: XCTestCase {
 
         sut.simulateAppearance()
 
-        XCTAssertEqual(sut.title, localized("FEED_VIEW_TITLE"))
+        XCTAssertEqual(sut.title, feedTitle)
     }
 
     // MARK: - Load Feed Actions
@@ -109,7 +109,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         XCTAssertNil(sut.errorMessage)
 
         loader.completeFeedLoadingWithError(at: 0)
-        XCTAssertEqual(sut.errorMessage, localized("GENERIC_CONNECTION_ERROR"))
+        XCTAssertEqual(sut.errorMessage, loadError)
 
         sut.simulateUserInitiatedFeedReload()
         XCTAssertNil(sut.errorMessage)

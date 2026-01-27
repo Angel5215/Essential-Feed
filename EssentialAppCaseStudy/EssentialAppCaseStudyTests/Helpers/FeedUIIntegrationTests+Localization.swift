@@ -3,17 +3,21 @@
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
-@_spi(Bundle) import EssentialFeed
+import EssentialFeed
 import XCTest
 
 extension FeedUIIntegrationTests {
-    func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
-        let table = "Feed"
-        let bundle = EssentialFeed.bundle
-        let value = bundle.localizedString(forKey: key, value: nil, table: table)
-        if value == key {
-            XCTFail("Missing localized string for key '\(key)' in table '\(table)'", file: file, line: line)
-        }
-        return value
+    var loadError: String {
+        LoadResourcePresenter<Any, DummyView>.loadError
+    }
+
+    var feedTitle: String {
+        FeedPresenter.title
+    }
+
+    // MARK: - Helpers
+
+    private final class DummyView: ResourceView {
+        func display(_ viewModel: Any) {}
     }
 }

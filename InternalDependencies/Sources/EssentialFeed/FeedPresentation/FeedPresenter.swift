@@ -13,7 +13,12 @@ public final class FeedPresenter {
     }
 
     private var feedLoadError: String {
-        String(localized: "GENERIC_CONNECTION_ERROR", table: "Feed", bundle: .module, comment: "Error message displayed when we can't load the image feed from the server")
+        String(
+            localized: "GENERIC_CONNECTION_ERROR",
+            table: "Shared",
+            bundle: .module,
+            comment: "Error message displayed when we can't load the image feed from the server",
+        )
     }
 
     public init(feedView: FeedView, loadingView: FeedLoadingView, errorView: FeedErrorView) {

@@ -12,7 +12,7 @@ public final class LoadResourcePresenter<Resource, View: ResourceView> {
     private let mapper: Mapper
 
     private var feedLoadError: String {
-        String(localized: "FEED_VIEW_CONNECTION_ERROR", table: "Feed", bundle: .module, comment: "Error message displayed when we can't load the image feed from the server")
+        String(localized: "GENERIC_CONNECTION_ERROR", table: "Feed", bundle: .module, comment: "Error message displayed when we can't load the image feed from the server")
     }
 
     public init(resourceView: View, loadingView: FeedLoadingView, errorView: FeedErrorView, mapper: @escaping Mapper) {
@@ -32,7 +32,7 @@ public final class LoadResourcePresenter<Resource, View: ResourceView> {
         loadingView.display(FeedLoadingViewModel(isLoading: false))
     }
 
-    public func didFinishLoadingFeed(with error: Error) {
+    public func didFinishLoading(with error: Error) {
         loadingView.display(FeedLoadingViewModel(isLoading: false))
         errorView.display(.error(message: feedLoadError))
     }

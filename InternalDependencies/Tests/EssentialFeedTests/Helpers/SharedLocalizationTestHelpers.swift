@@ -33,7 +33,7 @@ private func allLocalizationBundles(in bundle: Bundle, file: StaticString = #fil
             let path = bundle.path(forResource: localization, ofType: "lproj"),
             let localizedBundle = Bundle(path: path)
         else {
-            XCTFail("Couldn't find bundle for localization: \(localization)", file: file, line: line)
+            XCTFail("Couldn't find bundle for localization: '\(localization)'", file: file, line: line)
             return nil
         }
 
@@ -48,7 +48,7 @@ private func allLocalizedStringKeys(in bundles: [LocalizedBundle], table: String
             let strings = NSDictionary(contentsOfFile: path),
             let keys = strings.allKeys as? [String]
         else {
-            XCTFail("Couldn't load localized strings for localization: \(current.localization)", file: file, line: line)
+            XCTFail("Couldn't load localized strings for localization: '\(current.localization)'", file: file, line: line)
             return acc
         }
 

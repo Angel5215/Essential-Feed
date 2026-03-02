@@ -26,10 +26,17 @@ public enum ImageCommentsPresenter {
         String(localized: "IMAGE_COMMENTS_VIEW_TITLE", table: "ImageComments", bundle: .module, comment: "Title for the feed view")
     }
 
-    public static let formatter = RelativeDateTimeFormatter()
+    public static func map(
+        _ comments: [ImageComment],
+        currentDate: Date = Date(),
+        calendar: Calendar = .current,
+        locale: Locale = .current,
+    ) -> ImageCommentsViewModel {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.calendar = calendar
+        formatter.locale = locale
 
-    public static func map(_ comments: [ImageComment]) -> ImageCommentsViewModel {
-        ImageCommentsViewModel(
+        return ImageCommentsViewModel(
             comments: comments.map { comment in
                 ImageCommentViewModel(
                     message: comment.message,

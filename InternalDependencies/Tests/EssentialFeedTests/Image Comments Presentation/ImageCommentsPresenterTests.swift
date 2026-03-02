@@ -7,26 +7,20 @@ import XCTest
 @_spi(Bundle) import EssentialFeed
 
 final class ImageCommentsPresenterTests: XCTestCase {
-    override func setUp() {
-        ImageCommentsPresenter.formatter.locale = Locale(identifier: "en_US_POSIX")
-    }
-
-    override func tearDown() {
-        ImageCommentsPresenter.formatter.locale = .autoupdatingCurrent
-    }
-
     func test_title_isLocalized() {
         XCTAssertEqual(ImageCommentsPresenter.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
     }
 
     func test_map_createsViewModels() {
         let now = Date()
+        let calendar = Calendar(identifier: .gregorian)
+        let locale = Locale(identifier: "en_US_POSIX")
         let comments = [
             ImageComment(id: UUID(), message: "a message", creationDate: now.adding(minutes: -5), username: "a username"),
             ImageComment(id: UUID(), message: "another message", creationDate: now.adding(days: -1), username: "another username"),
         ]
 
-        let viewModel = ImageCommentsPresenter.map(comments)
+        let viewModel = ImageCommentsPresenter.map(comments, currentDate: now, calendar: calendar, locale: locale)
 
         XCTAssertEqual(viewModel.comments, [
             ImageCommentViewModel(message: "a message", date: "5 minutes ago", username: "a username"),

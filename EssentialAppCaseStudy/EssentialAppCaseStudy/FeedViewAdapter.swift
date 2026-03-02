@@ -36,10 +36,10 @@ final class FeedViewAdapter: ResourceView {
             }
         )
     }
+
+    // MARK: - Helpers
+
+    private typealias ImagePresentationAdapter = LoadResourcePresentationAdapter<Data, WeakReferenceVirtualProxy<FeedImageCellController>>
+
+    private struct InvalidImageData: Error {}
 }
-
-// MARK: - Helpers
-
-private typealias ImagePresentationAdapter = LoadResourcePresentationAdapter<Data, WeakReferenceVirtualProxy<FeedImageCellController>>
-
-private struct InvalidImageData: Error {}

@@ -9,4 +9,4 @@ xcodebuild clean build test \
     -enableThreadSanitizer YES \
     CODE_SIGN_IDENTITY="" \
     CODE_SIGNING_REQUIRED=NO \
-    ONLY_ACTIVE_ARCH=YES | xcbeautify --disable-logging --renderer github-actions --quieter --is-ci
+    ONLY_ACTIVE_ARCH=YES | xcbeautify --disable-logging --renderer github-actions --preserve-unbeautified

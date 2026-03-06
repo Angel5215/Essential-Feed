@@ -14,20 +14,20 @@ final class WeakReferenceVirtualProxy<Object: AnyObject> {
     }
 }
 
-extension WeakReferenceVirtualProxy: FeedLoadingView where Object: FeedLoadingView {
-    func display(_ viewModel: FeedLoadingViewModel) {
+extension WeakReferenceVirtualProxy: ResourceLoadingView where Object: ResourceLoadingView {
+    func display(_ viewModel: ResourceLoadingViewModel) {
         object?.display(viewModel)
     }
 }
 
-extension WeakReferenceVirtualProxy: FeedImageView where Object: FeedImageView, Object.Image == UIImage {
-    func display(_ model: FeedImageViewModel<UIImage>) {
-        object?.display(model)
+extension WeakReferenceVirtualProxy: ResourceView where Object: ResourceView, Object.ResourceViewModel == UIImage {
+    func display(_ viewModel: UIImage) {
+        object?.display(viewModel)
     }
 }
 
-extension WeakReferenceVirtualProxy: FeedErrorView where Object: FeedErrorView {
-    func display(_ viewModel: FeedErrorViewModel) {
+extension WeakReferenceVirtualProxy: ResourceErrorView where Object: ResourceErrorView {
+    func display(_ viewModel: ResourceErrorViewModel) {
         object?.display(viewModel)
     }
 }

@@ -6,7 +6,7 @@
 import EssentialFeedMobile
 import UIKit
 
-extension FeedViewController {
+extension ListViewController {
     private var feedImagesSection: Int {
         0
     }

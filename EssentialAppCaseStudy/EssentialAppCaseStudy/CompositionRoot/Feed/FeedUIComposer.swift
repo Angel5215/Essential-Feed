@@ -12,7 +12,7 @@ public enum FeedUIComposer {
     public static func feedComposedWith(
         feedLoader: @escaping () -> AnyPublisher<[FeedImage], Error>,
         imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher,
-    ) -> FeedViewController {
+    ) -> ListViewController {
         let presentationAdapter = FeedPresentationAdapter(loader: feedLoader)
         let feedController = makeFeedViewController(delegate: presentationAdapter, title: FeedPresenter.title)
         presentationAdapter.presenter = LoadResourcePresenter(
@@ -28,8 +28,8 @@ public enum FeedUIComposer {
 
     private typealias FeedPresentationAdapter = LoadResourcePresentationAdapter<[FeedImage], FeedViewAdapter>
 
-    private static func makeFeedViewController(delegate: FeedViewControllerDelegate, title: String) -> FeedViewController {
-        let feedController = UIStoryboard.feed.instantiateInitialViewController() as! FeedViewController
+    private static func makeFeedViewController(delegate: FeedViewControllerDelegate, title: String) -> ListViewController {
+        let feedController = UIStoryboard.feed.instantiateInitialViewController() as! ListViewController
         feedController.delegate = delegate
         feedController.title = title
         return feedController

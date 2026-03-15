@@ -1,5 +1,5 @@
 //
-// FeedViewController.swift
+// ListViewController.swift
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
@@ -16,8 +16,8 @@ public protocol CellController {
     func cancelLoad()
 }
 
-public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
-    private var onViewIsAppearing: ((FeedViewController) -> Void)?
+public final class ListViewController: UITableViewController, UITableViewDataSourcePrefetching {
+    private var onViewIsAppearing: ((ListViewController) -> Void)?
 
     public var delegate: FeedViewControllerDelegate?
     @IBOutlet public private(set) var errorView: ErrorView?
@@ -93,13 +93,13 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     }
 }
 
-extension FeedViewController: ResourceLoadingView {
+extension ListViewController: ResourceLoadingView {
     public func display(_ viewModel: ResourceLoadingViewModel) {
         refreshControl?.update(isRefreshing: viewModel.isLoading)
     }
 }
 
-extension FeedViewController: ResourceErrorView {
+extension ListViewController: ResourceErrorView {
     public func display(_ viewModel: ResourceErrorViewModel) {
         errorView?.message = viewModel.message
     }

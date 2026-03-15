@@ -14,23 +14,23 @@ public enum FeedUIComposer {
         imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher,
     ) -> ListViewController {
         let presentationAdapter = FeedPresentationAdapter(loader: feedLoader)
-        let feedController = makeFeedViewController(delegate: presentationAdapter, title: FeedPresenter.title)
+        let feedViewController = makeFeedViewController(title: FeedPresenter.title)
+        feedViewController.onRefresh = presentationAdapter.loadResource
         presentationAdapter.presenter = LoadResourcePresenter(
-            resourceView: FeedViewAdapter(controller: feedController, imageLoader: imageLoader),
-            loadingView: WeakReferenceVirtualProxy(feedController),
-            errorView: WeakReferenceVirtualProxy(feedController),
+            resourceView: FeedViewAdapter(controller: feedViewController, imageLoader: imageLoader),
+            loadingView: WeakReferenceVirtualProxy(feedViewController),
+            errorView: WeakReferenceVirtualProxy(feedViewController),
             mapper: FeedPresenter.map,
         )
-        return feedController
+        return feedViewController
     }
 
     // MARK: - Helpers
 
     private typealias FeedPresentationAdapter = LoadResourcePresentationAdapter<[FeedImage], FeedViewAdapter>
 
-    private static func makeFeedViewController(delegate: FeedViewControllerDelegate, title: String) -> ListViewController {
+    private static func makeFeedViewController(title: String) -> ListViewController {
         let feedController = UIStoryboard.feed.instantiateInitialViewController() as! ListViewController
-        feedController.delegate = delegate
         feedController.title = title
         return feedController
     }

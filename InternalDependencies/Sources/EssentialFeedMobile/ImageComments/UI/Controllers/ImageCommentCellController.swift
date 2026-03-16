@@ -6,14 +6,12 @@
 import EssentialFeed
 import UIKit
 
-public final class ImageCommentCellController: NSObject, CellController {
+public final class ImageCommentCellController: NSObject, UITableViewDataSource {
     private let model: ImageCommentViewModel
 
     public init(model: ImageCommentViewModel) {
         self.model = model
     }
-
-    public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {}
 
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         1

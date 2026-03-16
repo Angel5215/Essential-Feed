@@ -115,6 +115,21 @@ final class FeedUIIntegrationTests: XCTestCase {
         XCTAssertNil(sut.errorMessage)
     }
 
+    // MARK: - Error view
+
+    func test_tapOnErrorView_hidesErrorMessage() {
+        let (sut, loader) = makeSUT()
+
+        sut.simulateAppearance()
+        XCTAssertNil(sut.errorMessage)
+
+        loader.completeFeedLoadingWithError()
+        XCTAssertEqual(sut.errorMessage, loadError)
+
+        sut.simulateErrorViewTap()
+        XCTAssertNil(sut.errorMessage)
+    }
+
     // MARK: - Concurrency
 
     func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {

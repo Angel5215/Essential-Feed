@@ -18,11 +18,7 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
 
     override public func viewDidLoad() {
         super.viewDidLoad()
-
-        dataSource.defaultRowAnimation = .fade
-        tableView.dataSource = dataSource
-        configureErrorView()
-
+        configureTableView()
         onViewIsAppearing = { vc in
             vc.onViewIsAppearing = nil
             vc.refresh()
@@ -76,9 +72,10 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
         dataSource.itemIdentifier(for: indexPath)
     }
 
-    private func configureErrorView() {
-        let container = errorView.makeContainer()
-        tableView.tableHeaderView = container
+    private func configureTableView() {
+        dataSource.defaultRowAnimation = .fade
+        tableView.dataSource = dataSource
+        tableView.tableHeaderView = errorView.makeContainer()
         errorView.onHide = { [weak self] in
             self?.tableView.beginUpdates()
             self?.tableView.sizeTableHeaderToFit()

@@ -6,7 +6,7 @@
 import EssentialFeedMobile
 import UIKit
 
-extension FeedViewController {
+extension ListViewController {
     private var feedImagesSection: Int {
         0
     }
@@ -16,7 +16,11 @@ extension FeedViewController {
     }
 
     var errorMessage: String? {
-        errorView?.message
+        errorView.message
+    }
+
+    func simulateErrorViewTap() {
+        errorView.simulateTap()
     }
 
     func simulateAppearance() {
@@ -34,7 +38,7 @@ extension FeedViewController {
     }
 
     func numberOfRenderedFeedImageViews() -> Int {
-        tableView.numberOfRows(inSection: feedImagesSection)
+        tableView.numberOfSections == 0 ? 0 : tableView.numberOfRows(inSection: feedImagesSection)
     }
 
     func feedImageView(at row: Int) -> UITableViewCell? {
@@ -81,7 +85,12 @@ extension FeedViewController {
     // MARK: - Helpers
 
     private func prepareForFirstAppearance() {
+        setSmallFrameToPreventRenderingCells()
         replaceRefreshControlWithFakeForiOS17OrLaterSupport()
+    }
+
+    private func setSmallFrameToPreventRenderingCells() {
+        tableView.frame = CGRect(x: 0, y: 0, width: 1, height: 1)
     }
 
     private func replaceRefreshControlWithFakeForiOS17OrLaterSupport() {

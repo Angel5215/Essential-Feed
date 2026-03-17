@@ -12,25 +12,25 @@ public enum FeedUIComposer {
     public static func feedComposedWith(
         feedLoader: @escaping () -> AnyPublisher<[FeedImage], Error>,
         imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher,
-    ) -> FeedViewController {
+    ) -> ListViewController {
         let presentationAdapter = FeedPresentationAdapter(loader: feedLoader)
-        let feedController = makeFeedViewController(delegate: presentationAdapter, title: FeedPresenter.title)
+        let feedViewController = makeFeedViewController(title: FeedPresenter.title)
+        feedViewController.onRefresh = presentationAdapter.loadResource
         presentationAdapter.presenter = LoadResourcePresenter(
-            resourceView: FeedViewAdapter(controller: feedController, imageLoader: imageLoader),
-            loadingView: WeakReferenceVirtualProxy(feedController),
-            errorView: WeakReferenceVirtualProxy(feedController),
+            resourceView: FeedViewAdapter(controller: feedViewController, imageLoader: imageLoader),
+            loadingView: WeakReferenceVirtualProxy(feedViewController),
+            errorView: WeakReferenceVirtualProxy(feedViewController),
             mapper: FeedPresenter.map,
         )
-        return feedController
+        return feedViewController
     }
 
     // MARK: - Helpers
 
     private typealias FeedPresentationAdapter = LoadResourcePresentationAdapter<[FeedImage], FeedViewAdapter>
 
-    private static func makeFeedViewController(delegate: FeedViewControllerDelegate, title: String) -> FeedViewController {
-        let feedController = UIStoryboard.feed.instantiateInitialViewController() as! FeedViewController
-        feedController.delegate = delegate
+    private static func makeFeedViewController(title: String) -> ListViewController {
+        let feedController = UIStoryboard.feed.instantiateInitialViewController() as! ListViewController
         feedController.title = title
         return feedController
     }

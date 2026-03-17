@@ -8,15 +8,6 @@ import EssentialFeedMobile
 import XCTest
 
 final class FeedSnapshotTests: XCTestCase {
-    func test_emptyFeed() {
-        let sut = makeSUT()
-
-        sut.display(emptyFeed())
-
-        assert(snapshot: sut.snapshot(for: .iPhone(style: .light)), named: "EMPTY_FEED_light")
-        assert(snapshot: sut.snapshot(for: .iPhone(style: .dark)), named: "EMPTY_FEED_dark")
-    }
-
     func test_feedWithContent() {
         let sut = makeSUT()
 
@@ -24,20 +15,7 @@ final class FeedSnapshotTests: XCTestCase {
 
         assert(snapshot: sut.snapshot(for: .iPhone(style: .light)), named: "FEED_WITH_CONTENT_light")
         assert(snapshot: sut.snapshot(for: .iPhone(style: .dark)), named: "FEED_WITH_CONTENT_dark")
-    }
-
-    func test_feedWithErrorMessage() {
-        let errorMessage = """
-        This is a
-        multi-line
-        error message
-        """
-        let sut = makeSUT()
-
-        sut.display(.error(message: errorMessage))
-
-        assert(snapshot: sut.snapshot(for: .iPhone(style: .light)), named: "FEED_WITH_ERROR_MESSAGE_light")
-        assert(snapshot: sut.snapshot(for: .iPhone(style: .dark)), named: "FEED_WITH_ERROR_MESSAGE_dark")
+        assert(snapshot: sut.snapshot(for: .iPhone(style: .light, contentSize: .extraExtraExtraLarge)), named: "FEED_WITH_CONTENT_light_extraExtraExtraLarge")
     }
 
     func test_feedWithFailedImageLoading() {
@@ -51,16 +29,12 @@ final class FeedSnapshotTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func makeSUT() -> FeedViewController {
-        let controller = UIStoryboard.feed.instantiateInitialViewController() as! FeedViewController
+    private func makeSUT() -> ListViewController {
+        let controller = UIStoryboard.feed.instantiateInitialViewController() as! ListViewController
         controller.loadViewIfNeeded()
         controller.tableView.showsVerticalScrollIndicator = false
         controller.tableView.showsHorizontalScrollIndicator = false
         return controller
-    }
-
-    private func emptyFeed() -> [FeedImageCellController] {
-        []
     }
 
     private func feedWithContent() -> [ImageStub] {
@@ -96,12 +70,12 @@ final class FeedSnapshotTests: XCTestCase {
 
 // MARK: - Helpers
 
-private extension FeedViewController {
+private extension ListViewController {
     func display(_ stubs: [ImageStub]) {
-        let cells: [FeedImageCellController] = stubs.map { stub in
+        let cells: [CellController] = stubs.map { stub in
             let cellController = FeedImageCellController(viewModel: stub.viewModel, delegate: stub)
             stub.controller = cellController
-            return cellController
+            return CellController(id: UUID(), cellController)
         }
         display(cells)
     }

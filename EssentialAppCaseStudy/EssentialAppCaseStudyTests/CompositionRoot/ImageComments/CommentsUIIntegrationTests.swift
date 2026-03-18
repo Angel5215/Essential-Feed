@@ -11,12 +11,12 @@ import XCTest
 final class CommentsUIIntegrationTests: FeedUIIntegrationTests {
     // MARK: - Localization
 
-    override func test_feedView_hasTitle() {
+    func test_commentsView_hasTitle() {
         let (sut, _) = makeSUT()
 
         sut.simulateAppearance()
 
-        XCTAssertEqual(sut.title, feedTitle)
+        XCTAssertEqual(sut.title, commentsTitle)
     }
 
     // MARK: - Load Feed Actions

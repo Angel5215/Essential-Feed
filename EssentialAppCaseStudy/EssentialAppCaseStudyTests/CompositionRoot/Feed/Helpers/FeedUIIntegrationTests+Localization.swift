@@ -15,6 +15,10 @@ extension FeedUIIntegrationTests {
         FeedPresenter.title
     }
 
+    var commentsTitle: String {
+        ImageCommentsPresenter.title
+    }
+
     // MARK: - Helpers
 
     private final class DummyView: ResourceView {

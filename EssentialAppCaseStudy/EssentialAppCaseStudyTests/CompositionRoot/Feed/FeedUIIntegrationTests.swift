@@ -8,7 +8,7 @@ import EssentialFeed
 import EssentialFeedMobile
 import XCTest
 
-final class FeedUIIntegrationTests: XCTestCase {
+open class FeedUIIntegrationTests: XCTestCase {
     // MARK: - Localization
 
     func test_feedView_hasTitle() {

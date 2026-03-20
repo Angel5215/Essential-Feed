@@ -130,14 +130,14 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTests {
 
     // MARK: - Concurrency
 
-    override func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
-        let image = makeComment()
+    func test_loadCommentsCompletion_dispatchesFromBackgroundToMainThread() {
+        let comment = makeComment()
         let (sut, loader) = makeSUT()
         sut.simulateAppearance()
 
         let exp = expectation(description: "Wait for background queue")
         DispatchQueue.global().async {
-            loader.completeCommentsLoading(with: [image], at: 0)
+            loader.completeCommentsLoading(with: [comment], at: 0)
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1)

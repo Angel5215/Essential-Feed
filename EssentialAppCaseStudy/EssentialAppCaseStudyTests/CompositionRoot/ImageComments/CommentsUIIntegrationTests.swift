@@ -9,7 +9,7 @@ import EssentialFeed
 import EssentialFeedMobile
 import XCTest
 
-final class CommentsUIIntegrationTests: FeedUIIntegrationTests {
+final class CommentsUIIntegrationTests: XCTestCase {
     // MARK: - Localization
 
     func test_commentsView_hasTitle() {
@@ -20,7 +20,7 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTests {
         XCTAssertEqual(sut.title, commentsTitle)
     }
 
-    // MARK: - Load Feed Actions
+    // MARK: - Load Comments Actions
 
     func test_loadCommentsActions_requestCommentsFromLoader() {
         let (sut, loader) = makeSUT()
@@ -54,7 +54,7 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTests {
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading completes with an error")
     }
 
-    // MARK: - Load Feed Completion
+    // MARK: - Load Comments Completion
 
     func test_loadCommentsCompletion_rendersSuccessfullyLoadedComments() {
         let comment0 = makeComment(message: "a message", username: "a username")
@@ -100,7 +100,7 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTests {
         assertThat(sut, isRendering: [comment])
     }
 
-    override func test_loadFeedCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+    func test_loadCommentsCompletion_rendersErrorMessageOnErrorUntilNextReload() {
         let (sut, loader) = makeSUT()
 
         sut.simulateAppearance()
@@ -115,7 +115,7 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTests {
 
     // MARK: - Error view
 
-    override func test_tapOnErrorView_hidesErrorMessage() {
+    func test_tapOnErrorView_hidesErrorMessage() {
         let (sut, loader) = makeSUT()
 
         sut.simulateAppearance()
@@ -178,8 +178,6 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTests {
     }
 
     final class LoaderSpy {
-        // MARK: - FeedLoader
-
         private var requests = [PassthroughSubject<[ImageComment], Error>]()
 
         var loadCommentsCallCount: Int {

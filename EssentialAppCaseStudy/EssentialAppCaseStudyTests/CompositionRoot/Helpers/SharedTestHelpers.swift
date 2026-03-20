@@ -23,3 +23,21 @@ func uniqueFeed() -> [FeedImage] {
         FeedImage(id: UUID(), description: "any", location: "any", url: URL(string: "https://any-url.com")!)
     ]
 }
+
+// MARK: - Feed + Image Comments Localization
+
+var loadError: String {
+    LoadResourcePresenter<Any, DummyView>.loadError
+}
+
+var feedTitle: String {
+    FeedPresenter.title
+}
+
+var commentsTitle: String {
+    ImageCommentsPresenter.title
+}
+
+private final class DummyView: ResourceView {
+    func display(_ viewModel: Any) {}
+}

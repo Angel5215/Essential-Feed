@@ -6,11 +6,9 @@
 import EssentialFeedMobile
 import UIKit
 
-extension ListViewController {
-    private var feedImagesSection: Int {
-        0
-    }
+// MARK: - Shared
 
+extension ListViewController {
     var isShowingLoadingIndicator: Bool {
         refreshControl?.isRefreshing == true
     }
@@ -35,6 +33,53 @@ extension ListViewController {
 
     func simulateUserInitiatedReload() {
         refreshControl?.simulatePullToRefresh()
+    }
+
+    // MARK: - Helpers
+
+    private func prepareForFirstAppearance() {
+        setSmallFrameToPreventRenderingCells()
+        replaceRefreshControlWithFakeForiOS17OrLaterSupport()
+    }
+
+    private func setSmallFrameToPreventRenderingCells() {
+        tableView.frame = CGRect(x: 0, y: 0, width: 390, height: 1)
+    }
+
+    private func replaceRefreshControlWithFakeForiOS17OrLaterSupport() {
+        let fakeRefreshControl = FakeUIRefreshControl()
+
+        refreshControl?.allTargets.forEach { target in
+            refreshControl?.actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
+                fakeRefreshControl.addTarget(target, action: Selector(action), for: .valueChanged)
+            }
+        }
+
+        refreshControl = fakeRefreshControl
+    }
+
+    private final class FakeUIRefreshControl: UIRefreshControl {
+        private var _isRefreshing = false
+
+        override var isRefreshing: Bool {
+            _isRefreshing
+        }
+
+        override func beginRefreshing() {
+            _isRefreshing = true
+        }
+
+        override func endRefreshing() {
+            _isRefreshing = false
+        }
+    }
+}
+
+// MARK: - Feed
+
+extension ListViewController {
+    private var feedImagesSection: Int {
+        0
     }
 
     func numberOfRenderedFeedImageViews() -> Int {
@@ -81,43 +126,36 @@ extension ListViewController {
     func renderedFeedImageData(at index: Int) -> Data? {
         simulateFeedImageViewVisible(at: index)?.renderedImage
     }
+}
 
-    // MARK: - Helpers
+// MARK: - Image Comments
 
-    private func prepareForFirstAppearance() {
-        setSmallFrameToPreventRenderingCells()
-        replaceRefreshControlWithFakeForiOS17OrLaterSupport()
+extension ListViewController {
+    private var commentsSection: Int {
+        0
     }
 
-    private func setSmallFrameToPreventRenderingCells() {
-        tableView.frame = CGRect(x: 0, y: 0, width: 1, height: 1)
+    func numberOfRenderedComments() -> Int {
+        tableView.numberOfSections == 0 ? 0 : tableView.numberOfRows(inSection: commentsSection)
     }
 
-    private func replaceRefreshControlWithFakeForiOS17OrLaterSupport() {
-        let fakeRefreshControl = FakeUIRefreshControl()
-
-        refreshControl?.allTargets.forEach { target in
-            refreshControl?.actions(forTarget: target, forControlEvent: .valueChanged)?.forEach { action in
-                fakeRefreshControl.addTarget(target, action: Selector(action), for: .valueChanged)
-            }
-        }
-
-        refreshControl = fakeRefreshControl
+    func commentMessage(at row: Int) -> String? {
+        commentView(at: row)?.messageLabel.text
     }
 
-    private final class FakeUIRefreshControl: UIRefreshControl {
-        private var _isRefreshing = false
+    func commentDate(at row: Int) -> String? {
+        commentView(at: row)?.dateLabel.text
+    }
 
-        override var isRefreshing: Bool {
-            _isRefreshing
-        }
+    func commentUsername(at row: Int) -> String? {
+        commentView(at: row)?.usernameLabel.text
+    }
 
-        override func beginRefreshing() {
-            _isRefreshing = true
-        }
+    private func commentView(at row: Int) -> ImageCommentCell? {
+        guard numberOfRenderedComments() > row else { return nil }
 
-        override func endRefreshing() {
-            _isRefreshing = false
-        }
+        let dataSource = tableView.dataSource
+        let index = IndexPath(row: row, section: commentsSection)
+        return dataSource?.tableView(tableView, cellForRowAt: index) as? ImageCommentCell
     }
 }

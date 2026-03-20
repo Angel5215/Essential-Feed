@@ -5,8 +5,8 @@
 
 import UIKit
 
-final class ImageCommentCell: UITableViewCell {
-    @IBOutlet private(set) var usernameLabel: UILabel!
-    @IBOutlet private(set) var dateLabel: UILabel!
-    @IBOutlet private(set) var messageLabel: UILabel!
+public final class ImageCommentCell: UITableViewCell {
+    @IBOutlet public private(set) var usernameLabel: UILabel!
+    @IBOutlet public private(set) var dateLabel: UILabel!
+    @IBOutlet public private(set) var messageLabel: UILabel!
 }

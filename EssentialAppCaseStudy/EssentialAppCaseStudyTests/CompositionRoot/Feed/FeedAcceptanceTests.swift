@@ -53,6 +53,13 @@ final class FeedAcceptanceTests: XCTestCase {
         XCTAssertNotNil(store.feedCache, "Expected to keep non-expired cache")
     }
 
+    func test_onFeedImageSelection_displaysComments() throws {
+        let comments = try showCommentsForFirstImage()
+
+        XCTAssertEqual(comments.numberOfRenderedComments(), 1)
+        XCTAssertEqual(comments.commentMessage(at: 0), makeCommentMessage())
+    }
+
     // MARK: - Helpers
 
     private func launch(httpClient: HTTPClientStub, store: InMemoryFeedStore) throws -> ListViewController {
@@ -60,8 +67,8 @@ final class FeedAcceptanceTests: XCTestCase {
         sut.window = try UIWindowSpy.make()
         sut.configureWindow()
 
-        let nav = sut.window?.rootViewController as? UINavigationController
-        let feed = nav?.topViewController as! ListViewController
+        let navigationController = sut.window?.rootViewController as? UINavigationController
+        let feed = navigationController?.topViewController as! ListViewController
         feed.simulateAppearance()
 
         return feed
@@ -70,6 +77,18 @@ final class FeedAcceptanceTests: XCTestCase {
     private func enterBackground(with store: InMemoryFeedStore) {
         let sut = SceneDelegate(httpClient: HTTPClientStub.offline, store: store)
         sut.sceneWillResignActive(UIApplication.shared.connectedScenes.first!)
+    }
+
+    private func showCommentsForFirstImage() throws -> ListViewController {
+        let feed = try launch(httpClient: .online(response(for:)), store: .empty)
+
+        feed.simulateTapOnFeedImage(at: 0)
+        RunLoop.current.run(until: Date())
+
+        let navigationController = feed.navigationController
+        let commentsViewController = navigationController?.topViewController as! ListViewController
+        commentsViewController.simulateAppearance()
+        return commentsViewController
     }
 
     private final class HTTPClientStub: HTTPClient {
@@ -160,6 +179,8 @@ final class FeedAcceptanceTests: XCTestCase {
             makeImageData()
         case "/essential-feed/v1/feed":
             makeFeedData()
+        case "/essential-feed/v1/image/2AB2AE66-A4B7-4A16-B374-51BBAC8DB086/comments":
+            makeCommentsData()
         default:
             Data()
         }
@@ -173,11 +194,38 @@ final class FeedAcceptanceTests: XCTestCase {
         try! JSONSerialization.data(
             withJSONObject: [
                 "items": [
-                    ["id": "2AB2AE66-A4B7-4A16-B374-51BBAC8DB086", "image": "http://feed.com/image-1"],
-                    ["id": "A28F5FE3-27A7-44E9-8DF5-53742D0E4A5A", "image": "http://feed.com/image-2"],
+                    [
+                        "id": "2AB2AE66-A4B7-4A16-B374-51BBAC8DB086",
+                        "image": "http://feed.com/image-1",
+                    ],
+                    [
+                        "id": "A28F5FE3-27A7-44E9-8DF5-53742D0E4A5A",
+                        "image": "http://feed.com/image-2",
+                    ],
                 ]
             ]
         )
+    }
+
+    private func makeCommentsData() -> Data {
+        try! JSONSerialization.data(
+            withJSONObject: [
+                "items": [
+                    [
+                        "id": UUID().uuidString,
+                        "message": makeCommentMessage(),
+                        "created_at": "2020-05-20T11:24:59+0000",
+                        "author": [
+                            "username": "a username"
+                        ],
+                    ]
+                ]
+            ]
+        )
+    }
+
+    private func makeCommentMessage() -> String {
+        "a message"
     }
 
     private final class UIWindowSpy: UIWindow {

@@ -59,6 +59,11 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
         }
     }
 
+    override public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let delegate = cellController(at: indexPath)?.delegate
+        delegate?.tableView?(tableView, didSelectRowAt: indexPath)
+    }
+
     // MARK: - Helpers
 
     public func display(_ cellControllers: [CellController]) {

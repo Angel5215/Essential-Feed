@@ -59,7 +59,7 @@ extension FeedUIIntegrationTests {
     }
 }
 
-private extension ListViewController {
+extension ListViewController {
     func enforceLayoutCycleToRenderTable() {
         tableView.layoutIfNeeded()
         RunLoop.current.run(until: Date())

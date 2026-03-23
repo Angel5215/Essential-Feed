@@ -40,7 +40,7 @@ final class FeedViewAdapter: ResourceView {
                 errorView: WeakReferenceVirtualProxy(view),
                 mapper: UIImage.tryMake,
             )
-            return CellController(id: model, view)
+            return CellController(id: model, dataSource: view)
         }
 
         if let loadMorePublisher = viewModel.loadMorePublisher {
@@ -54,7 +54,7 @@ final class FeedViewAdapter: ResourceView {
                 mapper: \.self,
             )
 
-            let loadMoreSection = [CellController(id: UUID(), dataSource: loadMoreController, delegate: loadMoreController)]
+            let loadMoreSection = [CellController(id: UUID(), dataSource: loadMoreController)]
             controller?.display(feedSection, loadMoreSection)
         } else {
             controller?.display(feedSection)

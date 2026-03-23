@@ -23,27 +23,32 @@ final class FeedViewAdapter: ResourceView {
     }
 
     func display(_ viewModel: Paginated<FeedImage>) {
-        controller?.display(
-            viewModel.items.map { model in
-                let adapter = ImagePresentationAdapter { [imageLoader] in
-                    imageLoader(model.url)
-                }
-                let view = FeedImageCellController(
-                    viewModel: FeedImagePresenter.map(model),
-                    delegate: adapter,
-                    selection: { [selection] in
-                        selection(model)
-                    },
-                )
-                adapter.presenter = LoadResourcePresenter(
-                    resourceView: WeakReferenceVirtualProxy(view),
-                    loadingView: WeakReferenceVirtualProxy(view),
-                    errorView: WeakReferenceVirtualProxy(view),
-                    mapper: UIImage.tryMake,
-                )
-                return CellController(id: model, view)
+        let feedSection: [CellController] = viewModel.items.map { model in
+            let adapter = ImagePresentationAdapter { [imageLoader] in
+                imageLoader(model.url)
             }
-        )
+            let view = FeedImageCellController(
+                viewModel: FeedImagePresenter.map(model),
+                delegate: adapter,
+                selection: { [selection] in
+                    selection(model)
+                },
+            )
+            adapter.presenter = LoadResourcePresenter(
+                resourceView: WeakReferenceVirtualProxy(view),
+                loadingView: WeakReferenceVirtualProxy(view),
+                errorView: WeakReferenceVirtualProxy(view),
+                mapper: UIImage.tryMake,
+            )
+            return CellController(id: model, view)
+        }
+
+        let loadMore = LoadMoreCellController {
+            viewModel.loadMore? { _ in }
+        }
+        let loadMoreSection = [CellController(id: UUID(), dataSource: loadMore, delegate: loadMore)]
+
+        controller?.display(feedSection, loadMoreSection)
     }
 
     // MARK: - Helpers

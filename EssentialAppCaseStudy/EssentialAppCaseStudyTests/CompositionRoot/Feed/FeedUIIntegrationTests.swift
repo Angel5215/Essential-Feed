@@ -43,6 +43,9 @@ open class FeedUIIntegrationTests: XCTestCase {
 
         sut.simulateLoadMoreFeedAction()
         XCTAssertEqual(loader.loadMoreCallCount, 1, "Expected a loading request on load more action")
+
+        sut.simulateLoadMoreFeedAction()
+        XCTAssertEqual(loader.loadMoreCallCount, 1, "Expected no request while loading more")
     }
 
     // MARK: - Loading Indicator

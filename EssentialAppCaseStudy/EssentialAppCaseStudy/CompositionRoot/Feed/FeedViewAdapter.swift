@@ -24,7 +24,7 @@ final class FeedViewAdapter: ResourceView {
 
     func display(_ viewModel: Paginated<FeedImage>) {
         let feedSection: [CellController] = viewModel.items.map { model in
-            let adapter = ImagePresentationAdapter { [imageLoader] in
+            let adapter = ImageDataPresentationAdapter { [imageLoader] in
                 imageLoader(model.url)
             }
             let view = FeedImageCellController(
@@ -43,17 +43,28 @@ final class FeedViewAdapter: ResourceView {
             return CellController(id: model, view)
         }
 
-        let loadMore = LoadMoreCellController {
-            viewModel.loadMore? { _ in }
-        }
-        let loadMoreSection = [CellController(id: UUID(), dataSource: loadMore, delegate: loadMore)]
+        if let loadMorePublisher = viewModel.loadMorePublisher {
+            let loadMoreAdapter = LoadMorePresentationAdapter(loader: loadMorePublisher)
+            let loadMoreController = LoadMoreCellController(callback: loadMoreAdapter.loadResource)
 
-        controller?.display(feedSection, loadMoreSection)
+            loadMoreAdapter.presenter = LoadResourcePresenter(
+                resourceView: self,
+                loadingView: WeakReferenceVirtualProxy(loadMoreController),
+                errorView: WeakReferenceVirtualProxy(loadMoreController),
+                mapper: \.self,
+            )
+
+            let loadMoreSection = [CellController(id: UUID(), dataSource: loadMoreController, delegate: loadMoreController)]
+            controller?.display(feedSection, loadMoreSection)
+        } else {
+            controller?.display(feedSection)
+        }
     }
 
     // MARK: - Helpers
 
-    private typealias ImagePresentationAdapter = LoadResourcePresentationAdapter<Data, WeakReferenceVirtualProxy<FeedImageCellController>>
+    private typealias ImageDataPresentationAdapter = LoadResourcePresentationAdapter<Data, WeakReferenceVirtualProxy<FeedImageCellController>>
+    private typealias LoadMorePresentationAdapter = LoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>
 }
 
 extension UIImage {

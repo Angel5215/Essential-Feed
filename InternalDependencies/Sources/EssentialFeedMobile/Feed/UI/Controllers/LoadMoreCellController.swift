@@ -7,7 +7,7 @@ import EssentialFeed
 import UIKit
 
 public final class LoadMoreCellController: NSObject, UITableViewDataSource, UITableViewDelegate {
-    private let cell = LoadMoreCell()
+    private let loadMoreCell = LoadMoreCell()
     private let callback: () -> Void
 
     public init(callback: @escaping () -> Void) {
@@ -19,20 +19,21 @@ public final class LoadMoreCellController: NSObject, UITableViewDataSource, UITa
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        cell
+        loadMoreCell
     }
 
     public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard !loadMoreCell.isLoading else { return }
         callback()
     }
 }
 
 extension LoadMoreCellController: ResourceLoadingView, ResourceErrorView {
     public func display(_ viewModel: ResourceLoadingViewModel) {
-        cell.isLoading = viewModel.isLoading
+        loadMoreCell.isLoading = viewModel.isLoading
     }
 
     public func display(_ viewModel: ResourceErrorViewModel) {
-        cell.message = viewModel.message
+        loadMoreCell.message = viewModel.message
     }
 }

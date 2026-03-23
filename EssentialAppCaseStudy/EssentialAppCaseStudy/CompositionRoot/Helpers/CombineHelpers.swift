@@ -154,3 +154,19 @@ private extension FeedImageDataCache {
         save(data, for: url) { _ in }
     }
 }
+
+// MARK: - Pagination
+
+// Bridges the closure-based API from the Paginated<Item> to Combine
+public extension Paginated {
+    var loadMorePublisher: (() -> AnyPublisher<Self, Error>)? {
+        loadMore.map { loadMore in
+            {
+                Deferred {
+                    Future(loadMore)
+                }
+                .eraseToAnyPublisher()
+            }
+        }
+    }
+}

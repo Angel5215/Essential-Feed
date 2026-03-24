@@ -101,6 +101,10 @@ extension ListViewController {
         loadMoreFeedCell()?.isLoading == true
     }
 
+    var loadMoreFeedErrorMessage: String? {
+        loadMoreFeedCell()?.message
+    }
+
     func numberOfRenderedFeedImageViews() -> Int {
         numberOfRows(in: feedImagesSection)
     }

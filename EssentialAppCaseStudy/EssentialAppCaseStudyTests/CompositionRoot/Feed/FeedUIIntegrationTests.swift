@@ -191,6 +191,20 @@ open class FeedUIIntegrationTests: XCTestCase {
         XCTAssertNil(sut.errorMessage)
     }
 
+    func test_loadMoreCompletion_rendersErrorMessageOnError() {
+        let (sut, loader) = makeSUT()
+        sut.simulateAppearance()
+        loader.completeFeedLoading()
+        sut.simulateLoadMoreFeedAction()
+        XCTAssertNil(sut.loadMoreFeedErrorMessage)
+
+        loader.completeLoadMoreWithError()
+        XCTAssertEqual(sut.loadMoreFeedErrorMessage, loadError)
+
+        sut.simulateLoadMoreFeedAction()
+        XCTAssertNil(sut.loadMoreFeedErrorMessage)
+    }
+
     // MARK: - Concurrency
 
     func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {

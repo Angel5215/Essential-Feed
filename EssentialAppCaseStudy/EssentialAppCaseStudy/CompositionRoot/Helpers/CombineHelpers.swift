@@ -39,8 +39,13 @@ extension HTTPClient {
 }
 
 // Replaces `FeedLoaderCacheDecorator`
-extension Publisher where Output == [FeedImage] {
-    func caching(to cache: FeedCache) -> AnyPublisher<Output, Failure> {
+extension Publisher {
+    func caching(to cache: FeedCache) -> AnyPublisher<Output, Failure> where Output == [FeedImage] {
+        handleEvents(receiveOutput: cache.saveIgnoringResult)
+            .eraseToAnyPublisher()
+    }
+
+    func caching(to cache: FeedCache) -> AnyPublisher<Output, Failure> where Output == Paginated<FeedImage> {
         handleEvents(receiveOutput: cache.saveIgnoringResult)
             .eraseToAnyPublisher()
     }
@@ -49,6 +54,10 @@ extension Publisher where Output == [FeedImage] {
 private extension FeedCache {
     func saveIgnoringResult(_ feed: [FeedImage]) {
         save(feed) { _ in }
+    }
+
+    func saveIgnoringResult(_ feed: Paginated<FeedImage>) {
+        saveIgnoringResult(feed.items)
     }
 }
 
@@ -152,5 +161,43 @@ extension Publisher where Output == Data {
 private extension FeedImageDataCache {
     func saveIgnoringResult(_ data: Data, for url: URL) {
         save(data, for: url) { _ in }
+    }
+}
+
+// MARK: - Pagination
+
+// Bridges the closure-based API from the Paginated<Item> to Combine
+public extension Paginated {
+    var loadMorePublisher: (() -> AnyPublisher<Self, Error>)? {
+        loadMore.map { loadMore in
+            {
+                Deferred {
+                    Future(loadMore)
+                }
+                .eraseToAnyPublisher()
+            }
+        }
+    }
+
+    init(items: [Item], loadMorePublisher: (() -> AnyPublisher<Self, Error>)?) {
+        self.init(
+            items: items,
+            loadMore: loadMorePublisher.map { publisher in
+                { completion in
+                    publisher().subscribe(
+                        Subscribers.Sink(
+                            receiveCompletion: { result in
+                                if case let .failure(error) = result {
+                                    completion(.failure(error))
+                                }
+                            },
+                            receiveValue: { result in
+                                completion(.success(result))
+                            },
+                        )
+                    )
+                }
+            },
+        )
     }
 }

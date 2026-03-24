@@ -10,7 +10,7 @@ import UIKit
 
 public enum FeedUIComposer {
     public static func feedComposedWith(
-        feedLoader: @escaping () -> AnyPublisher<[FeedImage], Error>,
+        feedLoader: @escaping () -> AnyPublisher<Paginated<FeedImage>, Error>,
         imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher,
         selection: @escaping (FeedImage) -> Void = { _ in },
     ) -> ListViewController {
@@ -25,14 +25,14 @@ public enum FeedUIComposer {
             ),
             loadingView: WeakReferenceVirtualProxy(feedViewController),
             errorView: WeakReferenceVirtualProxy(feedViewController),
-            mapper: FeedPresenter.map,
+            mapper: { $0 },
         )
         return feedViewController
     }
 
     // MARK: - Helpers
 
-    private typealias FeedPresentationAdapter = LoadResourcePresentationAdapter<[FeedImage], FeedViewAdapter>
+    private typealias FeedPresentationAdapter = LoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>
 
     private static func makeFeedViewController(title: String) -> ListViewController {
         let feedController = UIStoryboard.feed.instantiateInitialViewController() as! ListViewController

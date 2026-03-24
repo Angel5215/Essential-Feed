@@ -13,8 +13,10 @@ struct FeedEndpointTests {
         let baseURL = URL(string: "https://base-url.com")!
 
         let received = FeedEndpoint.get.url(baseURL: baseURL)
-        let expected = URL(string: "https://base-url.com/v1/feed")!
 
-        #expect(received == expected)
+        #expect(received.scheme == "https")
+        #expect(received.host(percentEncoded: true) == "base-url.com")
+        #expect(received.path(percentEncoded: true) == "/v1/feed")
+        #expect(received.query(percentEncoded: true) == "limit=10")
     }
 }

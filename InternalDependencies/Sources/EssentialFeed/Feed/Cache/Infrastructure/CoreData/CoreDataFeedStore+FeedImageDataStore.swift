@@ -1,5 +1,5 @@
 //
-// CoreDataFeedStore+FeedImageDataLoader.swift
+// CoreDataFeedStore+FeedImageDataStore.swift
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 

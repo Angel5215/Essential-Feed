@@ -1,5 +1,5 @@
 //
-// CoreDataFeedStore+FeedImageDataLoader.swift
+// CoreDataFeedStore+FeedImageDataStore.swift
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
@@ -10,7 +10,7 @@ extension CoreDataFeedStore: FeedImageDataStore {
         perform { context in
             completion(
                 Result {
-                    try ManagedFeedImage.first(with: url, in: context)?.data
+                    try ManagedFeedImage.data(with: url, in: context)
                 }
             )
         }

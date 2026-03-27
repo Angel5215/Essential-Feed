@@ -7,6 +7,7 @@ import Combine
 import CoreData
 import EssentialFeed
 import EssentialFeedMobile
+import os
 import UIKit
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -17,6 +18,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var localFeedLoader = makeLocalFeedLoader()
 
     private lazy var baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
+
+    private lazy var logger = Logger(subsystem: "me.vazquez.angel.EssentialAppCaseStudy", category: "main")
 
     private lazy var navigationController = UINavigationController(
         rootViewController: FeedUIComposer.feedComposedWith(
@@ -56,9 +59,15 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private func makeLocalStore() -> FeedStore & FeedImageDataStore {
-        try! CoreDataFeedStore(
-            storeURL: NSPersistentContainer.defaultDirectoryURL.appending(path: "feed-store.sqlite")
-        )
+        do {
+            return try CoreDataFeedStore(
+                storeURL: NSPersistentContainer.defaultDirectoryURL.appending(path: "feed-store.sqlite")
+            )
+        } catch {
+            assertionFailure("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
+            logger.fault("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
+            return NullStore()
+        }
     }
 
     private func makeLocalFeedLoader() -> LocalFeedLoader {

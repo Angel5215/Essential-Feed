@@ -98,9 +98,12 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         return localImageLoader
             .loadImageDataPublisher(from: url)
-            .fallback { [httpClient] in
+            .logCacheMisses(url: url, logger: logger)
+            .fallback { [httpClient, logger] in
                 httpClient
                     .getPublisher(from: url)
+                    .logErrors(url: url, logger: logger)
+                    .logElapsedTime(url: url, logger: logger)
                     .tryMap(FeedImageDataMapper.map)
                     .caching(to: localImageLoader, using: url)
             }

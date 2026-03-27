@@ -287,7 +287,9 @@ final class FeedAcceptanceTests: XCTestCase {
     private final class UIWindowSpy: UIWindow {
         static func make(file: StaticString = #filePath, line: UInt = #line) throws -> UIWindowSpy {
             let dummyScene = try XCTUnwrap((UIWindowScene.self as NSObject.Type).init() as? UIWindowScene)
-            return UIWindowSpy(windowScene: dummyScene)
+            let window = UIWindowSpy(windowScene: dummyScene)
+            window.frame = CGRect(x: 0, y: 0, width: 1, height: 1)
+            return window
         }
 
         override func makeKeyAndVisible() {}

@@ -31,18 +31,18 @@ final class FeedImageDataStoreSpy: FeedImageDataStore {
 
     // MARK: Save
 
-    private var insertionCompletions = [(FeedImageDataStore.InsertionResult) -> Void]()
+    var insertionResult: Result<Void, Error>?
 
-    func insert(_ data: Data, for url: URL, completion: @escaping (InsertionResult) -> Void) {
+    func insert(_ data: Data, for url: URL) throws {
         receivedMessages.append(.insert(data: data, for: url))
-        insertionCompletions.append(completion)
+        try insertionResult?.get()
     }
 
     func completeInsertion(with error: Error, at index: Int = 0) {
-        insertionCompletions[index](.failure(error))
+        insertionResult = .failure(error)
     }
 
     func completeInsertionSuccessfully(at index: Int = 0) {
-        insertionCompletions[index](.success(()))
+        insertionResult = .success(())
     }
 }

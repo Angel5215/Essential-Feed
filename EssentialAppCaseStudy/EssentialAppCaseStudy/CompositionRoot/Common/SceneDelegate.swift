@@ -56,9 +56,13 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private func makeLocalStore() -> FeedStore & FeedImageDataStore {
-        try! CoreDataFeedStore(
-            storeURL: NSPersistentContainer.defaultDirectoryURL.appending(path: "feed-store.sqlite")
-        )
+        do {
+            return try CoreDataFeedStore(
+                storeURL: NSPersistentContainer.defaultDirectoryURL.appending(path: "feed-store.sqlite")
+            )
+        } catch {
+            return NullStore()
+        }
     }
 
     private func makeLocalFeedLoader() -> LocalFeedLoader {

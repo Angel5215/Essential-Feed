@@ -24,6 +24,7 @@ final class LoaderSpy: FeedImageDataLoader {
                 self?.loadMorePublisher() ?? Empty().eraseToAnyPublisher()
             }
         )
+        feedRequests[index].send(completion: .finished)
     }
 
     func completeFeedLoadingWithError(at index: Int = 0) {

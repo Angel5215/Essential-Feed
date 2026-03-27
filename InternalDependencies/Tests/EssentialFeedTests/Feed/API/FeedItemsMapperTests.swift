@@ -36,16 +36,16 @@ final class FeedItemsMapperTests: XCTestCase {
     }
 
     func test_map_deliversItemsOn200HTTPResponseWithJSONItems() throws {
-        let item1 = makeItem(
+        let item1 = try makeItem(
             id: UUID(),
-            imageURL: URL(string: "https://a-url.com")!,
+            imageURL: XCTUnwrap(URL(string: "https://a-url.com")),
         )
 
-        let item2 = makeItem(
+        let item2 = try makeItem(
             id: UUID(),
             description: "a description",
             location: "a location",
-            imageURL: URL(string: "https://another-url.com")!,
+            imageURL: XCTUnwrap(URL(string: "https://another-url.com")),
         )
         let json = makeItemsJSON([item1.json, item2.json])
 

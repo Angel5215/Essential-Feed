@@ -7,8 +7,8 @@ import Combine
 import EssentialFeed
 import Foundation
 
-// Wraps the `LocalFeedLoader` into a Combine `Publisher`
-// The `FeedLoader` was no longer necessary as we don't require the strategy (remote/local) anymore.
+/// Wraps the `LocalFeedLoader` into a Combine `Publisher`
+/// The `FeedLoader` was no longer necessary as we don't require the strategy (remote/local) anymore.
 public extension LocalFeedLoader {
     typealias Publisher = AnyPublisher<[FeedImage], Error>
 
@@ -40,7 +40,7 @@ extension HTTPClient {
     }
 }
 
-// Replaces `FeedLoaderCacheDecorator`
+/// Replaces `FeedLoaderCacheDecorator`
 extension Publisher {
     func caching(to cache: FeedCache) -> AnyPublisher<Output, Failure> where Output == [FeedImage] {
         handleEvents(receiveOutput: cache.saveIgnoringResult)
@@ -63,14 +63,14 @@ private extension FeedCache {
     }
 }
 
-// Replaces `FeedLoaderWithFallbackComposite` and `FeedImageDataLoaderWithFallbackComposite`
+/// Replaces `FeedLoaderWithFallbackComposite` and `FeedImageDataLoaderWithFallbackComposite`
 extension Publisher {
     func fallback(to fallbackPublisher: @escaping () -> AnyPublisher<Output, Failure>) -> AnyPublisher<Output, Failure> {
         self.catch { _ in fallbackPublisher() }.eraseToAnyPublisher()
     }
 }
 
-// Replaces the `MainQueueDispatchDecorator`
+/// Replaces the `MainQueueDispatchDecorator`
 extension Publisher {
     func dispatchOnMainQueue() -> AnyPublisher<Output, Failure> {
         receive(on: DispatchQueue.immediateWhenOnMainQueueScheduler).eraseToAnyPublisher()
@@ -131,7 +131,7 @@ extension DispatchQueue {
     }
 }
 
-// Wraps implementations for `FeedImageDataLoader` into Combine Publishers
+/// Wraps implementations for `FeedImageDataLoader` into Combine Publishers
 public extension FeedImageDataLoader {
     typealias Publisher = AnyPublisher<Data, Error>
 
@@ -147,7 +147,7 @@ public extension FeedImageDataLoader {
     }
 }
 
-// Replaces `FeedImageDataLoaderCacheDecorator`
+/// Replaces `FeedImageDataLoaderCacheDecorator`
 extension Publisher where Output == Data {
     func caching(to cache: FeedImageDataCache, using url: URL) -> AnyPublisher<Output, Failure> {
         handleEvents(receiveOutput: { data in
@@ -165,7 +165,7 @@ private extension FeedImageDataCache {
 
 // MARK: - Pagination
 
-// Bridges the closure-based API from the Paginated<Item> to Combine
+/// Bridges the closure-based API from the Paginated<Item> to Combine
 public extension Paginated {
     var loadMorePublisher: (() -> AnyPublisher<Self, Error>)? {
         loadMore.map { loadMore in

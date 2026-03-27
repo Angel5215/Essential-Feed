@@ -13,31 +13,31 @@ final class CoreDataFeedImageDataStoreTests: XCTestCase {
         expect(sut, toCompleteRetrievalWith: notFound(), for: anyURL())
     }
 
-    func test_retrieveImageData_deliversNotFoundWhenStoredDataURLDoesNotMatch() {
+    func test_retrieveImageData_deliversNotFoundWhenStoredDataURLDoesNotMatch() throws {
         let sut = makeSUT()
-        let url = URL(string: "https://a-url.com")!
-        let nonMatchingURL = URL(string: "https://another-url.com")!
+        let url = try XCTUnwrap(URL(string: "https://a-url.com"))
+        let nonMatchingURL = try XCTUnwrap(URL(string: "https://another-url.com"))
 
         insert(anyData(), for: url, into: sut)
 
         expect(sut, toCompleteRetrievalWith: notFound(), for: nonMatchingURL)
     }
 
-    func test_retrieveImageData_deliversFoundDataWhenThereIsAStoredImageDataMatchingURL() {
+    func test_retrieveImageData_deliversFoundDataWhenThereIsAStoredImageDataMatchingURL() throws {
         let sut = makeSUT()
         let storedData = anyData()
-        let matchingURL = URL(string: "https://a-url.com")!
+        let matchingURL = try XCTUnwrap(URL(string: "https://a-url.com"))
 
         insert(storedData, for: matchingURL, into: sut)
 
         expect(sut, toCompleteRetrievalWith: found(storedData), for: matchingURL)
     }
 
-    func test_retrieveImageData_deliversLastInsertedValues() {
+    func test_retrieveImageData_deliversLastInsertedValues() throws {
         let sut = makeSUT()
         let firstStoredData = Data("first".utf8)
         let lastStoredData = Data("last".utf8)
-        let url = URL(string: "https://a-url.com")!
+        let url = try XCTUnwrap(URL(string: "https://a-url.com"))
 
         insert(firstStoredData, for: url, into: sut)
         insert(lastStoredData, for: url, into: sut)

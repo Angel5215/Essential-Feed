@@ -6,5 +6,7 @@
 import Foundation
 
 @_spi(Bundle) public enum EssentialFeed {
-    public static var bundle: Bundle { .module }
+    public static var bundle: Bundle {
+        .module
+    }
 }

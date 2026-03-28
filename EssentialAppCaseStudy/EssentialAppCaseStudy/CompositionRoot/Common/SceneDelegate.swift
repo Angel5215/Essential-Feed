@@ -17,6 +17,12 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var store = makeLocalStore()
     private lazy var localFeedLoader = makeLocalFeedLoader()
 
+    private lazy var scheduler: AnyDispatchQueueScheduler = DispatchQueue(
+        label: "me.vazquez.angel.infra.queue",
+        qos: .userInitiated,
+        attributes: .concurrent,
+    ).eraseToAnyScheduler()
+
     private lazy var baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
 
     private lazy var logger = Logger(subsystem: "me.vazquez.angel.EssentialAppCaseStudy", category: "main")
@@ -29,10 +35,15 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         )
     )
 
-    convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
+    convenience init(
+        httpClient: HTTPClient,
+        store: FeedStore & FeedImageDataStore,
+        scheduler: AnyDispatchQueueScheduler,
+    ) {
         self.init()
         self.httpClient = httpClient
         self.store = store
+        self.scheduler = scheduler
     }
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -98,12 +109,16 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         return localImageLoader
             .loadImageDataPublisher(from: url)
-            .fallback { [httpClient] in
+            .fallback { [httpClient, scheduler] in
                 httpClient
                     .getPublisher(from: url)
                     .tryMap(FeedImageDataMapper.map)
                     .caching(to: localImageLoader, using: url)
+                    .subscribe(on: scheduler)
+                    .eraseToAnyPublisher()
             }
+            .subscribe(on: scheduler)
+            .eraseToAnyPublisher()
     }
 
     private func showComments(for image: FeedImage) {

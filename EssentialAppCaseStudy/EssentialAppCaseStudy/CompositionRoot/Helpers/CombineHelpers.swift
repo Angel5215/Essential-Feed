@@ -198,3 +198,72 @@ public extension Paginated {
         )
     }
 }
+
+// MARK: - AnyScheduler
+
+typealias AnyDispatchQueueScheduler = AnyScheduler<DispatchQueue.SchedulerTimeType, DispatchQueue.SchedulerOptions>
+
+extension AnyDispatchQueueScheduler {
+    static var immediateOnMainQueue: Self {
+        DispatchQueue.immediateWhenOnMainQueueScheduler.eraseToAnyScheduler()
+    }
+}
+
+struct AnyScheduler<SchedulerTimeType: Strideable, SchedulerOptions>: Scheduler where SchedulerTimeType.Stride: SchedulerTimeIntervalConvertible {
+    private let _now: () -> SchedulerTimeType
+    private let _minimumTolerance: () -> SchedulerTimeType.Stride
+    private let _schedule: (_ options: SchedulerOptions?, _ action: @escaping () -> Void) -> Void
+    private let _scheduleAfter: (
+        _ date: SchedulerTimeType,
+        _ tolerance: SchedulerTimeType.Stride,
+        _ options: SchedulerOptions?,
+        _ action: @escaping () -> Void,
+    ) -> Void
+    private let _scheduleAfterInterval: (
+        _ date: SchedulerTimeType,
+        _ interval: SchedulerTimeType.Stride,
+        _ tolerance: SchedulerTimeType.Stride,
+        _ options: SchedulerOptions?,
+        _ action: @escaping () -> Void,
+    ) -> any Cancellable
+
+    var now: SchedulerTimeType {
+        _now()
+    }
+
+    var minimumTolerance: SchedulerTimeType.Stride {
+        _minimumTolerance()
+    }
+
+    init<S: Scheduler>(_ scheduler: S) where SchedulerTimeType == S.SchedulerTimeType, SchedulerOptions == S.SchedulerOptions {
+        self._now = { scheduler.now }
+        self._minimumTolerance = { scheduler.minimumTolerance }
+        self._schedule = scheduler.schedule(options:_:)
+        self._scheduleAfter = scheduler.schedule(after:tolerance:options:_:)
+        self._scheduleAfterInterval = scheduler.schedule(after:interval:tolerance:options:_:)
+    }
+
+    func schedule(options: SchedulerOptions?, _ action: @escaping () -> Void) {
+        _schedule(options, action)
+    }
+
+    func schedule(after date: SchedulerTimeType, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) {
+        _scheduleAfter(date, tolerance, options, action)
+    }
+
+    func schedule(
+        after date: SchedulerTimeType,
+        interval: SchedulerTimeType.Stride,
+        tolerance: SchedulerTimeType.Stride,
+        options: SchedulerOptions?,
+        _ action: @escaping () -> Void,
+    ) -> any Cancellable {
+        _scheduleAfterInterval(date, interval, tolerance, options, action)
+    }
+}
+
+extension Scheduler {
+    func eraseToAnyScheduler() -> AnyScheduler<SchedulerTimeType, SchedulerOptions> {
+        AnyScheduler(self)
+    }
+}

@@ -27,18 +27,12 @@ extension LocalFeedLoader: FeedCache {
 // MARK: - Load
 
 public extension LocalFeedLoader {
-    typealias LoadResult = Result<[FeedImage], Error>
-
-    func load(completion: @escaping (LoadResult) -> Void) {
-        completion(
-            LoadResult {
-                if let cache = try store.retrieve(), FeedCachePolicy.validate(cache.timestamp, against: currentDate()) {
-                    cache.feed.toModels()
-                } else {
-                    []
-                }
-            }
-        )
+    func load() throws -> [FeedImage] {
+        if let cache = try store.retrieve(), FeedCachePolicy.validate(cache.timestamp, against: currentDate()) {
+            cache.feed.toModels()
+        } else {
+            []
+        }
     }
 }
 

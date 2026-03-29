@@ -145,17 +145,11 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line,
     ) {
-        let exp = expectation(description: "Wait for second save completion")
-        loader.save(feed) { saveResult in
-            switch saveResult {
-            case .success:
-                break
-            case let .failure(saveError):
-                XCTFail("Expected to save feed successfully, got \(saveError) instead", file: file, line: line)
-            }
-            exp.fulfill()
+        do {
+            try loader.save(feed)
+        } catch {
+            XCTFail("Expected to save feed successfully, got \(error) instead", file: file, line: line)
         }
-        wait(for: [exp], timeout: 1)
     }
 
     private func save(

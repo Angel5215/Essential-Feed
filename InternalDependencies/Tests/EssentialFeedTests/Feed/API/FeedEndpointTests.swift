@@ -14,23 +14,31 @@ struct FeedEndpointTests {
 
         let received = FeedEndpoint.get(after: .none).url(baseURL: baseURL)
 
+        let receivedHost = received.host(percentEncoded: true)
+        let receivedPath = received.path(percentEncoded: true)
+        let receivedQuery = received.query(percentEncoded: true)
+
         #expect(received.scheme == "https", "Scheme")
-        #expect(received.host(percentEncoded: true) == "base-url.com", "Host")
-        #expect(received.path(percentEncoded: true) == "/v1/feed", "Path")
-        #expect(received.query(percentEncoded: true) == "limit=10", "Query")
+        #expect(receivedHost == "base-url.com", "Host")
+        #expect(receivedPath == "/v1/feed", "Path")
+        #expect(receivedQuery == "limit=10", "Query")
     }
 
     @Test
-    func `Feed endpoint URL after given image`() throws {
+    func `Feed endpoint URL after given image`() {
         let image = uniqueImage()
         let baseURL = URL(string: "https://base-url.com")!
 
         let received = FeedEndpoint.get(after: image).url(baseURL: baseURL)
 
+        let receivedHost = received.host(percentEncoded: true)
+        let receivedPath = received.path(percentEncoded: true)
+        let receivedQuery = received.query(percentEncoded: true)
+
         #expect(received.scheme == "https")
-        #expect(received.host(percentEncoded: true) == "base-url.com")
-        #expect(received.path(percentEncoded: true) == "/v1/feed")
-        try #expect(#require(received.query(percentEncoded: true)?.contains("limit=10")), "Limit query param")
-        try #expect(#require(received.query(percentEncoded: true)?.contains("after_id=\(image.id)")), "After ID query param")
+        #expect(receivedHost == "base-url.com")
+        #expect(receivedPath == "/v1/feed")
+        #expect(receivedQuery?.contains("limit=10") == true, "Limit query param")
+        #expect(receivedQuery?.contains("after_id=\(image.id)") == true, "After ID query param")
     }
 }

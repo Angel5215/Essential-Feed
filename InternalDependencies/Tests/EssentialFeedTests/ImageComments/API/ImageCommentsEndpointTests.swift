@@ -9,7 +9,7 @@ import Testing
 
 struct ImageCommentsEndpointTests {
     @Test
-    func `image comments endpoint URL has expected value`() {
+    func `Image Comments endpoint URL has expected value`() {
         let imageID = UUID(uuidString: "2239CBA2-CB35-4392-ADC0-24A37D38E010")!
         let baseURL = URL(string: "https://base-url.com")!
 

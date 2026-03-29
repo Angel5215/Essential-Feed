@@ -126,17 +126,12 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line,
     ) {
-        let exp = expectation(description: "Wait for load completion")
-        sut.load { result in
-            switch result {
-            case let .success(loadedFeed):
-                XCTAssertEqual(loadedFeed, expectedFeed, file: file, line: line)
-            case let .failure(error):
-                XCTFail("Expected successful feed result, got \(error) instead", file: file, line: line)
-            }
-            exp.fulfill()
+        do {
+            let loadedFeed = try sut.load()
+            XCTAssertEqual(loadedFeed, expectedFeed, file: file, line: line)
+        } catch {
+            XCTFail("Expected successful feed result, got \(error) instead", file: file, line: line)
         }
-        wait(for: [exp], timeout: 1)
     }
 
     private func save(
@@ -145,17 +140,11 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line,
     ) {
-        let exp = expectation(description: "Wait for second save completion")
-        loader.save(feed) { saveResult in
-            switch saveResult {
-            case .success:
-                break
-            case let .failure(saveError):
-                XCTFail("Expected to save feed successfully, got \(saveError) instead", file: file, line: line)
-            }
-            exp.fulfill()
+        do {
+            try loader.save(feed)
+        } catch {
+            XCTFail("Expected to save feed successfully, got \(error) instead", file: file, line: line)
         }
-        wait(for: [exp], timeout: 1)
     }
 
     private func save(
@@ -165,14 +154,11 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line,
     ) {
-        let saveExp = expectation(description: "Wait for save completion")
-        loader.save(data, for: url) { result in
-            if case let .failure(error) = result {
-                XCTFail("Expected to save image data successfully, got \(error) instead", file: file, line: line)
-            }
-            saveExp.fulfill()
+        do {
+            try loader.save(data, for: url)
+        } catch {
+            XCTFail("Expected to save image data successfully, got \(error) instead", file: file, line: line)
         }
-        wait(for: [saveExp], timeout: 1)
     }
 
     private func expect(
@@ -182,30 +168,20 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line,
     ) {
-        let exp = expectation(description: "Wait for load completion")
-        _ = sut.loadImageData(from: url) { result in
-            switch result {
-            case let .success(loadedData):
-                XCTAssertEqual(loadedData, expectedData, file: file, line: line)
-            case let .failure(error):
-                XCTFail("Expected successful image data result, got \(error) instead", file: file, line: line)
-            }
-            exp.fulfill()
+        do {
+            let loadedData = try sut.loadImageData(from: url)
+            XCTAssertEqual(loadedData, expectedData, file: file, line: line)
+        } catch {
+            XCTFail("Expected successful image data result, got \(error) instead", file: file, line: line)
         }
-
-        wait(for: [exp], timeout: 1)
     }
 
     private func validateCache(with loader: LocalFeedLoader, file: StaticString = #filePath, line: UInt = #line) {
-        let validateExp = expectation(description: "Wait for save completion")
-        loader.validateCache { result in
-            if case let .failure(error) = result {
-                XCTFail("Expected to validate feed successfully, got \(error)", file: file, line: line)
-            }
-            validateExp.fulfill()
+        do {
+            try loader.validateCache()
+        } catch {
+            XCTFail("Expected to validate feed successfully, got \(error)", file: file, line: line)
         }
-
-        wait(for: [validateExp], timeout: 1)
     }
 
     private func testSpecificStoreURL() -> URL {

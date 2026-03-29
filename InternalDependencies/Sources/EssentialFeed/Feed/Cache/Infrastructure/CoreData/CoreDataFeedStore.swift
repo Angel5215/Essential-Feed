@@ -34,9 +34,11 @@ public final class CoreDataFeedStore {
         cleanupReferencesToPersistentStores()
     }
 
-    func perform(action: @escaping (NSManagedObjectContext) -> Void) {
+    func performSync<Value>(action: (NSManagedObjectContext) -> Result<Value, Error>) throws -> Value {
         let context = context
-        context.perform { action(context) }
+        var result: Result<Value, Error>!
+        context.performAndWait { result = action(context) }
+        return try result.get()
     }
 
     private func cleanupReferencesToPersistentStores() {

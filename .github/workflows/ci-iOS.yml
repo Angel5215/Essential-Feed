@@ -22,12 +22,16 @@ jobs:
         run: |
           bin/setup-xcode.sh
 
-      - name: Build and test
+      - name: Preboot Simulator
         env:
           SIMULATOR_UDID: "05494B9A-CF86-44CD-8948-A1003D606E75"
+        run: |
+          bin/preboot-simulator.sh
+
+      - name: Build and test
+        env:
           SCHEME: "CI-iOS"
-          PLATFORM_DESTINATION: "platform=iOS Simulator,arch=arm64,id=${SIMULATOR_UDID}"
+          PLATFORM_DESTINATION: "platform=iOS Simulator,arch=arm64,id=05494B9A-CF86-44CD-8948-A1003D606E75"
           TARGET_SDK: "iphonesimulator"
         run: |
-          xcrun simctl boot ${SIMULATOR_UDID}
           bin/build-and-test.sh

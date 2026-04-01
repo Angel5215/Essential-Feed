@@ -38,7 +38,7 @@ final class SceneDelegateTests: XCTestCase {
         private(set) var makeKeyAndVisibleCallCount = 0
 
         static func make(file: StaticString = #filePath, line: UInt = #line) throws -> UIWindowSpy {
-            let dummyScene = try XCTUnwrap((UIWindowScene.self as NSObject.Type).init() as? UIWindowScene)
+            let dummyScene = try XCTUnwrap((UIWindowScene.self as NSObject.Type).init() as? UIWindowScene, "Unable to create WindowScene", file: file, line: line)
             return UIWindowSpy(windowScene: dummyScene)
         }
 

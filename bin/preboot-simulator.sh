@@ -2,6 +2,9 @@
 
 set -o pipefail
 
+echo "Available devices"
+xcrun simctl list devices
+
 xcrun simctl boot "$SIMULATOR_UDID"
 xcrun simctl list devices | grep "Booted"
 

@@ -25,7 +25,7 @@ struct FeedEndpointTests {
     }
 
     @Test
-    func `Feed endpoint URL after given image`() {
+    func `Feed endpoint URL after given image`() throws {
         let image = uniqueImage()
         let baseURL = try #require(URL(string: "https://base-url.com"))
 

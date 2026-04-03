@@ -3,12 +3,12 @@
 set -o pipefail
 
 SIMULATOR_UDID=$(xcrun simctl list devices --json | jq -r '
-.devices["com.apple.CoreSimulator.SimRuntime.iOS-26-4"][] 
-| select(.name == "iPhone 17") 
+.devices["com.apple.CoreSimulator.SimRuntime.iOS-$SIMULATOR_RUNTIME"][] 
+| select(.name == "$SIMULATOR_NAME") 
 | .udid
 ')
 
-echo "Attempting to boot the simulator with UDID: $SIMULATOR_UDID and name: $SIMULATOR_NAME for runtime: $SIMULATOR_RUNTIME"
+echo "Attempting to boot the simulator with UDID: $SIMULATOR_UDID ($SIMULATOR_NAME - $SIMULATOR_RUNTIME)"
 xcrun simctl boot "$SIMULATOR_UDID"
 
 if [ $? -ne 0 ]; then

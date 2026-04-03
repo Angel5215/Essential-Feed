@@ -9,8 +9,8 @@ import Testing
 
 struct FeedEndpointTests {
     @Test
-    func `Feed endpoint URL has expected value`() {
-        let baseURL = URL(string: "https://base-url.com")!
+    func `Feed endpoint URL has expected value`() throws {
+        let baseURL = try #require(URL(string: "https://base-url.com"))
 
         let received = FeedEndpoint.get(after: .none).url(baseURL: baseURL)
 
@@ -25,9 +25,9 @@ struct FeedEndpointTests {
     }
 
     @Test
-    func `Feed endpoint URL after given image`() {
+    func `Feed endpoint URL after given image`() throws {
         let image = uniqueImage()
-        let baseURL = URL(string: "https://base-url.com")!
+        let baseURL = try #require(URL(string: "https://base-url.com"))
 
         let received = FeedEndpoint.get(after: image).url(baseURL: baseURL)
 

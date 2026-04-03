@@ -1,5 +1,5 @@
 # General Options
---swiftversion 6.2.1
+--swiftversion 6.3.0
 
 # File Options
 --exclude Stage,Tasks/.build,ThirdParty,**/SwiftGen/*,**/Sourcery/*,Frameworks/swift-composable-architecture,**.generated.swift
@@ -41,7 +41,7 @@
 --enable privateStateVariables
 --enable redundantEquatable
 --enable redundantMemberwiseInit
---enable redundantProperty
+--enable redundantVariable
 # --enable singlePropertyPerLine
 --enable wrapEnumCases
 --enable wrapMultilineFunctionChains

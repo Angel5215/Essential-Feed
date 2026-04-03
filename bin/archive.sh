@@ -15,4 +15,4 @@ xcodebuild clean archive \
     -configuration $BUILD_CONFIGURATION \
     -scheme $APP_SCHEME \
     -derivedDataPath $DERIVED_DATA_PATH \
-    -archivePath $ARCHIVE_PATH | xcbeautify --disable-logging --renderer github-actions --quieter --is-ci
+    -archivePath $ARCHIVE_PATH | xcbeautify --disable-logging --renderer github-actions --preserve-unbeautified

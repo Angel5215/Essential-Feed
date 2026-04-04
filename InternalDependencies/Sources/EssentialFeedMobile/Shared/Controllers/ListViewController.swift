@@ -10,7 +10,7 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
     public private(set) var errorView = ErrorView()
 
     public var onRefresh: (() -> Void)?
-    private var onViewIsAppearing: ((ListViewController) -> Void)?
+    private var onViewDidAppear: ((ListViewController) -> Void)?
 
     private lazy var dataSource: UITableViewDiffableDataSource<Int, CellController> = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, controller in
         controller.dataSource.tableView(tableView, cellForRowAt: indexPath)
@@ -19,15 +19,15 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
     override public func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
-        onViewIsAppearing = { vc in
-            vc.onViewIsAppearing = nil
+        onViewDidAppear = { vc in
+            vc.onViewDidAppear = nil
             vc.refresh()
         }
     }
 
-    override public func viewIsAppearing(_ animated: Bool) {
-        super.viewIsAppearing(animated)
-        onViewIsAppearing?(self)
+    override public func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        onViewDidAppear?(self)
     }
 
     override public func viewDidLayoutSubviews() {

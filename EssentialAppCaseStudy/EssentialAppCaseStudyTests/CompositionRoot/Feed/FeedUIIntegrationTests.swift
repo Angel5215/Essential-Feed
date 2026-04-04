@@ -243,11 +243,26 @@ open class FeedUIIntegrationTests: XCTestCase {
         XCTAssertFalse(view.isShowingRetryAction, "Expected no retry action when view becomes visible while still preloading image")
         XCTAssertTrue(view.isShowingImageLoadingIndicator, "Expected loading indicator when view becomes visible while still preloading image")
 
-        let imageData = UIImage.make(withColor: .red).pngData()!
+        let imageData = try XCTUnwrap(UIImage.make(withColor: .red).pngData())
         loader.completeImageLoading(with: imageData, at: 0)
         XCTAssertEqual(view.renderedImage, imageData, "Expected rendered image after image preloads successfully")
         XCTAssertFalse(view.isShowingRetryAction, "Expected no retry action after image preloads successfully")
         XCTAssertFalse(view.isShowingImageLoadingIndicator, "Expected loading indicator after image preloads successfully")
+    }
+
+    func test_feedImageView_doesNotShowDataFromPreviousRequestWhenCellIsReused() throws {
+        let (sut, loader) = makeSUT()
+
+        sut.simulateAppearance()
+        loader.completeFeedLoading(with: [makeImage(), makeImage()])
+
+        let view0 = try XCTUnwrap(sut.simulateFeedImageViewVisible(at: 0))
+        view0.prepareForReuse()
+
+        let imageData0 = try XCTUnwrap(UIImage.make(withColor: .red).pngData())
+        loader.completeImageLoading(with: imageData0, at: 0)
+
+        XCTAssertNil(view0.renderedImage, "Expected no image state change for reused view once image loading completes successfully")
     }
 
     // MARK: - Feed Image View Loading Indicator

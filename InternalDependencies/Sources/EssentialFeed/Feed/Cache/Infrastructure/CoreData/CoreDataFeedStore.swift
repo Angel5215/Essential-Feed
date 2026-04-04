@@ -10,7 +10,7 @@ public final class CoreDataFeedStore {
     private static let modelName = "FeedStore"
     private static let model = NSManagedObjectModel.with(name: modelName, in: .module)
     private let container: NSPersistentContainer
-    private let context: NSManagedObjectContext
+    let context: NSManagedObjectContext
 
     enum StoreError: Error {
         case modelNotFound
@@ -41,13 +41,6 @@ public final class CoreDataFeedStore {
 
     deinit {
         cleanupReferencesToPersistentStores()
-    }
-
-    func performSync<Value>(action: (NSManagedObjectContext) -> Result<Value, Error>) throws -> Value {
-        let context = context
-        var result: Result<Value, Error>!
-        context.performAndWait { result = action(context) }
-        return try result.get()
     }
 
     public func perform(_ action: @escaping () -> Void) {

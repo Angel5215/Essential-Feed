@@ -25,7 +25,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         return DispatchQueue(
             label: "me.vazquez.angel.infra.queue",
             qos: .userInitiated,
-            attributes: .concurrent,
         ).eraseToAnyScheduler()
     }()
 
@@ -83,7 +82,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         } catch {
             assertionFailure("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
             logger.fault("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
-            return NullStore()
+            return InMemoryFeedStore()
         }
     }
 

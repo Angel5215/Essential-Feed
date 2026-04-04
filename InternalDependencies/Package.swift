@@ -1,4 +1,4 @@
-// swift-tools-version: 6.2
+// swift-tools-version: 6.3
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -15,7 +15,16 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "EssentialFeed"
+            name: "EssentialFeed",
+            swiftSettings: [
+                .unsafeFlags(["-Xfrontend", "-strict-concurrency=complete"]),
+                .enableExperimentalFeature("StrictConcurrency", .when(platforms: [.macOS, .iOS])),
+                .enableUpcomingFeature("DisableOutwardActorInference"),
+                .enableUpcomingFeature("GlobalActorIsolatedTypesUsability"),
+                .enableUpcomingFeature("InferIsolatedConformances"),
+                .enableUpcomingFeature("InferSendableFromCaptures"),
+                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+            ],
         ),
         .target(
             name: "EssentialFeedMobile",
@@ -24,14 +33,41 @@ let package = Package(
         .testTarget(
             name: "EssentialFeedTests",
             dependencies: ["EssentialFeed"],
+            swiftSettings: [
+                .unsafeFlags(["-Xfrontend", "-strict-concurrency=complete"]),
+                .enableExperimentalFeature("StrictConcurrency", .when(platforms: [.macOS, .iOS])),
+                .enableUpcomingFeature("DisableOutwardActorInference"),
+                .enableUpcomingFeature("GlobalActorIsolatedTypesUsability"),
+                .enableUpcomingFeature("InferIsolatedConformances"),
+                .enableUpcomingFeature("InferSendableFromCaptures"),
+                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+            ],
         ),
         .testTarget(
             name: "EssentialFeedAPIEndToEndTests",
             dependencies: ["EssentialFeed"],
+            swiftSettings: [
+                .unsafeFlags(["-Xfrontend", "-strict-concurrency=complete"]),
+                .enableExperimentalFeature("StrictConcurrency", .when(platforms: [.macOS, .iOS])),
+                .enableUpcomingFeature("DisableOutwardActorInference"),
+                .enableUpcomingFeature("GlobalActorIsolatedTypesUsability"),
+                .enableUpcomingFeature("InferIsolatedConformances"),
+                .enableUpcomingFeature("InferSendableFromCaptures"),
+                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+            ],
         ),
         .testTarget(
             name: "EssentialFeedCacheIntegrationTests",
             dependencies: ["EssentialFeed"],
+            swiftSettings: [
+                .unsafeFlags(["-Xfrontend", "-strict-concurrency=complete"]),
+                .enableExperimentalFeature("StrictConcurrency", .when(platforms: [.macOS, .iOS])),
+                .enableUpcomingFeature("DisableOutwardActorInference"),
+                .enableUpcomingFeature("GlobalActorIsolatedTypesUsability"),
+                .enableUpcomingFeature("InferIsolatedConformances"),
+                .enableUpcomingFeature("InferSendableFromCaptures"),
+                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+            ],
         ),
         .testTarget(
             name: "EssentialFeedMobileTests",

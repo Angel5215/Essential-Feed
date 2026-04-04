@@ -7,6 +7,7 @@ import EssentialFeed
 import Foundation
 import Testing
 
+@MainActor
 struct FeedEndpointTests {
     @Test
     func `Feed endpoint URL has expected value`() throws {

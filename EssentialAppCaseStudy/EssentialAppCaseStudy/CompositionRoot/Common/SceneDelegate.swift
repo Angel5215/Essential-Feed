@@ -17,11 +17,16 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var store = makeLocalStore()
     private lazy var localFeedLoader = makeLocalFeedLoader()
 
-    private lazy var scheduler: AnyDispatchQueueScheduler = DispatchQueue(
-        label: "me.vazquez.angel.infra.queue",
-        qos: .userInitiated,
-        attributes: .concurrent,
-    ).eraseToAnyScheduler()
+    private lazy var scheduler: AnyDispatchQueueScheduler = {
+        if let store = store as? CoreDataFeedStore {
+            return .scheduler(for: store)
+        }
+
+        return DispatchQueue(
+            label: "me.vazquez.angel.infra.queue",
+            qos: .userInitiated,
+        ).eraseToAnyScheduler()
+    }()
 
     private lazy var baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
 
@@ -35,11 +40,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         )
     )
 
-    convenience init(
-        httpClient: HTTPClient,
-        store: FeedStore & FeedImageDataStore,
-        scheduler: AnyDispatchQueueScheduler,
-    ) {
+    convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
         self.init()
         self.httpClient = httpClient
         self.store = store
@@ -81,7 +82,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         } catch {
             assertionFailure("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
             logger.fault("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
-            return NullStore()
+            return InMemoryFeedStore()
         }
     }
 

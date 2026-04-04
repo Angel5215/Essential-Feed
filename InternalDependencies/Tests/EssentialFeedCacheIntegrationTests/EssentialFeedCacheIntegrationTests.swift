@@ -19,15 +19,15 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         undoStoreSideEffects()
     }
 
-    func test_load_deliversNoItemsOnEmptyCache() {
-        let sut = makeFeedLoader()
+    func test_load_deliversNoItemsOnEmptyCache() throws {
+        let sut = try makeFeedLoader()
 
         expect(sut, toLoad: [])
     }
 
-    func test_load_deliversItemsSavedOnASeparateInstance() {
-        let sutToPerformSave = makeFeedLoader()
-        let sutToPerformLoad = makeFeedLoader()
+    func test_load_deliversItemsSavedOnASeparateInstance() throws {
+        let sutToPerformSave = try makeFeedLoader()
+        let sutToPerformLoad = try makeFeedLoader()
         let feed = uniqueImageFeed().models
 
         save(feed, with: sutToPerformSave)
@@ -35,10 +35,10 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         expect(sutToPerformLoad, toLoad: feed)
     }
 
-    func test_save_overridesItemsSavedOnASeparateInstance() {
-        let sutToPerformFirstSave = makeFeedLoader()
-        let sutToPerformLastSave = makeFeedLoader()
-        let sutToPerformLoad = makeFeedLoader()
+    func test_save_overridesItemsSavedOnASeparateInstance() throws {
+        let sutToPerformFirstSave = try makeFeedLoader()
+        let sutToPerformLastSave = try makeFeedLoader()
+        let sutToPerformLoad = try makeFeedLoader()
         let firstFeed = uniqueImageFeed().models
         let latestFeed = uniqueImageFeed().models
 
@@ -49,10 +49,10 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         expect(sutToPerformLoad, toLoad: latestFeed)
     }
 
-    func test_loadImageData_deliversSavedDataOnASeparateInstance() {
-        let imageLoaderToPerformSave = makeImageLoader()
-        let imageLoaderToPerformLoad = makeImageLoader()
-        let feedLoader = makeFeedLoader()
+    func test_loadImageData_deliversSavedDataOnASeparateInstance() throws {
+        let imageLoaderToPerformSave = try makeImageLoader()
+        let imageLoaderToPerformLoad = try makeImageLoader()
+        let feedLoader = try makeFeedLoader()
         let image = uniqueImage()
         let dataToSave = anyData()
 
@@ -62,11 +62,11 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         expect(imageLoaderToPerformLoad, toLoad: dataToSave, for: image.url)
     }
 
-    func test_saveImageData_overridesSavedImageDataOnASeparateInstance() {
-        let imageLoaderToPerformFirstSave = makeImageLoader()
-        let imageLoaderToPerformLastSave = makeImageLoader()
-        let imageLoaderToPerformLoad = makeImageLoader()
-        let feedLoader = makeFeedLoader()
+    func test_saveImageData_overridesSavedImageDataOnASeparateInstance() throws {
+        let imageLoaderToPerformFirstSave = try makeImageLoader()
+        let imageLoaderToPerformLastSave = try makeImageLoader()
+        let imageLoaderToPerformLoad = try makeImageLoader()
+        let feedLoader = try makeFeedLoader()
         let image = uniqueImage()
         let firstDataToSave = Data("first".utf8)
         let lastImageData = Data("last".utf8)
@@ -78,9 +78,9 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         expect(imageLoaderToPerformLoad, toLoad: lastImageData, for: image.url)
     }
 
-    func test_validateFeedCache_doesNotDeleteRecentlySavedFeed() {
-        let feedLoaderToPerformSave = makeFeedLoader()
-        let feedLoaderToPerformValidation = makeFeedLoader()
+    func test_validateFeedCache_doesNotDeleteRecentlySavedFeed() throws {
+        let feedLoaderToPerformSave = try makeFeedLoader()
+        let feedLoaderToPerformValidation = try makeFeedLoader()
         let feed = uniqueImageFeed().models
 
         save(feed, with: feedLoaderToPerformSave)
@@ -89,9 +89,9 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         expect(feedLoaderToPerformSave, toLoad: feed)
     }
 
-    func test_validateFeedCache_deletesFeedSavedInADistantPast() {
-        let feedLoaderToPerformSave = makeFeedLoader(currentDate: .distantPast)
-        let feedLoaderToPerformValidation = makeFeedLoader(currentDate: Date())
+    func test_validateFeedCache_deletesFeedSavedInADistantPast() throws {
+        let feedLoaderToPerformSave = try makeFeedLoader(currentDate: .distantPast)
+        let feedLoaderToPerformValidation = try makeFeedLoader(currentDate: Date())
         let feed = uniqueImageFeed().models
 
         save(feed, with: feedLoaderToPerformSave)
@@ -102,18 +102,22 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func makeFeedLoader(currentDate: Date = Date(), file: StaticString = #filePath, line: UInt = #line) -> LocalFeedLoader {
+    private func makeFeedLoader(
+        currentDate: Date = Date(),
+        file: StaticString = #filePath,
+        line: UInt = #line,
+    ) throws -> LocalFeedLoader {
         let storeURL = testSpecificStoreURL()
-        let store = try! CoreDataFeedStore(storeURL: storeURL)
+        let store = try CoreDataFeedStore(storeURL: storeURL, contextQueue: .main)
         let sut = LocalFeedLoader(store: store, currentDate: { currentDate })
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(store, file: file, line: line)
         return sut
     }
 
-    private func makeImageLoader(file: StaticString = #filePath, line: UInt = #line) -> LocalFeedImageDataLoader {
+    private func makeImageLoader(file: StaticString = #filePath, line: UInt = #line) throws -> LocalFeedImageDataLoader {
         let storeURL = testSpecificStoreURL()
-        let store = try! CoreDataFeedStore(storeURL: storeURL)
+        let store = try CoreDataFeedStore(storeURL: storeURL, contextQueue: .main)
         let sut = LocalFeedImageDataLoader(store: store)
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(store, file: file, line: line)

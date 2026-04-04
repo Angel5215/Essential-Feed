@@ -231,6 +231,40 @@ open class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(view1?.renderedImage, imageData1, "Expected image for second view once second image loading completes successfully")
     }
 
+    func test_feedImageView_configuresViewCorrectlyWhenTransitioningFromNearVisibleToVisibleWhileStillPreloadingImage() throws {
+        let (sut, loader) = makeSUT()
+
+        sut.simulateAppearance()
+        loader.completeFeedLoading(with: [makeImage()])
+
+        sut.simulateFeedImageViewNearVisible(at: 0)
+        let view = try XCTUnwrap(sut.simulateFeedImageViewVisible(at: 0))
+        XCTAssertNil(view.renderedImage, "Expected no rendered image when view becomes visible while still preloading image")
+        XCTAssertFalse(view.isShowingRetryAction, "Expected no retry action when view becomes visible while still preloading image")
+        XCTAssertTrue(view.isShowingImageLoadingIndicator, "Expected loading indicator when view becomes visible while still preloading image")
+
+        let imageData = try XCTUnwrap(UIImage.make(withColor: .red).pngData())
+        loader.completeImageLoading(with: imageData, at: 0)
+        XCTAssertEqual(view.renderedImage, imageData, "Expected rendered image after image preloads successfully")
+        XCTAssertFalse(view.isShowingRetryAction, "Expected no retry action after image preloads successfully")
+        XCTAssertFalse(view.isShowingImageLoadingIndicator, "Expected loading indicator after image preloads successfully")
+    }
+
+    func test_feedImageView_doesNotShowDataFromPreviousRequestWhenCellIsReused() throws {
+        let (sut, loader) = makeSUT()
+
+        sut.simulateAppearance()
+        loader.completeFeedLoading(with: [makeImage(), makeImage()])
+
+        let view0 = try XCTUnwrap(sut.simulateFeedImageViewVisible(at: 0))
+        view0.prepareForReuse()
+
+        let imageData0 = try XCTUnwrap(UIImage.make(withColor: .red).pngData())
+        loader.completeImageLoading(with: imageData0, at: 0)
+
+        XCTAssertNil(view0.renderedImage, "Expected no image state change for reused view once image loading completes successfully")
+    }
+
     // MARK: - Feed Image View Loading Indicator
 
     func test_feedImageViewLoadingIndicator_isVisibleWhileLoadingImage() {

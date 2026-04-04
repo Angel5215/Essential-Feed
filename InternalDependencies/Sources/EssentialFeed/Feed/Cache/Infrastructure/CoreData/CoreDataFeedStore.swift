@@ -10,21 +10,30 @@ public final class CoreDataFeedStore {
     private static let modelName = "FeedStore"
     private static let model = NSManagedObjectModel.with(name: modelName, in: .module)
     private let container: NSPersistentContainer
-    private let context: NSManagedObjectContext
+    let context: NSManagedObjectContext
 
     enum StoreError: Error {
         case modelNotFound
         case failedToLoadPersistentContainer(Error)
     }
 
-    public init(storeURL: URL) throws {
+    public enum ContextQueue {
+        case main
+        case background
+    }
+
+    public var contextQueue: ContextQueue {
+        context == container.viewContext ? .main : .background
+    }
+
+    public init(storeURL: URL, contextQueue: ContextQueue = .background) throws {
         guard let model = CoreDataFeedStore.model else {
             throw StoreError.modelNotFound
         }
 
         do {
             self.container = try NSPersistentContainer.load(name: CoreDataFeedStore.modelName, model: model, url: storeURL)
-            self.context = container.newBackgroundContext()
+            self.context = contextQueue == .main ? container.viewContext : container.newBackgroundContext()
         } catch {
             throw StoreError.failedToLoadPersistentContainer(error)
         }
@@ -34,11 +43,8 @@ public final class CoreDataFeedStore {
         cleanupReferencesToPersistentStores()
     }
 
-    func performSync<Value>(action: (NSManagedObjectContext) -> Result<Value, Error>) throws -> Value {
-        let context = context
-        var result: Result<Value, Error>!
-        context.performAndWait { result = action(context) }
-        return try result.get()
+    public func perform(_ action: @escaping () -> Void) {
+        context.perform(action)
     }
 
     private func cleanupReferencesToPersistentStores() {

@@ -20,7 +20,7 @@
   },
   "testTargets": [
     {
-      "parallelizable": false,
+      "parallelizable": true,
       "target": {
         "containerPath": "container:",
         "identifier": "EssentialFeedAPIEndToEndTests",
@@ -28,7 +28,7 @@
       }
     },
     {
-      "parallelizable": false,
+      "parallelizable": true,
       "target": {
         "containerPath": "container:",
         "identifier": "EssentialFeedCacheIntegrationTests",
@@ -36,7 +36,7 @@
       }
     },
     {
-      "parallelizable": false,
+      "parallelizable": true,
       "target": {
         "containerPath": "container:",
         "identifier": "EssentialFeedTests",

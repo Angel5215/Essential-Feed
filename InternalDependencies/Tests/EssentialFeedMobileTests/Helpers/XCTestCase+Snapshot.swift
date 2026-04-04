@@ -8,12 +8,12 @@ import XCTest
 
 extension XCTestCase {
     func record(snapshot: UIImage, named name: String, file: StaticString = #filePath, line: UInt = #line) {
-        let snapshotURL = makeSnapshotURL(named: name, file: file)
+        let snapshotURL = snapshotURL(named: name, file: file)
         let snapshotData = makeSnapshotData(for: snapshot, file: file, line: line)
 
         do {
             try FileManager.default.createDirectory(
-                at: snapshotURL.deletingLastPathComponent(),
+                at: snapshotsDirectory(file: file),
                 withIntermediateDirectories: true,
             )
 
@@ -26,7 +26,7 @@ extension XCTestCase {
     }
 
     func assert(snapshot: UIImage, named name: String, file: StaticString = #filePath, line: UInt = #line) {
-        let snapshotURL = makeSnapshotURL(named: name, file: file)
+        let snapshotURL = snapshotURL(named: name, file: file)
         let snapshotData = makeSnapshotData(for: snapshot, file: file, line: line)
 
         guard let storedSnapshotData = try? Data(contentsOf: snapshotURL) else {
@@ -34,19 +34,38 @@ extension XCTestCase {
         }
 
         if snapshotData != storedSnapshotData {
-            let temporarySnapshotURL = URL(filePath: NSTemporaryDirectory(), directoryHint: .isDirectory).appending(path: snapshotURL.lastPathComponent)
+            let failureSnapshotURL = failureSnapshotsDirectory(file: file)
+                .appending(path: snapshotURL.lastPathComponent)
 
-            try? snapshotData?.write(to: temporarySnapshotURL)
+            do {
+                try FileManager.default.createDirectory(
+                    at: failureSnapshotsDirectory(file: file),
+                    withIntermediateDirectories: true,
+                )
 
-            XCTFail("New snapshot does not match stored snapshot. New snapshot URL: '\(temporarySnapshotURL)'. Stored snapshot URL: '\(snapshotURL)'", file: file, line: line)
+                try snapshotData?.write(to: failureSnapshotURL)
+
+                XCTFail("New snapshot does not match stored snapshot. New snapshot URL: '\(failureSnapshotURL)'. Stored snapshot URL: '\(snapshotURL)'", file: file, line: line)
+            } catch {
+                XCTFail("Failed to record snapshot with error: \(error)", file: file, line: line)
+            }
         }
     }
 
-    private func makeSnapshotURL(named name: String, file: StaticString) -> URL {
+    private func snapshotsDirectory(file: StaticString) -> URL {
         URL(filePath: String(describing: file))
             .deletingLastPathComponent()
             .appending(path: "Snapshots")
+    }
+
+    private func snapshotURL(named name: String, file: StaticString) -> URL {
+        snapshotsDirectory(file: file)
             .appending(path: "\(name).png")
+    }
+
+    private func failureSnapshotsDirectory(file: StaticString) -> URL {
+        snapshotsDirectory(file: file)
+            .appending(path: "FailureImages")
     }
 
     private func makeSnapshotData(for snapshot: UIImage, file: StaticString, line: UInt) -> Data? {

@@ -25,19 +25,15 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
         }
     }
 
+    override public func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        onViewIsAppearing?(self)
+    }
+
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         tableView.sizeTableHeaderToFit()
-    }
-
-    @IBAction private func refresh() {
-        onRefresh?()
-    }
-
-    override public func viewIsAppearing(_ animated: Bool) {
-        super.viewIsAppearing(animated)
-        onViewIsAppearing?(self)
     }
 
     override public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -69,7 +65,7 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
         delegate?.tableView?(tableView, willDisplay: cell, forRowAt: indexPath)
     }
 
-    // MARK: - Helpers
+    // MARK: - Public API
 
     public func display(_ sections: [CellController]...) {
         var snapshot = NSDiffableDataSourceSnapshot<Int, CellController>()
@@ -78,6 +74,12 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
             snapshot.appendItems(cellControllers, toSection: section)
         }
         dataSource.applySnapshotUsingReloadData(snapshot)
+    }
+
+    // MARK: - Helpers
+
+    @IBAction private func refresh() {
+        onRefresh?()
     }
 
     private func cellController(at indexPath: IndexPath) -> CellController? {

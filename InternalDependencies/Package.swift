@@ -16,62 +16,63 @@ let package = Package(
     targets: [
         .target(
             name: "EssentialFeed",
-            swiftSettings: [
-                .unsafeFlags(["-Xfrontend", "-strict-concurrency=complete"]),
-                .enableExperimentalFeature("StrictConcurrency", .when(platforms: [.macOS, .iOS])),
-                .enableUpcomingFeature("DisableOutwardActorInference"),
-                .enableUpcomingFeature("GlobalActorIsolatedTypesUsability"),
-                .enableUpcomingFeature("InferIsolatedConformances"),
-                .enableUpcomingFeature("InferSendableFromCaptures"),
-                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
-            ],
+            swiftSettings: .with(
+                settings: [
+                    .strictConcurrency,
+                    .approachableConcurrency,
+                ]
+            ),
         ),
         .target(
             name: "EssentialFeedMobile",
             dependencies: ["EssentialFeed"],
+            swiftSettings: .with(
+                settings: [
+                    .strictConcurrency,
+                    .approachableConcurrency,
+                    .mainActorIsolation,
+                ]
+            ),
         ),
         .testTarget(
             name: "EssentialFeedTests",
             dependencies: ["EssentialFeed"],
-            swiftSettings: [
-                .unsafeFlags(["-Xfrontend", "-strict-concurrency=complete"]),
-                .enableExperimentalFeature("StrictConcurrency", .when(platforms: [.macOS, .iOS])),
-                .enableUpcomingFeature("DisableOutwardActorInference"),
-                .enableUpcomingFeature("GlobalActorIsolatedTypesUsability"),
-                .enableUpcomingFeature("InferIsolatedConformances"),
-                .enableUpcomingFeature("InferSendableFromCaptures"),
-                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
-            ],
+            swiftSettings: .with(
+                settings: [
+                    .strictConcurrency,
+                    .approachableConcurrency,
+                ]
+            ),
         ),
         .testTarget(
             name: "EssentialFeedAPIEndToEndTests",
             dependencies: ["EssentialFeed"],
-            swiftSettings: [
-                .unsafeFlags(["-Xfrontend", "-strict-concurrency=complete"]),
-                .enableExperimentalFeature("StrictConcurrency", .when(platforms: [.macOS, .iOS])),
-                .enableUpcomingFeature("DisableOutwardActorInference"),
-                .enableUpcomingFeature("GlobalActorIsolatedTypesUsability"),
-                .enableUpcomingFeature("InferIsolatedConformances"),
-                .enableUpcomingFeature("InferSendableFromCaptures"),
-                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
-            ],
+            swiftSettings: .with(
+                settings: [
+                    .strictConcurrency,
+                    .approachableConcurrency,
+                ]
+            ),
         ),
         .testTarget(
             name: "EssentialFeedCacheIntegrationTests",
             dependencies: ["EssentialFeed"],
-            swiftSettings: [
-                .unsafeFlags(["-Xfrontend", "-strict-concurrency=complete"]),
-                .enableExperimentalFeature("StrictConcurrency", .when(platforms: [.macOS, .iOS])),
-                .enableUpcomingFeature("DisableOutwardActorInference"),
-                .enableUpcomingFeature("GlobalActorIsolatedTypesUsability"),
-                .enableUpcomingFeature("InferIsolatedConformances"),
-                .enableUpcomingFeature("InferSendableFromCaptures"),
-                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
-            ],
+            swiftSettings: .with(
+                settings: [
+                    .strictConcurrency,
+                    .approachableConcurrency,
+                ]
+            ),
         ),
         .testTarget(
             name: "EssentialFeedMobileTests",
             dependencies: ["EssentialFeedMobile"],
+            swiftSettings: .with(
+                settings: [
+                    .strictConcurrency,
+                    .approachableConcurrency,
+                ]
+            ),
         ),
     ],
     swiftLanguageModes: [
@@ -82,5 +83,34 @@ let package = Package(
 extension Product {
     static func singleTargetLibrary(named name: String) -> Product {
         .library(name: name, targets: [name])
+    }
+}
+
+extension [SwiftSetting] {
+    static func with(settings: [Self]) -> Self {
+        settings.flatMap(\.self)
+    }
+
+    static var strictConcurrency: Self {
+        [
+            .unsafeFlags(["-Xfrontend", "-strict-concurrency=complete"]),
+            .enableExperimentalFeature("StrictConcurrency", .when(platforms: [.macOS, .iOS])),
+        ]
+    }
+
+    static var approachableConcurrency: Self {
+        [
+            .enableUpcomingFeature("DisableOutwardActorInference"),
+            .enableUpcomingFeature("GlobalActorIsolatedTypesUsability"),
+            .enableUpcomingFeature("InferIsolatedConformances"),
+            .enableUpcomingFeature("InferSendableFromCaptures"),
+            .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+        ]
+    }
+
+    static var mainActorIsolation: Self {
+        [
+            .defaultIsolation(MainActor.self)
+        ]
     }
 }

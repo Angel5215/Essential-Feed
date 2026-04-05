@@ -9,6 +9,7 @@ import EssentialFeed
 import EssentialFeedMobile
 import XCTest
 
+@MainActor
 final class CommentsUIIntegrationTests: XCTestCase {
     // MARK: - Localization
 
@@ -131,21 +132,6 @@ final class CommentsUIIntegrationTests: XCTestCase {
 
         sut.simulateErrorViewTap()
         XCTAssertNil(sut.errorMessage)
-    }
-
-    // MARK: - Concurrency
-
-    func test_loadCommentsCompletion_dispatchesFromBackgroundToMainThread() {
-        let comment = makeComment()
-        let (sut, loader) = makeSUT()
-        sut.simulateAppearance()
-
-        let exp = expectation(description: "Wait for background queue")
-        DispatchQueue.global().async {
-            loader.completeCommentsLoading(with: [comment], at: 0)
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1)
     }
 
     // MARK: - Deinit

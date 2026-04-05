@@ -8,6 +8,7 @@ import EssentialFeed
 import EssentialFeedMobile
 import Foundation
 
+@MainActor
 final class LoadResourcePresentationAdapter<Resource, View: ResourceView> {
     private let loader: () -> AnyPublisher<Resource, Error>
     private var cancellable: Cancellable?

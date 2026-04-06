@@ -6,7 +6,6 @@
 import XCTest
 @_spi(Bundle) import EssentialFeed
 
-@MainActor
 final class ImageCommentsPresenterTests: XCTestCase {
     func test_title_isLocalized() {
         XCTAssertEqual(ImageCommentsPresenter.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))

@@ -8,8 +8,7 @@ import EssentialFeed
 import EssentialFeedMobile
 import XCTest
 
-@MainActor
-final class FeedUIIntegrationTests: XCTestCase {
+open class FeedUIIntegrationTests: XCTestCase {
     // MARK: - Localization
 
     func test_feedView_hasTitle() {
@@ -146,6 +145,35 @@ final class FeedUIIntegrationTests: XCTestCase {
 
         sut.simulateErrorViewTap()
         XCTAssertNil(sut.errorMessage)
+    }
+
+    // MARK: - Concurrency
+
+    func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
+        let image = makeImage()
+        let (sut, loader) = makeSUT()
+        sut.simulateAppearance()
+
+        let exp = expectation(description: "Wait for background queue")
+        DispatchQueue.global().async {
+            loader.completeFeedLoading(with: [image], at: 0)
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1)
+    }
+
+    func test_loadImageDataCompletion_dispatchesBackgroundToMainThread() {
+        let (sut, loader) = makeSUT()
+        sut.simulateAppearance()
+        loader.completeFeedLoading(with: [makeImage()], at: 0)
+        _ = sut.simulateFeedImageViewVisible(at: 0)
+
+        let exp = expectation(description: "Wait for background queue work")
+        DispatchQueue.global().async {
+            loader.completeImageLoading(with: self.anyImageData(), at: 0)
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1)
     }
 
     // MARK: - Feed Image View
@@ -484,10 +512,24 @@ final class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.loadMoreCallCount, 2)
     }
 
+    func test_loadMoreCompletion_dispatchesFromBackgroundToMainThread() {
+        let (sut, loader) = makeSUT()
+        sut.simulateAppearance()
+        loader.completeFeedLoading(at: 0)
+        sut.simulateLoadMoreFeedAction()
+
+        let exp = expectation(description: "Wait for background queue")
+        DispatchQueue.global().async {
+            loader.completeLoadMore(at: 0)
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1)
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
-        selection: @MainActor @escaping (FeedImage) -> Void = { _ in },
+        selection: @escaping (FeedImage) -> Void = { _ in },
         file: StaticString = #filePath,
         line: UInt = #line,
     ) -> (sut: ListViewController, loader: LoaderSpy) {

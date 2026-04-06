@@ -7,7 +7,6 @@
 import EssentialFeedMobile
 import XCTest
 
-@MainActor
 final class ListSnapshotTests: XCTestCase {
     func test_display_emptyList() {
         let sut = makeSUT()

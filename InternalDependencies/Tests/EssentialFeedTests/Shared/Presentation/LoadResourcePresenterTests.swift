@@ -6,7 +6,6 @@
 @_spi(Bundle) import EssentialFeed
 import XCTest
 
-@MainActor
 final class LoadResourcePresenterTests: XCTestCase {
     func test_init_doesNotSendMessagesToView() {
         let (_, view) = makeSUT()

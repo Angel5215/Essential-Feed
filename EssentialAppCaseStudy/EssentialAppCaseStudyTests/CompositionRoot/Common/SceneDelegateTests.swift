@@ -7,7 +7,6 @@
 import EssentialFeedMobile
 import XCTest
 
-@MainActor
 final class SceneDelegateTests: XCTestCase {
     func test_configureWindow_configuresRootViewController() throws {
         let sut = SceneDelegate()

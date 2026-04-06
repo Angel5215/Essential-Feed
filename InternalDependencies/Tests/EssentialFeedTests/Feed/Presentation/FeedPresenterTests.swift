@@ -6,7 +6,6 @@
 @_spi(Bundle) import EssentialFeed
 import XCTest
 
-@MainActor
 final class FeedPresenterTests: XCTestCase {
     func test_title_isLocalized() {
         XCTAssertEqual(FeedPresenter.title, localized("FEED_VIEW_TITLE"))

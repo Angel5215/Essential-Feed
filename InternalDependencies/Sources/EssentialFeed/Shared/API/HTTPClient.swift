@@ -15,5 +15,5 @@ public protocol HTTPClient {
     /// The `completion` handler can be invoked in any thread.
     /// Clients are responsible to dispatch to appropriate thread, if needed.
     @discardableResult
-    func get(from url: URL, completion: @Sendable @escaping (Result) -> Void) -> HTTPClientTask
+    func get(from url: URL, completion: @escaping (Result) -> Void) -> HTTPClientTask
 }

@@ -30,10 +30,7 @@ extension HTTPClient {
 
         return Deferred {
             Future { completion in
-                nonisolated(unsafe) let uncheckedCompletion = completion
-                task = self.get(from: url) {
-                    uncheckedCompletion($0)
-                }
+                task = self.get(from: url, completion: completion)
             }
         }
         .handleEvents(receiveCancel: {
@@ -301,8 +298,7 @@ extension AnyDispatchQueueScheduler {
             if store.contextQueue == .main, Thread.isMainThread {
                 action()
             } else {
-                nonisolated(unsafe) let uncheckedAction = action
-                store.perform { uncheckedAction() }
+                store.perform(action)
             }
             return AnyCancellable {}
         }
@@ -316,8 +312,7 @@ extension AnyDispatchQueueScheduler {
             if store.contextQueue == .main, Thread.isMainThread {
                 action()
             } else {
-                nonisolated(unsafe) let uncheckedAction = action
-                store.perform { uncheckedAction() }
+                store.perform(action)
             }
         }
 
@@ -325,8 +320,7 @@ extension AnyDispatchQueueScheduler {
             if store.contextQueue == .main, Thread.isMainThread {
                 action()
             } else {
-                nonisolated(unsafe) let uncheckedAction = action
-                store.perform { uncheckedAction() }
+                store.perform(action)
             }
         }
     }

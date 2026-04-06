@@ -7,7 +7,6 @@
 import EssentialFeedMobile
 import XCTest
 
-@MainActor
 final class FeedSnapshotTests: XCTestCase {
     func test_feedWithContent() {
         let sut = makeSUT()

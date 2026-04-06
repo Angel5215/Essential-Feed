@@ -6,36 +6,35 @@
 import EssentialFeed
 import XCTest
 
-@MainActor
 final class CoreDataFeedImageDataStoreTests: XCTestCase, FeedImageDataStoreSpecs {
     func test_retrieveImageData_deliversNotFoundWhenEmpty() throws {
         try makeSUT { sut, imageDataURL in
-            assertThatRetrieveImageDataDeliversNotFoundOnEmptyCache(on: sut, imageDataURL: imageDataURL)
+            self.assertThatRetrieveImageDataDeliversNotFoundOnEmptyCache(on: sut, imageDataURL: imageDataURL)
         }
     }
 
     func test_retrieveImageData_deliversNotFoundWhenStoredDataURLDoesNotMatch() throws {
         try makeSUT { sut, imageDataURL in
-            assertThatRetrieveImageDataDeliversNotFoundWhenStoredDataURLDoesNotMatch(on: sut, imageDataURL: imageDataURL)
+            self.assertThatRetrieveImageDataDeliversNotFoundWhenStoredDataURLDoesNotMatch(on: sut, imageDataURL: imageDataURL)
         }
     }
 
     func test_retrieveImageData_deliversFoundDataWhenThereIsAStoredImageDataMatchingURL() throws {
         try makeSUT { sut, imageDataURL in
-            assertThatRetrieveImageDataDeliversFoundDataWhenThereIsAStoredImageDataMatchingURL(on: sut, imageDataURL: imageDataURL)
+            self.assertThatRetrieveImageDataDeliversFoundDataWhenThereIsAStoredImageDataMatchingURL(on: sut, imageDataURL: imageDataURL)
         }
     }
 
     func test_retrieveImageData_deliversLastInsertedValue() throws {
         try makeSUT { sut, imageDataURL in
-            assertThatRetrieveImageDataDeliversLastInsertedValueForURL(on: sut, imageDataURL: imageDataURL)
+            self.assertThatRetrieveImageDataDeliversLastInsertedValueForURL(on: sut, imageDataURL: imageDataURL)
         }
     }
 
     // MARK: - Helpers
 
     private func makeSUT(
-        _ test: @Sendable @escaping (CoreDataFeedStore, URL) -> Void,
+        _ test: @escaping (CoreDataFeedStore, URL) -> Void,
         file: StaticString = #filePath,
         line: UInt = #line,
     ) throws {

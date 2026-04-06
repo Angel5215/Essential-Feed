@@ -7,7 +7,6 @@ import EssentialFeed
 import Foundation
 import XCTest
 
-@MainActor
 final class FeedItemsMapperTests: XCTestCase {
     func test_map_throwsErrorOnNon200HTTPResponse() {
         let json = makeItemsJSON([])

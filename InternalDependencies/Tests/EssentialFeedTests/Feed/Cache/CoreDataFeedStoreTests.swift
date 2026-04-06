@@ -6,78 +6,77 @@
 import EssentialFeed
 import XCTest
 
-@MainActor
 final class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs {
     func test_retrieve_deliversEmptyOnEmptyCache() throws {
         try makeSUT { sut in
-            assertThatRetrieveDeliversEmptyOnEmptyCache(on: sut)
+            self.assertThatRetrieveDeliversEmptyOnEmptyCache(on: sut)
         }
     }
 
     func test_retrieve_hasNoSideEffectsOnEmptyCache() throws {
         try makeSUT { sut in
-            assertThatRetrieveHasNoSideEffectsOnEmptyCache(on: sut)
+            self.assertThatRetrieveHasNoSideEffectsOnEmptyCache(on: sut)
         }
     }
 
     func test_retrieve_deliversFoundValuesOnNonEmptyCache() throws {
         try makeSUT { sut in
-            assertThatRetrieveDeliversFoundValuesOnNonEmptyCache(on: sut)
+            self.assertThatRetrieveDeliversFoundValuesOnNonEmptyCache(on: sut)
         }
     }
 
     func test_retrieve_hasNoSideEffectsOnNonEmptyCache() throws {
         try makeSUT { sut in
-            assertThatRetrieveHasNoSideEffectsOnNonEmptyCache(on: sut)
+            self.assertThatRetrieveHasNoSideEffectsOnNonEmptyCache(on: sut)
         }
     }
 
     func test_insert_deliversNoErrorOnEmptyCache() throws {
         try makeSUT { sut in
-            assertThatInsertDeliversNoErrorOnEmptyCache(on: sut)
+            self.assertThatInsertDeliversNoErrorOnEmptyCache(on: sut)
         }
     }
 
     func test_insert_deliversNoErrorOnNonEmptyCache() throws {
         try makeSUT { sut in
-            assertThatInsertDeliversNoErrorOnNonEmptyCache(on: sut)
+            self.assertThatInsertDeliversNoErrorOnNonEmptyCache(on: sut)
         }
     }
 
     func test_insert_overridesPreviouslyInsertedCacheValues() throws {
         try makeSUT { sut in
-            assertThatInsertOverridesPreviouslyInsertedCacheValues(on: sut)
+            self.assertThatInsertOverridesPreviouslyInsertedCacheValues(on: sut)
         }
     }
 
     func test_delete_deliversNoErrorOnEmptyCache() throws {
         try makeSUT { sut in
-            assertThatDeleteDeliversNoErrorOnEmptyCache(on: sut)
+            self.assertThatDeleteDeliversNoErrorOnEmptyCache(on: sut)
         }
     }
 
     func test_delete_hasNoSideEffectsOnEmptyCache() throws {
         try makeSUT { sut in
-            assertThatDeleteHasNoSideEffectsOnEmptyCache(on: sut)
+            self.assertThatDeleteHasNoSideEffectsOnEmptyCache(on: sut)
         }
     }
 
     func test_delete_deliversNoErrorOnNonEmptyCache() throws {
         try makeSUT { sut in
-            assertThatDeleteDeliversNoErrorOnNonEmptyCache(on: sut)
+            self.assertThatDeleteDeliversNoErrorOnNonEmptyCache(on: sut)
         }
     }
 
     func test_delete_emptiesPreviouslyInsertedCache() throws {
         try makeSUT { sut in
-            assertThatDeleteEmptiesPreviouslyInsertedCache(on: sut)
+            self.assertThatDeleteEmptiesPreviouslyInsertedCache(on: sut)
         }
     }
 
     // MARK: - Helpers
 
     private func makeSUT(
-        _ test: @Sendable @escaping (CoreDataFeedStore) -> Void,
+        _ test: @escaping (CoreDataFeedStore) -> Void,
         file: StaticString = #filePath,
         line: UInt = #line,
     ) throws {

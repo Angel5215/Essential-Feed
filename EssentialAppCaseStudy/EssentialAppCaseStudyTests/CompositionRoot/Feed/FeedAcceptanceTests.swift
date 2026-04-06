@@ -8,7 +8,6 @@ import EssentialFeed
 import EssentialFeedMobile
 import XCTest
 
-@MainActor
 final class FeedAcceptanceTests: XCTestCase {
     func test_onLaunch_displaysRemoteFeedWhenCustomerHasConnectivity() throws {
         let feed = try launch(httpClient: .online(response(for:)), store: .empty)
@@ -247,7 +246,6 @@ final class FeedAcceptanceTests: XCTestCase {
     }
 }
 
-@MainActor
 private extension CoreDataFeedStore {
     static var empty: CoreDataFeedStore {
         get throws {

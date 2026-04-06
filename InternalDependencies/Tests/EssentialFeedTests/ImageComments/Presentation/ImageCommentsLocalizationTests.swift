@@ -6,7 +6,6 @@
 @_spi(Bundle) import EssentialFeed
 import XCTest
 
-@MainActor
 final class ImageCommentsLocalizationTests: XCTestCase {
     func test_localizedStrings_haveKeysAndValuesForAllSupportedLocalizations() {
         let table = "ImageComments"

@@ -8,7 +8,6 @@ import EssentialFeed
 import EssentialFeedMobile
 import UIKit
 
-@MainActor
 public enum CommentsUIComposer {
     public static func commentsComposedWith(commentsLoader: @escaping () -> AnyPublisher<[ImageComment], Error>) -> ListViewController {
         let presentationAdapter = CommentsPresentationAdapter(loader: commentsLoader)
@@ -34,7 +33,6 @@ public enum CommentsUIComposer {
     }
 }
 
-@MainActor
 final class CommentsViewAdapter: ResourceView {
     private weak var controller: ListViewController?
 

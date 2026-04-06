@@ -39,6 +39,10 @@ public final class ErrorView: UIButton {
         configure()
     }
 
+    override public func awakeFromNib() {
+        super.awakeFromNib()
+    }
+
     // MARK: - Private methods
 
     private func configure() {

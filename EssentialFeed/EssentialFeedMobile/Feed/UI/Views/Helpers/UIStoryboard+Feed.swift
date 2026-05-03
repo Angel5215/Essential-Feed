@@ -7,6 +7,6 @@ import UIKit
 
 public extension UIStoryboard {
     static var feed: UIStoryboard {
-        UIStoryboard(name: "Feed", bundle: .module)
+        UIStoryboard(name: "Feed", bundle: .essentialFeedMobile)
     }
 }

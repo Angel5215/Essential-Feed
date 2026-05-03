@@ -11,6 +11,7 @@
 		FA46E88A2FA72CAF00AA5F4C /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA46E8682FA72C2A00AA5F4C /* EssentialFeed.framework */; };
 		FA46E8982FA72CBB00AA5F4C /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA46E8682FA72C2A00AA5F4C /* EssentialFeed.framework */; };
 		FA46E8AC2FA72CDC00AA5F4C /* EssentialFeedMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA46E8A32FA72CDC00AA5F4C /* EssentialFeedMobile.framework */; };
+		FAD7726C2FA736020020EBD2 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA46E8682FA72C2A00AA5F4C /* EssentialFeed.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,36 @@
 		FA46E8AB2FA72CDC00AA5F4C /* EssentialFeedMobileTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedMobileTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		FAD7726A2FA735F40020EBD2 /* Exceptions for "EssentialFeedMobileTests" folder in "EssentialFeedMobileTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Feed/UI/Snapshots/FEED_WITH_CONTENT_dark.png,
+				Feed/UI/Snapshots/FEED_WITH_CONTENT_light_extraExtraExtraLarge.png,
+				Feed/UI/Snapshots/FEED_WITH_CONTENT_light.png,
+				Feed/UI/Snapshots/FEED_WITH_FAILED_IMAGE_LOADING_dark.png,
+				Feed/UI/Snapshots/FEED_WITH_FAILED_IMAGE_LOADING_light.png,
+				Feed/UI/Snapshots/FEED_WITH_LOAD_MORE_ERROR_dark.png,
+				Feed/UI/Snapshots/FEED_WITH_LOAD_MORE_ERROR_light_extraExtraExtraLarge.png,
+				Feed/UI/Snapshots/FEED_WITH_LOAD_MORE_ERROR_light.png,
+				Feed/UI/Snapshots/FEED_WITH_LOAD_MORE_INDICATOR_dark.png,
+				Feed/UI/Snapshots/FEED_WITH_LOAD_MORE_INDICATOR_light.png,
+				ImageComments/UI/Snapshots/FailureImages/IMAGE_COMMENTS_dark.png,
+				ImageComments/UI/Snapshots/FailureImages/IMAGE_COMMENTS_light_extraExtraExtraLarge.png,
+				ImageComments/UI/Snapshots/FailureImages/IMAGE_COMMENTS_light.png,
+				ImageComments/UI/Snapshots/IMAGE_COMMENTS_dark.png,
+				ImageComments/UI/Snapshots/IMAGE_COMMENTS_light_extraExtraExtraLarge.png,
+				ImageComments/UI/Snapshots/IMAGE_COMMENTS_light.png,
+				Shared/UI/Snapshots/EMPTY_LIST_dark.png,
+				Shared/UI/Snapshots/EMPTY_LIST_light.png,
+				Shared/UI/Snapshots/LIST_WITH_ERROR_MESSAGE_dark.png,
+				Shared/UI/Snapshots/LIST_WITH_ERROR_MESSAGE_light_extraExtraExtraLarge.png,
+				Shared/UI/Snapshots/LIST_WITH_ERROR_MESSAGE_light.png,
+			);
+			target = FA46E8AA2FA72CDC00AA5F4C /* EssentialFeedMobileTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		FA46E86A2FA72C2A00AA5F4C /* EssentialFeed */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -81,6 +112,9 @@
 		};
 		FA46E8AF2FA72CDC00AA5F4C /* EssentialFeedMobileTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				FAD7726A2FA735F40020EBD2 /* Exceptions for "EssentialFeedMobileTests" folder in "EssentialFeedMobileTests" target */,
+			);
 			path = EssentialFeedMobileTests;
 			sourceTree = "<group>";
 		};
@@ -122,6 +156,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAD7726C2FA736020020EBD2 /* EssentialFeed.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +180,7 @@
 				FA46E8952FA72CBB00AA5F4C /* EssentialFeedCacheIntegrationTests */,
 				FA46E8A42FA72CDC00AA5F4C /* EssentialFeedMobile */,
 				FA46E8AF2FA72CDC00AA5F4C /* EssentialFeedMobileTests */,
+				FAD7726B2FA736020020EBD2 /* Frameworks */,
 				FA46E8692FA72C2A00AA5F4C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -160,6 +196,13 @@
 				FA46E8AB2FA72CDC00AA5F4C /* EssentialFeedMobileTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		FAD7726B2FA736020020EBD2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -638,6 +681,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_MODULE = YES;
@@ -673,6 +717,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_MODULE = YES;
@@ -692,6 +737,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.angel5215.EssentialFeedTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
@@ -709,6 +755,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.angel5215.EssentialFeedTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
@@ -726,6 +773,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.angel5215.EssentialFeedAPIEndToEndTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
@@ -743,6 +791,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.angel5215.EssentialFeedAPIEndToEndTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
@@ -760,6 +809,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.angel5215.EssentialFeedCacheIntegrationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
@@ -777,6 +827,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.angel5215.EssentialFeedCacheIntegrationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;

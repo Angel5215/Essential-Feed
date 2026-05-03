@@ -14,10 +14,23 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../Configuration/TestPlans/EssentialFeedCacheIntegrationTests.xctestplan"
+            reference = "container:../Configuration/TestPlans/EssentialFeedMobileTests.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
+      <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "FA46E8AA2FA72CDC00AA5F4C"
+               BuildableName = "EssentialFeedMobileTests.xctest"
+               BlueprintName = "EssentialFeedMobileTests"
+               ReferencedContainer = "container:EssentialFeed.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"

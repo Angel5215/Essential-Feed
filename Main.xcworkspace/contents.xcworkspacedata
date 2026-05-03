@@ -20,7 +20,4 @@
    <FileRef
       location = "group:Prototype/Prototype.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:Configuration/TestPlans/CI-macOS.xctestplan">
-   </FileRef>
 </Workspace>

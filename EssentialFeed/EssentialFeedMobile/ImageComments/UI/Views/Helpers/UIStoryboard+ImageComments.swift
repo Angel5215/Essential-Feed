@@ -7,6 +7,6 @@ import UIKit
 
 public extension UIStoryboard {
     static var imageComments: UIStoryboard {
-        UIStoryboard(name: "ImageComments", bundle: .module)
+        UIStoryboard(name: "ImageComments", bundle: .essentialFeedMobile)
     }
 }

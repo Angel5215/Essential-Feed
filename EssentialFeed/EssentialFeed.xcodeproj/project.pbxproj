@@ -82,6 +82,24 @@
 			);
 			target = FA46E8AA2FA72CDC00AA5F4C /* EssentialFeedMobileTests */;
 		};
+		FAE2F8DC2FA73AE600949262 /* Exceptions for "EssentialFeedTests" folder in "EssentialFeedAPIEndToEndTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Helpers/Testing+MemoryLeakTracking.swift",
+				"Helpers/XCTestCase+MemoryLeakTracking.swift",
+			);
+			target = FA46E8852FA72CAF00AA5F4C /* EssentialFeedAPIEndToEndTests */;
+		};
+		FAE2F8DD2FA73AE600949262 /* Exceptions for "EssentialFeedTests" folder in "EssentialFeedCacheIntegrationTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Feed/Cache/Helpers/FeedCacheTestHelpers.swift,
+				Helpers/SharedTestHelpers.swift,
+				"Helpers/Testing+MemoryLeakTracking.swift",
+				"Helpers/XCTestCase+MemoryLeakTracking.swift",
+			);
+			target = FA46E8932FA72CBB00AA5F4C /* EssentialFeedCacheIntegrationTests */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -92,6 +110,10 @@
 		};
 		FA46E8792FA72C7F00AA5F4C /* EssentialFeedTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				FAE2F8DC2FA73AE600949262 /* Exceptions for "EssentialFeedTests" folder in "EssentialFeedAPIEndToEndTests" target */,
+				FAE2F8DD2FA73AE600949262 /* Exceptions for "EssentialFeedTests" folder in "EssentialFeedCacheIntegrationTests" target */,
+			);
 			path = EssentialFeedTests;
 			sourceTree = "<group>";
 		};

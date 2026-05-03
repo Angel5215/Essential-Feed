@@ -3,7 +3,10 @@
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
+import EssentialFeed
 import Foundation
+
+// MARK: - Test Helpers
 
 func anyNSError() -> NSError {
     NSError(domain: "any error", code: 0)
@@ -27,6 +30,8 @@ extension HTTPURLResponse {
         self.init(url: anyURL(), statusCode: statusCode, httpVersion: nil, headerFields: nil)!
     }
 }
+
+// MARK: - Date Helpers
 
 extension Date {
     func adding(seconds: TimeInterval) -> Date {

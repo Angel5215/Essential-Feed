@@ -1,0 +1,74 @@
+{
+  "configurations": [
+    {
+      "id": "BFB0D932-8126-45D4-9DD4-F32C003AFFB9",
+      "name": "Configuration 1",
+      "options": {}
+    }
+  ],
+  "defaultOptions": {
+    "codeCoverage": {
+      "targets": [
+        {
+          "containerPath": "container:EssentialAppCaseStudy.xcodeproj",
+          "identifier": "FABFD7292F08D40E000D6D19",
+          "name": "EssentialAppCaseStudy"
+        },
+        {
+          "containerPath": "container:../EssentialFeed/EssentialFeed.xcodeproj",
+          "identifier": "FA46E8672FA72C2A00AA5F4C",
+          "name": "EssentialFeed"
+        },
+        {
+          "containerPath": "container:../EssentialFeed/EssentialFeed.xcodeproj",
+          "identifier": "FA46E8A22FA72CDC00AA5F4C",
+          "name": "EssentialFeedMobile"
+        }
+      ]
+    },
+    "testExecutionOrdering": "random"
+  },
+  "testTargets": [
+    {
+      "parallelizable": false,
+      "target": {
+        "containerPath": "container:../EssentialFeed/EssentialFeed.xcodeproj",
+        "identifier": "FA46E8932FA72CBB00AA5F4C",
+        "name": "EssentialFeedCacheIntegrationTests"
+      }
+    },
+    {
+      "parallelizable": false,
+      "target": {
+        "containerPath": "container:../EssentialFeed/EssentialFeed.xcodeproj",
+        "identifier": "FA46E8AA2FA72CDC00AA5F4C",
+        "name": "EssentialFeedMobileTests"
+      }
+    },
+    {
+      "parallelizable": false,
+      "target": {
+        "containerPath": "container:../EssentialFeed/EssentialFeed.xcodeproj",
+        "identifier": "FA46E8772FA72C7F00AA5F4C",
+        "name": "EssentialFeedTests"
+      }
+    },
+    {
+      "parallelizable": false,
+      "target": {
+        "containerPath": "container:EssentialAppCaseStudy.xcodeproj",
+        "identifier": "FABFD73F2F08D40F000D6D19",
+        "name": "EssentialAppCaseStudyTests"
+      }
+    },
+    {
+      "parallelizable": false,
+      "target": {
+        "containerPath": "container:../EssentialFeed/EssentialFeed.xcodeproj",
+        "identifier": "FA46E8852FA72CAF00AA5F4C",
+        "name": "EssentialFeedAPIEndToEndTests"
+      }
+    }
+  ],
+  "version": 1
+}

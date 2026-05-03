@@ -12,12 +12,15 @@
       name = "Configuration">
    </FileSystemSynchronizedGroup>
    <FileRef
-      location = "group:InternalDependencies">
+      location = "group:EssentialFeed/EssentialFeed.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:EssentialAppCaseStudy/EssentialAppCaseStudy.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Prototype/Prototype.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Configuration/TestPlans/EssentialFeed.xctestplan">
    </FileRef>
 </Workspace>

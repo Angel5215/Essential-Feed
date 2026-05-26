@@ -1,0 +1,32 @@
+{
+  "configurations": [
+    {
+      "id": "31E51043-8753-4EE2-B180-CC90E3A0F769",
+      "name": "Configuration 1",
+      "options": {}
+    }
+  ],
+  "defaultOptions": {
+    "codeCoverage": {
+      "targets": [
+        {
+          "containerPath": "container:EssentialFeed.xcodeproj",
+          "identifier": "FA46E8672FA72C2A00AA5F4C",
+          "name": "EssentialFeed"
+        }
+      ]
+    },
+    "testExecutionOrdering": "random"
+  },
+  "testTargets": [
+    {
+      "parallelizable": false,
+      "target": {
+        "containerPath": "container:EssentialFeed.xcodeproj",
+        "identifier": "FA46E8772FA72C7F00AA5F4C",
+        "name": "EssentialFeedTests"
+      }
+    }
+  ],
+  "version": 1
+}

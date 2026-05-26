@@ -5,7 +5,7 @@
 [![deploy](https://github.com/Angel5215/Essential-Feed/actions/workflows/deploy.yml/badge.svg)](https://github.com/Angel5215/Essential-Feed/actions/workflows/deploy.yml)
 
 
-Repository created to keep track of the iOS Lead Essentials training program. This repository keeps track of all the lectures in the program with some small twists - using Swift Package Manager to create the modules (frameworks). The overall result should be equivalent but it serves to practice the TDD approach while learning new technologies at the same time.
+Repository created to keep track of the iOS Lead Essentials training program. The overall result should be equivalent but it serves to practice the TDD approach while learning new technologies at the same time.
 
 ## Requirements
 

@@ -1,7 +1,7 @@
 {
   "configurations": [
     {
-      "id": "FEC35CAC-E903-44B6-9C87-FFF733A17E98",
+      "id": "BFB0D932-8126-45D4-9DD4-F32C003AFFB9",
       "name": "Configuration 1",
       "options": {}
     }
@@ -10,18 +10,18 @@
     "codeCoverage": {
       "targets": [
         {
-          "containerPath": "container:EssentialAppCaseStudy/EssentialAppCaseStudy.xcodeproj",
+          "containerPath": "container:EssentialAppCaseStudy.xcodeproj",
           "identifier": "FABFD7292F08D40E000D6D19",
           "name": "EssentialAppCaseStudy"
         },
         {
-          "containerPath": "container:InternalDependencies",
-          "identifier": "EssentialFeed",
+          "containerPath": "container:../EssentialFeed/EssentialFeed.xcodeproj",
+          "identifier": "FA46E8672FA72C2A00AA5F4C",
           "name": "EssentialFeed"
         },
         {
-          "containerPath": "container:InternalDependencies",
-          "identifier": "EssentialFeedMobile",
+          "containerPath": "container:../EssentialFeed/EssentialFeed.xcodeproj",
+          "identifier": "FA46E8A22FA72CDC00AA5F4C",
           "name": "EssentialFeedMobile"
         }
       ]
@@ -32,7 +32,31 @@
     {
       "parallelizable": false,
       "target": {
-        "containerPath": "container:EssentialAppCaseStudy/EssentialAppCaseStudy.xcodeproj",
+        "containerPath": "container:../EssentialFeed/EssentialFeed.xcodeproj",
+        "identifier": "FA46E8932FA72CBB00AA5F4C",
+        "name": "EssentialFeedCacheIntegrationTests"
+      }
+    },
+    {
+      "parallelizable": false,
+      "target": {
+        "containerPath": "container:../EssentialFeed/EssentialFeed.xcodeproj",
+        "identifier": "FA46E8AA2FA72CDC00AA5F4C",
+        "name": "EssentialFeedMobileTests"
+      }
+    },
+    {
+      "parallelizable": false,
+      "target": {
+        "containerPath": "container:../EssentialFeed/EssentialFeed.xcodeproj",
+        "identifier": "FA46E8772FA72C7F00AA5F4C",
+        "name": "EssentialFeedTests"
+      }
+    },
+    {
+      "parallelizable": false,
+      "target": {
+        "containerPath": "container:EssentialAppCaseStudy.xcodeproj",
         "identifier": "FABFD73F2F08D40F000D6D19",
         "name": "EssentialAppCaseStudyTests"
       }
@@ -40,32 +64,8 @@
     {
       "parallelizable": false,
       "target": {
-        "containerPath": "container:InternalDependencies",
-        "identifier": "EssentialFeedCacheIntegrationTests",
-        "name": "EssentialFeedCacheIntegrationTests"
-      }
-    },
-    {
-      "parallelizable": false,
-      "target": {
-        "containerPath": "container:InternalDependencies",
-        "identifier": "EssentialFeedTests",
-        "name": "EssentialFeedTests"
-      }
-    },
-    {
-      "parallelizable": false,
-      "target": {
-        "containerPath": "container:InternalDependencies",
-        "identifier": "EssentialFeedMobileTests",
-        "name": "EssentialFeedMobileTests"
-      }
-    },
-    {
-      "parallelizable": false,
-      "target": {
-        "containerPath": "container:InternalDependencies",
-        "identifier": "EssentialFeedAPIEndToEndTests",
+        "containerPath": "container:../EssentialFeed/EssentialFeed.xcodeproj",
+        "identifier": "FA46E8852FA72CAF00AA5F4C",
         "name": "EssentialFeedAPIEndToEndTests"
       }
     }

@@ -1,0 +1,8 @@
+// EssentialFeedTests target settings.
+#include "UnitTests.xcconfig"
+
+MACOSX_DEPLOYMENT_TARGET = 26.0;
+IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+PRODUCT_BUNDLE_IDENTIFIER = com.github.angel5215.EssentialFeedTests;
+SUPPORTED_PLATFORMS = macosx iphoneos iphonesimulator;
+TARGETED_DEVICE_FAMILY = 1;

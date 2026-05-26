@@ -25,7 +25,7 @@ jobs:
       - name: Build and test
         env:
           SCHEME: "CI-macOS"
-          PLATFORM_DESTINATION: "platform=macOS"
+          PLATFORM_DESTINATION: "platform=macOS,arch=arm64,name=My Mac"
           TARGET_SDK: "macosx"
         run: |
           bin/build-and-test.sh

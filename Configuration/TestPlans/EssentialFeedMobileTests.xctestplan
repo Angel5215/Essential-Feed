@@ -1,8 +1,8 @@
 {
   "configurations": [
     {
-      "id": "EDE9AF1D-49D4-4B82-AA83-8F38D1C803B4",
-      "name": "Test Scheme Action",
+      "id": "1C643BDF-2F8D-4C2E-8C7C-5DC56A04E6E8",
+      "name": "Configuration 1",
       "options": {}
     }
   ],
@@ -10,21 +10,20 @@
     "codeCoverage": {
       "targets": [
         {
-          "containerPath": "container:",
-          "identifier": "EssentialFeedMobile",
+          "containerPath": "container:EssentialFeed.xcodeproj",
+          "identifier": "FA46E8A22FA72CDC00AA5F4C",
           "name": "EssentialFeedMobile"
         }
       ]
     },
-    "performanceAntipatternCheckerEnabled": true,
     "testExecutionOrdering": "random"
   },
   "testTargets": [
     {
       "parallelizable": false,
       "target": {
-        "containerPath": "container:",
-        "identifier": "EssentialFeedMobileTests",
+        "containerPath": "container:EssentialFeed.xcodeproj",
+        "identifier": "FA46E8AA2FA72CDC00AA5F4C",
         "name": "EssentialFeedMobileTests"
       }
     }

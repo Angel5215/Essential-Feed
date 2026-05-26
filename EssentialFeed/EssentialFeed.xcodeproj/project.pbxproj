@@ -659,7 +659,7 @@
 		FA46E8B62FA72CDC00AA5F4C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReferenceAnchor = FA89AEF52FA8773300FD080B /* Configuration */;
-			baseConfigurationReferenceRelativePath = EssentialFeedTests.xcconfig;
+			baseConfigurationReferenceRelativePath = EssentialFeedMobileTests.xcconfig;
 			buildSettings = {
 			};
 			name = Debug;

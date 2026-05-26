@@ -1,6 +1,7 @@
 // EssentialFeedCacheIntegrationTests target settings.
 #include "UnitTests.xcconfig"
 
+MACOSX_DEPLOYMENT_TARGET = 26.0;
 IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 PRODUCT_BUNDLE_IDENTIFIER = com.github.angel5215.EssentialFeedCacheIntegrationTests;
 SUPPORTED_PLATFORMS = macosx iphonesimulator iphoneos;

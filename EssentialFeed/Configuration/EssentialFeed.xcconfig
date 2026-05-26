@@ -1,0 +1,10 @@
+// EssentialFeed framework target settings.
+// macOS framework supporting iOS platforms as well.
+#include "Framework.xcconfig"
+
+MACOSX_DEPLOYMENT_TARGET = 26.0;
+IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+PRODUCT_BUNDLE_IDENTIFIER = com.github.angel5215.EssentialFeed;
+SUPPORTED_PLATFORMS = macosx iphonesimulator iphoneos;
+ENABLE_MODULE_VERIFIER = YES;
+VERSIONING_SYSTEM = apple-generic;

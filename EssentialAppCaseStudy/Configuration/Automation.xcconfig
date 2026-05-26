@@ -1,0 +1,11 @@
+// Automation build settings — used for CI distribution.
+// Inherits Release settings and overrides code signing for distribution.
+#include "Release.xcconfig"
+
+CODE_SIGN_STYLE = Manual;
+DEVELOPMENT_TEAM = 486CCPNU3B;
+"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 486CCPNU3B;
+"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Essential App Case Study Distribution;
+PROVISIONING_PROFILE_SPECIFIER = "";
+VALIDATE_PRODUCT = YES;

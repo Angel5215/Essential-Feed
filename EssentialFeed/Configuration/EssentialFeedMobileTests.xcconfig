@@ -1,0 +1,12 @@
+// EssentialFeedMobileTests target settings.
+// iOS-specific test target.
+#include "UnitTests.xcconfig"
+
+IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+PRODUCT_BUNDLE_IDENTIFIER = com.github.angel5215.EssentialFeedMobileTests;
+SDKROOT = iphoneos;
+SUPPORTS_MACCATALYST = NO;
+SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+TARGETED_DEVICE_FAMILY = 1;
+VALIDATE_PRODUCT[sdk=iphoneos*] = YES;

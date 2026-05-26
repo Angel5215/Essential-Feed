@@ -1,0 +1,7 @@
+// EssentialFeedAPIEndToEndTests target settings.
+#include "UnitTests.xcconfig"
+
+IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+PRODUCT_BUNDLE_IDENTIFIER = com.github.angel5215.EssentialFeedAPIEndToEndTests;
+SUPPORTED_PLATFORMS = macosx iphonesimulator iphoneos;
+TARGETED_DEVICE_FAMILY = 1;

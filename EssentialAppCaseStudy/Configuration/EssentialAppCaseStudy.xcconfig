@@ -1,0 +1,4 @@
+// EssentialAppCaseStudy app target settings.
+#include "iOSApp.xcconfig"
+
+PRODUCT_BUNDLE_IDENTIFIER = me.vazquez.angel.EssentialAppCaseStudy.Development;

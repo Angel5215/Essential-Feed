@@ -1,0 +1,4 @@
+// EssentialAppCaseStudyTests target settings.
+#include "AppTests.xcconfig"
+
+PRODUCT_BUNDLE_IDENTIFIER = me.vazquez.angel.EssentialAppCaseStudyTests;

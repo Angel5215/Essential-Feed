@@ -1,5 +1,5 @@
 # General Options
---swiftversion 6.3.0
+--swiftversion 6.3.2
 
 # File Options
 --exclude Stage,Tasks/.build,ThirdParty,**/SwiftGen/*,**/Sourcery/*,Frameworks/swift-composable-architecture,**.generated.swift

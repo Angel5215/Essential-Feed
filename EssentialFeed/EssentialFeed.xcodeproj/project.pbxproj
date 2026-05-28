@@ -268,7 +268,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				FA46E86A2FA72C2A00AA5F4C /* EssentialFeed */,
-				FA89AEF52FA8773300FD080B /* Configuration */,
 			);
 			name = EssentialFeed;
 			packageProductDependencies = (
@@ -400,7 +399,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 2640;
-				LastUpgradeCheck = 2640;
+				LastUpgradeCheck = 2650;
 				TargetAttributes = {
 					FA46E8672FA72C2A00AA5F4C = {
 						CreatedOnToolsVersion = 26.4.1;

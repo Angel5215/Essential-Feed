@@ -7,6 +7,7 @@ import EssentialFeed
 import Foundation
 import Testing
 
+@MainActor
 struct ImageCommentsEndpointTests {
     @Test
     func `Image Comments endpoint URL has expected value`() throws {

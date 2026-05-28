@@ -7,13 +7,14 @@ import EssentialFeed
 import Foundation
 import XCTest
 
+@MainActor
 final class EssentialFeedAPIEndToEndTests: XCTestCase {
     private var feedTestServerURL: URL {
         URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
     }
 
-    func test_endToEndTestServerGETFeedResult_matchesFixedTestAccountData() {
-        switch getFeedResult() {
+    func test_endToEndTestServerGETFeedResult_matchesFixedTestAccountData() async {
+        switch await getFeedResult() {
         case let .success(imageFeed):
             XCTAssertEqual(imageFeed.count, 8, "Expected 8 images in the test account image feed")
             XCTAssertEqual(imageFeed[0], expectedImage(at: 0))
@@ -33,8 +34,8 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         }
     }
 
-    func test_endToEndTestServerGETFeedImageDataResult_matchesFixedTestAccountData() {
-        switch getFeedImageDataResult() {
+    func test_endToEndTestServerGETFeedImageDataResult_matchesFixedTestAccountData() async {
+        switch await getFeedImageDataResult() {
         case let .success(data)?:
             XCTAssertFalse(data.isEmpty, "Expected non-empty image data")
         case let .failure(error)?:
@@ -46,45 +47,40 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func getFeedResult(file: StaticString = #filePath, line: UInt = #line) -> Result<[FeedImage], Error>? {
+    private func getFeedResult(file: StaticString = #filePath, line: UInt = #line) async -> Result<[FeedImage], Error>? {
         let client = ephemeralClient(file: file, line: line)
-
-        let exp = expectation(description: "Wait for load completion")
-        var receivedResult: Result<[FeedImage], Error>?
-        client.get(from: feedTestServerURL) { result in
-            receivedResult = result.flatMap { data, response in
-                do {
-                    return try .success(FeedItemsMapper.map(data, from: response))
-                } catch {
-                    return .failure(error)
-                }
+        return await withCheckedContinuation { continuation in
+            client.get(from: feedTestServerURL) { result in
+                continuation.resume(
+                    returning: result.flatMap { data, response in
+                        do {
+                            return try .success(FeedItemsMapper.map(data, from: response))
+                        } catch {
+                            return .failure(error)
+                        }
+                    }
+                )
             }
-            exp.fulfill()
         }
-        wait(for: [exp], timeout: 10)
-
-        return receivedResult
     }
 
-    private func getFeedImageDataResult(file: StaticString = #filePath, line: UInt = #line) -> Result<Data, Error>? {
+    private func getFeedImageDataResult(file: StaticString = #filePath, line: UInt = #line) async -> Result<Data, Error>? {
         let client = ephemeralClient(file: file, line: line)
         let testServerURL = feedTestServerURL.appending(path: "73A7F70C-75DA-4C2E-B5A3-EED40DC53AA6/image")
-        let exp = expectation(description: "Wait for load completion")
 
-        var receivedResult: Result<Data, Error>?
-        _ = client.get(from: testServerURL) { result in
-            receivedResult = result.flatMap { data, response in
-                do {
-                    return try .success(FeedImageDataMapper.map(data, from: response))
-                } catch {
-                    return .failure(error)
-                }
+        return await withCheckedContinuation { continuation in
+            client.get(from: testServerURL) { result in
+                continuation.resume(
+                    returning: result.flatMap { data, response in
+                        do {
+                            return try .success(FeedImageDataMapper.map(data, from: response))
+                        } catch {
+                            return .failure(error)
+                        }
+                    }
+                )
             }
-            exp.fulfill()
         }
-        wait(for: [exp], timeout: 10)
-
-        return receivedResult
     }
 
     private func ephemeralClient(file: StaticString = #filePath, line: UInt = #line) -> HTTPClient {

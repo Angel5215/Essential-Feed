@@ -6,6 +6,7 @@
 import EssentialFeed
 import XCTest
 
+@MainActor
 final class EssentialFeedCacheIntegrationTests: XCTestCase {
     override func setUp() {
         super.setUp()

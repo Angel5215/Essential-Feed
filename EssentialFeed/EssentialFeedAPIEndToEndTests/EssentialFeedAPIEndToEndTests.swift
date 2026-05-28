@@ -7,6 +7,7 @@ import EssentialFeed
 import Foundation
 import XCTest
 
+@MainActor
 final class EssentialFeedAPIEndToEndTests: XCTestCase {
     private var feedTestServerURL: URL {
         URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!

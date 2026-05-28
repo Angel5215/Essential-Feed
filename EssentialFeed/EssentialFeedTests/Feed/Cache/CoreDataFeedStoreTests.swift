@@ -6,6 +6,7 @@
 import EssentialFeed
 import XCTest
 
+@MainActor
 final class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs {
     func test_retrieve_deliversEmptyOnEmptyCache() throws {
         try makeSUT { sut in

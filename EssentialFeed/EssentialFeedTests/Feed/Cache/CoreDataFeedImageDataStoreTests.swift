@@ -6,6 +6,7 @@
 import EssentialFeed
 import XCTest
 
+@MainActor
 final class CoreDataFeedImageDataStoreTests: XCTestCase, FeedImageDataStoreSpecs {
     func test_retrieveImageData_deliversNotFoundWhenEmpty() throws {
         try makeSUT { sut, imageDataURL in

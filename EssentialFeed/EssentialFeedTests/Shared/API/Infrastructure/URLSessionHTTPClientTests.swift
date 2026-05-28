@@ -7,6 +7,7 @@ import EssentialFeed
 import Foundation
 import XCTest
 
+@MainActor
 final class URLSessionHTTPClientTests: XCTestCase {
     override func tearDown() {
         URLProtocolStub.removeStub()

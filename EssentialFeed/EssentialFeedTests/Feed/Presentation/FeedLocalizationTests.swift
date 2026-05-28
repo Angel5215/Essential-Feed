@@ -6,6 +6,7 @@
 @_spi(Bundle) import EssentialFeed
 import XCTest
 
+@MainActor
 final class FeedLocalizationTests: XCTestCase {
     func test_localizedStrings_haveKeysAndValuesForAllSupportedLocalizations() {
         let table = "Feed"

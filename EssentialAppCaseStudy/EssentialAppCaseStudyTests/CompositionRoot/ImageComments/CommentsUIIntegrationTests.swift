@@ -9,6 +9,7 @@ import EssentialFeed
 import EssentialFeedMobile
 import XCTest
 
+@MainActor
 final class CommentsUIIntegrationTests: XCTestCase {
     // MARK: - Localization
 

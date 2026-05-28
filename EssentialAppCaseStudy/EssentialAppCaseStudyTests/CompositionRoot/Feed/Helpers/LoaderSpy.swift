@@ -9,6 +9,7 @@ import EssentialFeed
 import EssentialFeedMobile
 import UIKit
 
+@MainActor
 final class LoaderSpy {
     // MARK: - FeedLoader
 

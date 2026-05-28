@@ -8,11 +8,12 @@ import EssentialFeed
 import EssentialFeedMobile
 import UIKit
 
+@MainActor
 public enum FeedUIComposer {
     public static func feedComposedWith(
-        feedLoader: @escaping () -> AnyPublisher<Paginated<FeedImage>, Error>,
-        imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher,
-        selection: @escaping (FeedImage) -> Void = { _ in },
+        feedLoader: @MainActor @escaping () -> AnyPublisher<Paginated<FeedImage>, Error>,
+        imageLoader: @MainActor @escaping (URL) -> FeedImageDataLoader.Publisher,
+        selection: @MainActor @escaping (FeedImage) -> Void = { _ in },
     ) -> ListViewController {
         let presentationAdapter = FeedPresentationAdapter(loader: feedLoader)
         let feedViewController = makeFeedViewController(title: FeedPresenter.title)

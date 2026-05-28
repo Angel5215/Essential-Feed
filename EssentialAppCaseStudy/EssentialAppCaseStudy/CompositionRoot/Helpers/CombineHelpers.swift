@@ -72,12 +72,14 @@ extension Publisher {
 
 /// Replaces the `MainQueueDispatchDecorator`
 extension Publisher {
-    func dispatchOnMainQueue() -> AnyPublisher<Output, Failure> {
-        receive(on: DispatchQueue.immediateWhenOnMainQueueScheduler).eraseToAnyPublisher()
+    func dispatchOnMainThread() -> AnyPublisher<Output, Failure> {
+        receive(on: DispatchQueue.immediateWhenOnMainThreadScheduler).eraseToAnyPublisher()
     }
 }
 
 extension DispatchQueue {
+    // MARK: - ImmediateWhenOnMainQueueScheduler
+
     static var immediateWhenOnMainQueueScheduler: ImmediateWhenOnMainQueueScheduler {
         ImmediateWhenOnMainQueueScheduler.shared
     }
@@ -127,6 +129,47 @@ extension DispatchQueue {
 
         private var isMainQueue: Bool {
             DispatchQueue.getSpecific(key: Self.key) == Self.value
+        }
+    }
+
+    // MARK: - ImmediateWhenOnMainThreadScheduler
+
+    static var immediateWhenOnMainThreadScheduler: ImmediateWhenOnMainThreadScheduler {
+        ImmediateWhenOnMainThreadScheduler()
+    }
+
+    struct ImmediateWhenOnMainThreadScheduler: Scheduler {
+        typealias SchedulerTimeType = DispatchQueue.SchedulerTimeType
+        typealias SchedulerOptions = DispatchQueue.SchedulerOptions
+
+        var now: SchedulerTimeType {
+            DispatchQueue.main.now
+        }
+
+        var minimumTolerance: SchedulerTimeType.Stride {
+            DispatchQueue.main.minimumTolerance
+        }
+
+        func schedule(options: SchedulerOptions?, _ action: @escaping () -> Void) {
+            guard Thread.isMainThread else {
+                return DispatchQueue.main.schedule(options: options, action)
+            }
+
+            action()
+        }
+
+        func schedule(after date: SchedulerTimeType, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) {
+            DispatchQueue.main.schedule(after: date, tolerance: tolerance, options: options, action)
+        }
+
+        func schedule(
+            after date: SchedulerTimeType,
+            interval: SchedulerTimeType.Stride,
+            tolerance: SchedulerTimeType.Stride,
+            options: SchedulerOptions?,
+            _ action: @escaping () -> Void,
+        ) -> Cancellable {
+            DispatchQueue.main.schedule(after: date, interval: interval, tolerance: tolerance, options: options, action)
         }
     }
 }
@@ -208,6 +251,10 @@ typealias AnyDispatchQueueScheduler = AnyScheduler<DispatchQueue.SchedulerTimeTy
 extension AnyDispatchQueueScheduler {
     static var immediateOnMainQueue: Self {
         DispatchQueue.immediateWhenOnMainQueueScheduler.eraseToAnyScheduler()
+    }
+
+    static var immediateOnMainThread: Self {
+        DispatchQueue.immediateWhenOnMainThreadScheduler.eraseToAnyScheduler()
     }
 }
 

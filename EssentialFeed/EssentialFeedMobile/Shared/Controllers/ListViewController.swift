@@ -73,7 +73,7 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
             snapshot.appendSections([section])
             snapshot.appendItems(cellControllers, toSection: section)
         }
-        dataSource.applySnapshotUsingReloadData(snapshot)
+        dataSource.apply(snapshot)
     }
 
     // MARK: - Helpers

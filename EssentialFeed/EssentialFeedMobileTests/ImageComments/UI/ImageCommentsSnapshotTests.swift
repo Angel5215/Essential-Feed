@@ -7,6 +7,7 @@ import EssentialFeed
 import EssentialFeedMobile
 import XCTest
 
+@MainActor
 final class ImageCommentsSnapshotTests: XCTestCase {
     func test_display_listWithComments() {
         let sut = makeSUT()

@@ -12,7 +12,7 @@ import UIKit
 public enum FeedUIComposer {
     public static func feedComposedWith(
         feedLoader: @MainActor @escaping () -> AnyPublisher<Paginated<FeedImage>, Error>,
-        imageLoader: @MainActor @escaping (URL) -> FeedImageDataLoader.Publisher,
+        imageLoader: @MainActor @escaping (URL) async throws -> Data,
         selection: @MainActor @escaping (FeedImage) -> Void = { _ in },
     ) -> ListViewController {
         let presentationAdapter = FeedPresentationAdapter(loader: feedLoader)

@@ -166,7 +166,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url], "Expected second image URL request once second view also becomes visible")
     }
 
-    func test_feedImageView_cancelsImageLoadingWhenNotVisibleAnymore() throws {
+    func test_feedImageView_cancelsImageLoadingWhenNotVisibleAnymore() async throws {
         let image0 = try makeImage(url: XCTUnwrap(URL(string: "https://url-0.com")))
         let image1 = try makeImage(url: XCTUnwrap(URL(string: "https://url-1.com")))
         let (sut, loader) = makeSUT()
@@ -176,9 +176,13 @@ final class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.cancelledImageURLs, [], "Expected no cancelled image URL requests until image is not visible")
 
         sut.simulateFeedImageViewNotVisible(at: 0)
+        let result0 = try await loader.imageResult(at: 0)
+        XCTAssertEqual(result0, .cancelled)
         XCTAssertEqual(loader.cancelledImageURLs, [image0.url], "Expected one cancelled image URL request once first image is not visible anymore")
 
         sut.simulateFeedImageViewNotVisible(at: 1)
+        let result1 = try await loader.imageResult(at: 1)
+        XCTAssertEqual(result1, .cancelled)
         XCTAssertEqual(loader.cancelledImageURLs, [image0.url, image1.url], "Expected two cancelled image requests once second image is also not visible anymore")
     }
 
@@ -334,7 +338,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url], "Expected second image URL request once second image is near visible")
     }
 
-    func test_feedImageView_cancelsImageURLPreloadingWhenNotNearVisibleAnymore() throws {
+    func test_feedImageView_cancelsImageURLPreloadingWhenNotNearVisibleAnymore() async throws {
         let image0 = try makeImage(url: XCTUnwrap(URL(string: "https://url-0.com")))
         let image1 = try makeImage(url: XCTUnwrap(URL(string: "https://url-1.com")))
         let (sut, loader) = makeSUT()
@@ -344,9 +348,13 @@ final class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.cancelledImageURLs, [], "Expected no cancelled image URL requests until image is not near visible")
 
         sut.simulateFeedImageViewNotNearVisible(at: 0)
+        let result0 = try await loader.imageResult(at: 0)
+        XCTAssertEqual(result0, .cancelled)
         XCTAssertEqual(loader.cancelledImageURLs, [image0.url], "Expected first cancelled image URL request once first image is not near visible anymore")
 
         sut.simulateFeedImageViewNotNearVisible(at: 1)
+        let result1 = try await loader.imageResult(at: 1)
+        XCTAssertEqual(result1, .cancelled)
         XCTAssertEqual(loader.cancelledImageURLs, [image0.url, image1.url], "Expected second cancelled image URL request once second image is not near visible anymore")
     }
 
@@ -494,11 +502,16 @@ final class FeedUIIntegrationTests: XCTestCase {
         let loader = LoaderSpy()
         let sut = FeedUIComposer.feedComposedWith(
             feedLoader: loader.loadPublisher,
-            imageLoader: loader.loadImageDataPublisher,
+            imageLoader: loader.loadImageData,
             selection: selection,
         )
         trackForMemoryLeaks(loader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
+
+        addTeardownBlock { [weak loader] in
+            try await loader?.cancelPendingRequests()
+        }
+
         return (sut, loader)
     }
 

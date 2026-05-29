@@ -48,38 +48,23 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
     // MARK: - Helpers
 
     private func getFeedResult(file: StaticString = #filePath, line: UInt = #line) async -> Result<[FeedImage], Error>? {
-        let client = ephemeralClient(file: file, line: line)
-        return await withCheckedContinuation { continuation in
-            client.get(from: feedTestServerURL) { result in
-                continuation.resume(
-                    returning: result.flatMap { data, response in
-                        do {
-                            return try .success(FeedItemsMapper.map(data, from: response))
-                        } catch {
-                            return .failure(error)
-                        }
-                    }
-                )
-            }
+        do {
+            let client = ephemeralClient(file: file, line: line)
+            let (data, response) = try await client.get(from: feedTestServerURL)
+            return try .success(FeedItemsMapper.map(data, from: response))
+        } catch {
+            return .failure(error)
         }
     }
 
     private func getFeedImageDataResult(file: StaticString = #filePath, line: UInt = #line) async -> Result<Data, Error>? {
-        let client = ephemeralClient(file: file, line: line)
-        let testServerURL = feedTestServerURL.appending(path: "73A7F70C-75DA-4C2E-B5A3-EED40DC53AA6/image")
-
-        return await withCheckedContinuation { continuation in
-            client.get(from: testServerURL) { result in
-                continuation.resume(
-                    returning: result.flatMap { data, response in
-                        do {
-                            return try .success(FeedImageDataMapper.map(data, from: response))
-                        } catch {
-                            return .failure(error)
-                        }
-                    }
-                )
-            }
+        do {
+            let client = ephemeralClient(file: file, line: line)
+            let testServerURL = feedTestServerURL.appending(path: "73A7F70C-75DA-4C2E-B5A3-EED40DC53AA6/image")
+            let (data, response) = try await client.get(from: testServerURL)
+            return try .success(FeedImageDataMapper.map(data, from: response))
+        } catch {
+            return .failure(error)
         }
     }
 

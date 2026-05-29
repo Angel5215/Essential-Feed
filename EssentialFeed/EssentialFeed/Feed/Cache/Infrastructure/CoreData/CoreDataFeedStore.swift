@@ -55,11 +55,6 @@ public final class CoreDataFeedStore: Sendable {
         try await context.perform(action)
     }
 
-    @available(*, deprecated, message: "Use async version instead")
-    public func perform(_ action: @Sendable @escaping () -> Void) {
-        context.perform(action)
-    }
-
     private func cleanupReferencesToPersistentStores() {
         context.performAndWait {
             let coordinator = self.container.persistentStoreCoordinator

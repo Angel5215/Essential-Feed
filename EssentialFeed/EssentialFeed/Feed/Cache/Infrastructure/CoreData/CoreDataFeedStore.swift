@@ -51,8 +51,8 @@ public final class CoreDataFeedStore: Sendable {
         cleanupReferencesToPersistentStores()
     }
 
-    public func perform(_ action: @Sendable @escaping () -> Void) {
-        context.perform(action)
+    public func perform<T>(_ action: @Sendable @escaping () throws -> T) async rethrows -> T {
+        try await context.perform(action)
     }
 
     private func cleanupReferencesToPersistentStores() {

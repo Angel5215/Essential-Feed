@@ -112,19 +112,14 @@ final class FeedAcceptanceTests: XCTestCase {
     }
 
     private final class HTTPClientStub: HTTPClient {
-        private let stub: (URL) -> HTTPClient.Result
+        private let stub: (URL) -> Result<(Data, HTTPURLResponse), Error>
 
-        init(stub: @escaping (URL) -> HTTPClient.Result) {
+        init(stub: @escaping (URL) -> Result<(Data, HTTPURLResponse), Error>) {
             self.stub = stub
         }
 
         func get(from url: URL) async throws -> (Data, HTTPURLResponse) {
             try stub(url).get()
-        }
-
-        func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> any HTTPClientTask {
-            completion(stub(url))
-            return Task()
         }
 
         // MARK: - Helpers
@@ -135,10 +130,6 @@ final class FeedAcceptanceTests: XCTestCase {
 
         static func online(_ stub: @escaping (URL) -> (Data, HTTPURLResponse)) -> HTTPClientStub {
             HTTPClientStub { .success(stub($0)) }
-        }
-
-        private final class Task: HTTPClientTask {
-            func cancel() {}
         }
     }
 

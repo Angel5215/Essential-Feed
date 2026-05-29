@@ -22,17 +22,23 @@ public extension LocalFeedLoader {
     }
 }
 
+@MainActor
 extension HTTPClient {
     typealias Publisher = AnyPublisher<(Data, HTTPURLResponse), Error>
 
     func getPublisher(from url: URL) -> Publisher {
-        var task: HTTPClientTask?
+        var task: Task<Void, Error>?
 
         return Deferred {
             Future { completion in
                 nonisolated(unsafe) let uncheckedCompletion = completion
-                task = self.get(from: url) {
-                    uncheckedCompletion($0)
+                task = Task.immediate {
+                    do {
+                        let result = try await self.get(from: url)
+                        uncheckedCompletion(.success(result))
+                    } catch {
+                        uncheckedCompletion(.failure(error))
+                    }
                 }
             }
         }

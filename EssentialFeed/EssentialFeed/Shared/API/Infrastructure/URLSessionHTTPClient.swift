@@ -12,6 +12,12 @@ public final class URLSessionHTTPClient: HTTPClient {
         self.session = session
     }
 
+    public func get(from url: URL) async throws -> (Data, HTTPURLResponse) {
+        let (data, response) = try await session.data(from: url)
+        guard let response = response as? HTTPURLResponse else { throw UnexpectedValuesRepresentation() }
+        return (data, response)
+    }
+
     private struct URLSessionTaskWrapper: HTTPClientTask {
         let wrappedTask: URLSessionTask
 

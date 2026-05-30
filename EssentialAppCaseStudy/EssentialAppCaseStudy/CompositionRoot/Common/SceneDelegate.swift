@@ -15,18 +15,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     private lazy var httpClient = makeRemoteClient()
+
     private lazy var store = makeLocalStore()
-
-    private lazy var scheduler: AnyDispatchQueueScheduler = {
-        if let store = store as? CoreDataFeedStore {
-            return .scheduler(for: store)
-        }
-
-        return DispatchQueue(
-            label: "me.vazquez.angel.infra.queue",
-            qos: .userInitiated,
-        ).eraseToAnyScheduler()
-    }()
 
     private lazy var baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
 
@@ -60,12 +50,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
-        do {
-            let localFeedLoader = LocalFeedLoader(store: store, currentDate: Date.init)
-            try localFeedLoader.validateCache()
-        } catch {
-            logger.error("Failed to validate cache with error: \(error.localizedDescription)")
-        }
+        validateCache()
     }
 
     // MARK: - Helpers
@@ -96,6 +81,19 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         { [httpClient] in
             let (data, response) = try await httpClient.get(from: url)
             return try ImageCommentsMapper.map(data, from: response)
+        }
+    }
+
+    private func validateCache() {
+        Task.immediate { @MainActor in
+            await store.schedule { [store, logger] in
+                do {
+                    let localFeedLoader = LocalFeedLoader(store: store, currentDate: Date.init)
+                    try localFeedLoader.validateCache()
+                } catch {
+                    logger.error("Failed to validate cache with error: \(error.localizedDescription)")
+                }
+            }
         }
     }
 

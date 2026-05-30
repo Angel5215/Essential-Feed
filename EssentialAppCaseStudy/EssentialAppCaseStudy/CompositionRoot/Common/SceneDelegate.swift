@@ -3,7 +3,6 @@
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
-import Combine
 import CoreData
 import EssentialFeed
 import EssentialFeedMobile
@@ -17,7 +16,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     private lazy var httpClient = makeRemoteClient()
     private lazy var store = makeLocalStore()
-    private lazy var localFeedLoader = makeLocalFeedLoader()
 
     private lazy var scheduler: AnyDispatchQueueScheduler = {
         if let store = store as? CoreDataFeedStore {
@@ -63,6 +61,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func sceneWillResignActive(_ scene: UIScene) {
         do {
+            let localFeedLoader = LocalFeedLoader(store: store, currentDate: Date.init)
             try localFeedLoader.validateCache()
         } catch {
             logger.error("Failed to validate cache with error: \(error.localizedDescription)")
@@ -87,29 +86,16 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 
-    private func makeLocalFeedLoader() -> LocalFeedLoader {
-        LocalFeedLoader(store: store, currentDate: Date.init)
-    }
-
     private func showComments(for image: FeedImage) {
         let url = ImageCommentsEndpoint.get(image.id).url(baseURL: baseURL)
-        let commentsViewController = CommentsUIComposer.commentsComposedWith(commentsLoader: makeRemoteCommentsLoader(url: url))
+        let commentsViewController = CommentsUIComposer.commentsComposedWith(commentsLoader: loadComments(url: url))
         navigationController.pushViewController(commentsViewController, animated: true)
     }
 
-    private func makeRemoteFeedLoader(after: FeedImage? = nil) -> AnyPublisher<[FeedImage], Error> {
-        httpClient
-            .getPublisher(from: FeedEndpoint.get(after: after).url(baseURL: baseURL))
-            .tryMap(FeedItemsMapper.map)
-            .eraseToAnyPublisher()
-    }
-
-    private func makeRemoteCommentsLoader(url: URL) -> () -> AnyPublisher<[ImageComment], Error> {
+    private func loadComments(url: URL) -> () async throws -> [ImageComment] {
         { [httpClient] in
-            httpClient
-                .getPublisher(from: url)
-                .tryMap(ImageCommentsMapper.map)
-                .eraseToAnyPublisher()
+            let (data, response) = try await httpClient.get(from: url)
+            return try ImageCommentsMapper.map(data, from: response)
         }
     }
 

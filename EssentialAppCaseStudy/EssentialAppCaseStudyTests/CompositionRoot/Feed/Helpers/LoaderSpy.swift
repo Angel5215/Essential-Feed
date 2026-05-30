@@ -11,6 +11,7 @@ enum AsyncResult {
     case cancelled
 }
 
+@MainActor
 final class LoaderSpy<Parameter, Resource: Sendable> {
     private(set) var requests = [Request]()
 

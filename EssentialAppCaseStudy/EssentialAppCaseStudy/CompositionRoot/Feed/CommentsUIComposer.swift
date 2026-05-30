@@ -3,14 +3,15 @@
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
-import Combine
 import EssentialFeed
 import EssentialFeedMobile
 import UIKit
 
 @MainActor
 public enum CommentsUIComposer {
-    public static func commentsComposedWith(commentsLoader: @escaping () -> AnyPublisher<[ImageComment], Error>) -> ListViewController {
+    private typealias CommentsPresentationAdapter = AsyncLoadResourcePresentationAdapter<[ImageComment], CommentsViewAdapter>
+
+    public static func commentsComposedWith(commentsLoader: @escaping () async throws -> [ImageComment]) -> ListViewController {
         let presentationAdapter = CommentsPresentationAdapter(loader: commentsLoader)
         let commentsViewController = makeCommentsViewController(title: ImageCommentsPresenter.title)
         commentsViewController.onRefresh = presentationAdapter.loadResource
@@ -24,8 +25,6 @@ public enum CommentsUIComposer {
     }
 
     // MARK: - Helpers
-
-    private typealias CommentsPresentationAdapter = LoadResourcePresentationAdapter<[ImageComment], CommentsViewAdapter>
 
     private static func makeCommentsViewController(title: String) -> ListViewController {
         let controller = UIStoryboard.imageComments.instantiateInitialViewController() as! ListViewController

@@ -3,7 +3,6 @@
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
-import Combine
 import EssentialFeed
 import EssentialFeedMobile
 import UIKit
@@ -11,7 +10,7 @@ import UIKit
 @MainActor
 public enum FeedUIComposer {
     public static func feedComposedWith(
-        feedLoader: @MainActor @escaping () -> AnyPublisher<Paginated<FeedImage>, Error>,
+        feedLoader: @MainActor @escaping () async throws -> Paginated<FeedImage>,
         imageLoader: @MainActor @escaping (URL) async throws -> Data,
         selection: @MainActor @escaping (FeedImage) -> Void = { _ in },
     ) -> ListViewController {
@@ -33,7 +32,7 @@ public enum FeedUIComposer {
 
     // MARK: - Helpers
 
-    private typealias FeedPresentationAdapter = LoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>
+    private typealias FeedPresentationAdapter = AsyncLoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>
 
     private static func makeFeedViewController(title: String) -> ListViewController {
         let feedController = UIStoryboard.feed.instantiateInitialViewController() as! ListViewController

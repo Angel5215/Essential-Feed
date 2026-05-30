@@ -36,7 +36,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     private lazy var navigationController = UINavigationController(
         rootViewController: FeedUIComposer.feedComposedWith(
-            feedLoader: makeRemoteFeedLoaderWithLocalFallback,
+            feedLoader: loadRemoteFeedWithLocalFallback,
             imageLoader: loadLocalImageWithRemoteFallback,
             selection: showComments,
         )
@@ -91,38 +91,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         LocalFeedLoader(store: store, currentDate: Date.init)
     }
 
-    private func makeRemoteFeedLoaderWithLocalFallback() -> AnyPublisher<Paginated<FeedImage>, Error> {
-        Deferred {
-            Future { completion in
-                Task.immediate {
-                    do {
-                        let feed = try await self.loadRemoteFeedWithLocalFallback()
-                        completion(.success(feed))
-                    } catch {
-                        completion(.failure(error))
-                    }
-                }
-            }
-        }
-        .eraseToAnyPublisher()
-    }
-
-    private func makeRemoteLoadMoreLoader(last: FeedImage?) -> AnyPublisher<Paginated<FeedImage>, Error> {
-        Deferred {
-            Future { completion in
-                Task.immediate {
-                    do {
-                        let feed = try await self.loadMoreRemoteFeed(last: last)
-                        completion(.success(feed))
-                    } catch {
-                        completion(.failure(error))
-                    }
-                }
-            }
-        }
-        .eraseToAnyPublisher()
-    }
-
     private func showComments(for image: FeedImage) {
         let url = ImageCommentsEndpoint.get(image.id).url(baseURL: baseURL)
         let commentsViewController = CommentsUIComposer.commentsComposedWith(commentsLoader: makeRemoteCommentsLoader(url: url))
@@ -152,14 +120,11 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private func makePage(items: [FeedImage], last: FeedImage?) -> Paginated<FeedImage> {
-        Paginated(
-            items: items,
-            loadMorePublisher: last.map { last in
-                {
-                    self.makeRemoteLoadMoreLoader(last: last)
-                }
-            },
-        )
+        Paginated(items: items, loadMore: last.map { last in
+            { @MainActor @Sendable in
+                try await self.loadMoreRemoteFeed(last: last)
+            }
+        })
     }
 
     private func loadMoreRemoteFeed(last: FeedImage?) async throws -> Paginated<FeedImage> {

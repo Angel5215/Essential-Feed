@@ -35,20 +35,20 @@ final class LoaderSpy<Parameter, Resource: Sendable> {
         }
     }
 
-    func complete(with resource: Resource, at index: Int) {
+    func complete(with resource: Resource, at index: Int) async {
         requests[index].continuation.yield(resource)
         requests[index].continuation.finish()
 
         while requests[index].result == nil {
-            RunLoop.current.run(until: Date())
+            await Task.yield()
         }
     }
 
-    func fail(with error: Error, at index: Int) {
+    func fail(with error: Error, at index: Int) async {
         requests[index].continuation.finish(throwing: error)
 
         while requests[index].result == nil {
-            RunLoop.current.run(until: Date())
+            await Task.yield()
         }
     }
 

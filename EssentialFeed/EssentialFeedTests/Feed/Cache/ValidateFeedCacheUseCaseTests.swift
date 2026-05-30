@@ -149,7 +149,7 @@ final class ValidateFeedCacheUseCaseTests: XCTestCase {
         _ sut: LocalFeedLoader,
         toCompleteWith expectedResult: Result<Void, Error>,
         when action: () -> Void,
-        file: StaticString = #file,
+        file: StaticString = #filePath,
         line: UInt = #line,
     ) {
         action()

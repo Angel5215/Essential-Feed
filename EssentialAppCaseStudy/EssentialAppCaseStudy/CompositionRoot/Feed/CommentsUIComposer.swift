@@ -9,7 +9,7 @@ import UIKit
 
 @MainActor
 public enum CommentsUIComposer {
-    private typealias CommentsPresentationAdapter = AsyncLoadResourcePresentationAdapter<[ImageComment], CommentsViewAdapter>
+    private typealias CommentsPresentationAdapter = LoadResourcePresentationAdapter<[ImageComment], CommentsViewAdapter>
 
     public static func commentsComposedWith(commentsLoader: @escaping () async throws -> [ImageComment]) -> ListViewController {
         let presentationAdapter = CommentsPresentationAdapter(loader: commentsLoader)

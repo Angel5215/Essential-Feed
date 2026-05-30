@@ -26,6 +26,7 @@ func uniqueFeed() -> [FeedImage] {
 
 // MARK: - Feed + Image Comments Localization
 
+@MainActor
 var loadError: String {
     LoadResourcePresenter<Any, DummyView>.loadError
 }

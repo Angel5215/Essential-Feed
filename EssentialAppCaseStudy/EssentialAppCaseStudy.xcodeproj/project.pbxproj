@@ -259,7 +259,7 @@
 		FA60F78A2F12E25D0096EB76 /* Automation */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReferenceAnchor = FAC46F402FA8798E002112EB /* Configuration */;
-			baseConfigurationReferenceRelativePath = Automation.xcconfig;
+			baseConfigurationReferenceRelativePath = Release.xcconfig;
 			buildSettings = {
 			};
 			name = Automation;
@@ -267,7 +267,7 @@
 		FA60F78B2F12E25D0096EB76 /* Automation */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReferenceAnchor = FAC46F402FA8798E002112EB /* Configuration */;
-			baseConfigurationReferenceRelativePath = EssentialAppCaseStudy.xcconfig;
+			baseConfigurationReferenceRelativePath = EssentialAppCaseStudyAutomation.xcconfig;
 			buildSettings = {
 			};
 			name = Automation;

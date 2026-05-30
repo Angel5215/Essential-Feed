@@ -3,10 +3,10 @@
 set -o pipefail
 
 DERIVED_DATA_PATH=DerivedData
-ARCHIVE_PATH=$DERIVED_DATA_PATH/Archive/App.xcarchive
+ARCHIVE_PATH=$DERIVED_DATA_PATH/Archive/EssentialAppCaseStudy.xcarchive
 
 WORKSPACE="Main.xcworkspace"
-APP_SCHEME="App"
+APP_SCHEME="EssentialAppCaseStudy"
 BUILD_CONFIGURATION="Automation"
 
 xcodebuild clean archive \

@@ -3,7 +3,7 @@
 set -o pipefail
 
 DERIVED_DATA_PATH=DerivedData
-ARCHIVE_PATH=$DERIVED_DATA_PATH/Archive/App.xcarchive
+ARCHIVE_PATH=$DERIVED_DATA_PATH/Archive/EssentialAppCaseStudy.xcarchive
 IPA_FOLDER=$DERIVED_DATA_PATH/ipa
 EXPORT_OPTIONS_PATH=$RUNNER_TEMP/ExportOptions.plist
 

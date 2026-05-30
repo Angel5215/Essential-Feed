@@ -671,6 +671,62 @@
 			};
 			name = Release;
 		};
+		FAB2E8F52FCAE7F100878BF5 /* Automation */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = FA89AEF52FA8773300FD080B /* Configuration */;
+			baseConfigurationReferenceRelativePath = Release.xcconfig;
+			buildSettings = {
+			};
+			name = Automation;
+		};
+		FAB2E8F62FCAE7F100878BF5 /* Automation */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = FA89AEF52FA8773300FD080B /* Configuration */;
+			baseConfigurationReferenceRelativePath = EssentialFeed.xcconfig;
+			buildSettings = {
+			};
+			name = Automation;
+		};
+		FAB2E8F72FCAE7F100878BF5 /* Automation */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = FA89AEF52FA8773300FD080B /* Configuration */;
+			baseConfigurationReferenceRelativePath = EssentialFeedTests.xcconfig;
+			buildSettings = {
+			};
+			name = Automation;
+		};
+		FAB2E8F82FCAE7F100878BF5 /* Automation */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = FA89AEF52FA8773300FD080B /* Configuration */;
+			baseConfigurationReferenceRelativePath = EssentialFeedAPIEndToEndTests.xcconfig;
+			buildSettings = {
+			};
+			name = Automation;
+		};
+		FAB2E8F92FCAE7F100878BF5 /* Automation */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = FA89AEF52FA8773300FD080B /* Configuration */;
+			baseConfigurationReferenceRelativePath = EssentialFeedCacheIntegrationTests.xcconfig;
+			buildSettings = {
+			};
+			name = Automation;
+		};
+		FAB2E8FA2FCAE7F100878BF5 /* Automation */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = FA89AEF52FA8773300FD080B /* Configuration */;
+			baseConfigurationReferenceRelativePath = EssentialFeedMobile.xcconfig;
+			buildSettings = {
+			};
+			name = Automation;
+		};
+		FAB2E8FB2FCAE7F100878BF5 /* Automation */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = FA89AEF52FA8773300FD080B /* Configuration */;
+			baseConfigurationReferenceRelativePath = EssentialFeedMobileTests.xcconfig;
+			buildSettings = {
+			};
+			name = Automation;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -679,6 +735,7 @@
 			buildConfigurations = (
 				FA46E86D2FA72C2A00AA5F4C /* Debug */,
 				FA46E86E2FA72C2A00AA5F4C /* Release */,
+				FAB2E8F52FCAE7F100878BF5 /* Automation */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -688,6 +745,7 @@
 			buildConfigurations = (
 				FA46E8702FA72C2A00AA5F4C /* Debug */,
 				FA46E8712FA72C2A00AA5F4C /* Release */,
+				FAB2E8F62FCAE7F100878BF5 /* Automation */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -697,6 +755,7 @@
 			buildConfigurations = (
 				FA46E87F2FA72C7F00AA5F4C /* Debug */,
 				FA46E8802FA72C7F00AA5F4C /* Release */,
+				FAB2E8F72FCAE7F100878BF5 /* Automation */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -706,6 +765,7 @@
 			buildConfigurations = (
 				FA46E88E2FA72CAF00AA5F4C /* Debug */,
 				FA46E88F2FA72CAF00AA5F4C /* Release */,
+				FAB2E8F82FCAE7F100878BF5 /* Automation */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -715,6 +775,7 @@
 			buildConfigurations = (
 				FA46E89C2FA72CBB00AA5F4C /* Debug */,
 				FA46E89D2FA72CBB00AA5F4C /* Release */,
+				FAB2E8F92FCAE7F100878BF5 /* Automation */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -724,6 +785,7 @@
 			buildConfigurations = (
 				FA46E8B32FA72CDC00AA5F4C /* Debug */,
 				FA46E8B42FA72CDC00AA5F4C /* Release */,
+				FAB2E8FA2FCAE7F100878BF5 /* Automation */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -733,6 +795,7 @@
 			buildConfigurations = (
 				FA46E8B62FA72CDC00AA5F4C /* Debug */,
 				FA46E8B72FA72CDC00AA5F4C /* Release */,
+				FAB2E8FB2FCAE7F100878BF5 /* Automation */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -143,7 +143,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				FABFD72C2F08D40E000D6D19 /* EssentialAppCaseStudy */,
-				FAC46F402FA8798E002112EB /* Configuration */,
 			);
 			name = EssentialAppCaseStudy;
 			packageProductDependencies = (
@@ -183,7 +182,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 2620;
-				LastUpgradeCheck = 2620;
+				LastUpgradeCheck = 2650;
 				TargetAttributes = {
 					FABFD7292F08D40E000D6D19 = {
 						CreatedOnToolsVersion = 26.2;

@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FAD772732FA7385A0020EBD2 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD772712FA7385A0020EBD2 /* EssentialFeed.framework */; };
-		FAD772742FA7385A0020EBD2 /* EssentialFeed.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAD772712FA7385A0020EBD2 /* EssentialFeed.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		FAD772752FA7385A0020EBD2 /* EssentialFeedMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD772722FA7385A0020EBD2 /* EssentialFeedMobile.framework */; };
-		FAD772762FA7385A0020EBD2 /* EssentialFeedMobile.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAD772722FA7385A0020EBD2 /* EssentialFeedMobile.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FAB2E8EC2FCAE50200878BF5 /* EssentialFeedMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAB2E8E92FCAE50200878BF5 /* EssentialFeedMobile.framework */; };
+		FAB2E8ED2FCAE50200878BF5 /* EssentialFeedMobile.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAB2E8E92FCAE50200878BF5 /* EssentialFeedMobile.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FAB2E8F32FCAE61400878BF5 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAB2E8F12FCAE60C00878BF5 /* EssentialFeed.framework */; };
+		FAB2E8F42FCAE61400878BF5 /* EssentialFeed.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAB2E8F12FCAE60C00878BF5 /* EssentialFeed.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -24,14 +24,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		FAD772772FA7385A0020EBD2 /* Embed Frameworks */ = {
+		FAB2E8EE2FCAE50200878BF5 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				FAD772742FA7385A0020EBD2 /* EssentialFeed.framework in Embed Frameworks */,
-				FAD772762FA7385A0020EBD2 /* EssentialFeedMobile.framework in Embed Frameworks */,
+				FAB2E8ED2FCAE50200878BF5 /* EssentialFeedMobile.framework in Embed Frameworks */,
+				FAB2E8F42FCAE61400878BF5 /* EssentialFeed.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -39,10 +39,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		FAB2E8E92FCAE50200878BF5 /* EssentialFeedMobile.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialFeedMobile.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAB2E8F12FCAE60C00878BF5 /* EssentialFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FABFD72A2F08D40E000D6D19 /* EssentialAppCaseStudy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EssentialAppCaseStudy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FABFD7402F08D40F000D6D19 /* EssentialAppCaseStudyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialAppCaseStudyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		FAD772712FA7385A0020EBD2 /* EssentialFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		FAD772722FA7385A0020EBD2 /* EssentialFeedMobile.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialFeedMobile.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -81,8 +81,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAD772732FA7385A0020EBD2 /* EssentialFeed.framework in Frameworks */,
-				FAD772752FA7385A0020EBD2 /* EssentialFeedMobile.framework in Frameworks */,
+				FAB2E8EC2FCAE50200878BF5 /* EssentialFeedMobile.framework in Frameworks */,
+				FAB2E8F32FCAE61400878BF5 /* EssentialFeed.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,8 +119,8 @@
 		FABFD7742F08D525000D6D19 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FAD772712FA7385A0020EBD2 /* EssentialFeed.framework */,
-				FAD772722FA7385A0020EBD2 /* EssentialFeedMobile.framework */,
+				FAB2E8F12FCAE60C00878BF5 /* EssentialFeed.framework */,
+				FAB2E8E92FCAE50200878BF5 /* EssentialFeedMobile.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -135,7 +135,7 @@
 				FABFD7262F08D40E000D6D19 /* Sources */,
 				FABFD7272F08D40E000D6D19 /* Frameworks */,
 				FABFD7282F08D40E000D6D19 /* Resources */,
-				FAD772772FA7385A0020EBD2 /* Embed Frameworks */,
+				FAB2E8EE2FCAE50200878BF5 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

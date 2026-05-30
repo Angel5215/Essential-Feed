@@ -10,14 +10,14 @@ import UIKit
 @MainActor
 final class FeedViewAdapter: ResourceView {
     private weak var controller: ListViewController?
-    private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
+    private let imageLoader: (URL) async throws -> Data
     private let selection: (FeedImage) -> Void
     private let currentFeed: [FeedImage: CellController]
 
     init(
         currentFeed: [FeedImage: CellController] = [:],
         controller: ListViewController,
-        imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher,
+        imageLoader: @escaping (URL) async throws -> Data,
         selection: @escaping (FeedImage) -> Void,
     ) {
         self.currentFeed = currentFeed
@@ -37,7 +37,7 @@ final class FeedViewAdapter: ResourceView {
             }
 
             let adapter = ImageDataPresentationAdapter { [imageLoader] in
-                imageLoader(model.url)
+                try await imageLoader(model.url)
             }
             let view = FeedImageCellController(
                 viewModel: FeedImagePresenter.map(model),
@@ -82,7 +82,7 @@ final class FeedViewAdapter: ResourceView {
 
     // MARK: - Helpers
 
-    private typealias ImageDataPresentationAdapter = LoadResourcePresentationAdapter<Data, WeakReferenceVirtualProxy<FeedImageCellController>>
+    private typealias ImageDataPresentationAdapter = AsyncLoadResourcePresentationAdapter<Data, WeakReferenceVirtualProxy<FeedImageCellController>>
     private typealias LoadMorePresentationAdapter = LoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>
 }
 

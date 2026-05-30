@@ -3,93 +3,89 @@
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
-import Combine
-import EssentialAppCaseStudy
-import EssentialFeed
-import EssentialFeedMobile
-import UIKit
+import Foundation
 
-@MainActor
-final class LoaderSpy {
-    // MARK: - FeedLoader
+enum AsyncResult {
+    case success
+    case failure
+    case cancelled
+}
 
-    private var feedRequests = [PassthroughSubject<Paginated<FeedImage>, Error>]()
+final class LoaderSpy<Parameter, Resource: Sendable> {
+    private(set) var requests = [Request]()
 
-    var loadFeedCallCount: Int {
-        feedRequests.count
-    }
+    func load(from parameter: Parameter) async throws -> Resource {
+        let (stream, continuation) = AsyncThrowingStream<Resource, Error>.makeStream()
+        let index = requests.count
+        requests.append(Request(parameter: parameter, publisher: stream, continuation: continuation))
 
-    func completeFeedLoading(with feed: [FeedImage] = [], at index: Int = 0) {
-        feedRequests[index].send(
-            Paginated(items: feed) { [weak self] in
-                self?.loadMorePublisher() ?? Empty().eraseToAnyPublisher()
+        do {
+            for try await result in stream {
+                try Task.checkCancellation()
+                requests[index].result = .success
+                return result
             }
-        )
-        feedRequests[index].send(completion: .finished)
+
+            try Task.checkCancellation()
+
+            throw NoResponse()
+        } catch {
+            requests[index].result = Task.isCancelled ? .cancelled : .failure
+            throw error
+        }
     }
 
-    func completeFeedLoadingWithError(at index: Int = 0) {
-        let error = NSError(domain: "an error", code: 0)
-        feedRequests[index].send(completion: .failure(error))
+    func complete(with resource: Resource, at index: Int) {
+        requests[index].continuation.yield(resource)
+        requests[index].continuation.finish()
+
+        while requests[index].result == nil {
+            RunLoop.current.run(until: Date())
+        }
     }
 
-    func completeLoadMore(with feed: [FeedImage] = [], lastPage: Bool = false, at index: Int = 0) {
-        loadMoreRequests[index].send(
-            Paginated(items: feed, loadMorePublisher: lastPage ? nil : { [weak self] in
-                self?.loadMorePublisher() ?? Empty().eraseToAnyPublisher()
-            })
-        )
+    func fail(with error: Error, at index: Int) {
+        requests[index].continuation.finish(throwing: error)
+
+        while requests[index].result == nil {
+            RunLoop.current.run(until: Date())
+        }
     }
 
-    func completeLoadMoreWithError(at index: Int = 0) {
-        loadMoreRequests[index].send(completion: .failure(anyNSError()))
+    func result(at index: Int, timeout: TimeInterval = 1) async throws -> AsyncResult {
+        let maxDate = Date() + timeout
+
+        while Date() <= maxDate {
+            if let result = requests[index].result {
+                return result
+            }
+
+            await Task.yield()
+        }
+
+        throw Timeout()
     }
 
-    func loadPublisher() -> AnyPublisher<Paginated<FeedImage>, Error> {
-        let publisher = PassthroughSubject<Paginated<FeedImage>, Error>()
-        feedRequests.append(publisher)
-        return publisher.eraseToAnyPublisher()
+    func cancelPendingRequests() async throws {
+        for (index, request) in requests.enumerated() where request.result == nil {
+            request.continuation.finish(throwing: CancellationError())
+
+            while requests[index].result == nil {
+                await Task.yield()
+            }
+        }
     }
 
-    // MARK: - LoadMoreFeedLoader
+    // MARK: - Helpers
 
-    private var loadMoreRequests = [PassthroughSubject<Paginated<FeedImage>, Error>]()
-
-    var loadMoreCallCount: Int {
-        loadMoreRequests.count
+    struct Request {
+        var parameter: Parameter
+        var publisher: AsyncThrowingStream<Resource, Error>
+        var continuation: AsyncThrowingStream<Resource, Error>.Continuation
+        var result: AsyncResult?
     }
 
-    func loadMorePublisher() -> AnyPublisher<Paginated<FeedImage>, Error> {
-        let publisher = PassthroughSubject<Paginated<FeedImage>, Error>()
-        loadMoreRequests.append(publisher)
-        return publisher.eraseToAnyPublisher()
-    }
+    private struct NoResponse: Error {}
 
-    // MARK: - FeedImageDataLoader
-
-    private var imageRequests = [(url: URL, publisher: PassthroughSubject<Data, Error>)]()
-
-    var loadedImageURLs: [URL] {
-        imageRequests.map(\.url)
-    }
-
-    private(set) var cancelledImageURLs = [URL]()
-
-    func loadImageDataPublisher(from url: URL) -> AnyPublisher<Data, Error> {
-        let publisher = PassthroughSubject<Data, Error>()
-        imageRequests.append((url, publisher))
-        return publisher.handleEvents(receiveCancel: { [weak self] in
-            self?.cancelledImageURLs.append(url)
-        })
-        .eraseToAnyPublisher()
-    }
-
-    func completeImageLoading(with imageData: Data = Data(), at index: Int = 0) {
-        imageRequests[index].publisher.send(imageData)
-        imageRequests[index].publisher.send(completion: .finished)
-    }
-
-    func completeImageLoadingWithError(at index: Int = 0) {
-        imageRequests[index].publisher.send(completion: .failure(anyNSError()))
-    }
+    private struct Timeout: Error {}
 }

@@ -10,6 +10,8 @@ import EssentialFeedMobile
 import os
 import UIKit
 
+typealias ScheduledStore = FeedImageDataStore & FeedStore & Sendable & StoreScheduler
+
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
@@ -35,16 +37,15 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var navigationController = UINavigationController(
         rootViewController: FeedUIComposer.feedComposedWith(
             feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-            imageLoader: makeLocalImageLoaderWithRemoteFallback,
+            imageLoader: loadLocalImageWithRemoteFallback,
             selection: showComments,
         )
     )
 
-    convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
+    convenience init(httpClient: HTTPClient, store: ScheduledStore) {
         self.init()
         self.httpClient = httpClient
         self.store = store
-        self.scheduler = scheduler
     }
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -74,7 +75,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
     }
 
-    private func makeLocalStore() -> FeedStore & FeedImageDataStore {
+    private func makeLocalStore() -> ScheduledStore {
         do {
             return try CoreDataFeedStore(
                 storeURL: NSPersistentContainer.defaultDirectoryURL.appending(path: "feed-store.sqlite")
@@ -107,23 +108,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
             .map(makePage)
             .caching(to: localFeedLoader)
-            .subscribe(on: scheduler)
-            .eraseToAnyPublisher()
-    }
-
-    private func makeLocalImageLoaderWithRemoteFallback(url: URL) -> FeedImageDataLoader.Publisher {
-        let localImageLoader = LocalFeedImageDataLoader(store: store)
-
-        return localImageLoader
-            .loadImageDataPublisher(from: url)
-            .fallback { [httpClient, scheduler] in
-                httpClient
-                    .getPublisher(from: url)
-                    .tryMap(FeedImageDataMapper.map)
-                    .caching(to: localImageLoader, using: url)
-                    .subscribe(on: scheduler)
-                    .eraseToAnyPublisher()
-            }
             .subscribe(on: scheduler)
             .eraseToAnyPublisher()
     }
@@ -163,5 +147,55 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 }
             },
         )
+    }
+
+    // MARK: - Store
+
+    private func loadLocalImageWithRemoteFallback(url: URL) async throws -> Data {
+        do {
+            return try await loadLocalImage(url: url)
+        } catch {
+            return try await loadAndCacheRemoteImage(url: url)
+        }
+    }
+
+    private func loadLocalImage(url: URL) async throws -> Data {
+        try await store.schedule { [store] in
+            let localImageLoader = LocalFeedImageDataLoader(store: store)
+            return try localImageLoader.loadImageData(from: url)
+        }
+    }
+
+    private func loadAndCacheRemoteImage(url: URL) async throws -> Data {
+        let (data, response) = try await httpClient.get(from: url)
+        let imageData = try FeedImageDataMapper.map(data, from: response)
+        await store.schedule { [store] in
+            let localImageLoader = LocalFeedImageDataLoader(store: store)
+            try? localImageLoader.save(data, for: url)
+        }
+        return imageData
+    }
+}
+
+protocol StoreScheduler {
+    @MainActor
+    func schedule<T>(_ action: @Sendable @escaping () throws -> T) async rethrows -> T
+}
+
+extension CoreDataFeedStore: StoreScheduler {
+    @MainActor
+    func schedule<T>(_ action: @Sendable @escaping () throws -> T) async rethrows -> T {
+        if contextQueue == .main {
+            try action()
+        } else {
+            try await perform(action)
+        }
+    }
+}
+
+extension InMemoryFeedStore: StoreScheduler {
+    @MainActor
+    func schedule<T>(_ action: @Sendable @escaping () throws -> T) async rethrows -> T {
+        try action()
     }
 }

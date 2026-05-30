@@ -26,6 +26,10 @@ final class FeedViewAdapter: ResourceView {
         self.selection = selection
     }
 
+    private typealias ImageDataPresentationAdapter = LoadResourcePresentationAdapter<Data, WeakReferenceVirtualProxy<FeedImageCellController>>
+
+    private typealias LoadMorePresentationAdapter = LoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>
+
     func display(_ viewModel: Paginated<FeedImage>) {
         guard let controller else { return }
 
@@ -79,11 +83,6 @@ final class FeedViewAdapter: ResourceView {
             controller.display(feedSection)
         }
     }
-
-    // MARK: - Helpers
-
-    private typealias ImageDataPresentationAdapter = AsyncLoadResourcePresentationAdapter<Data, WeakReferenceVirtualProxy<FeedImageCellController>>
-    private typealias LoadMorePresentationAdapter = AsyncLoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>
 }
 
 extension UIImage {

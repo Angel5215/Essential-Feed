@@ -92,12 +92,19 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private func makeRemoteFeedLoaderWithLocalFallback() -> AnyPublisher<Paginated<FeedImage>, Error> {
-        makeRemoteFeedLoader()
-            .caching(to: localFeedLoader)
-            .fallback(to: localFeedLoader.loadPublisher)
-            .map(makeFirstPage)
-            .subscribe(on: scheduler)
-            .eraseToAnyPublisher()
+        Deferred {
+            Future { completion in
+                Task.immediate {
+                    do {
+                        let feed = try await self.loadRemoteFeedWithLocalFallback()
+                        completion(.success(feed))
+                    } catch {
+                        completion(.failure(error))
+                    }
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
 
     private func makeRemoteLoadMoreLoader(items: [FeedImage], last: FeedImage?) -> AnyPublisher<Paginated<FeedImage>, Error> {
@@ -134,6 +141,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 
+    // MARK: - Pagination
+
     private func makeFirstPage(items: [FeedImage]) -> Paginated<FeedImage> {
         makePage(items: items, last: items.last)
     }
@@ -147,6 +156,40 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 }
             },
         )
+    }
+
+    // MARK: - Feed Image Loader
+
+    private func loadRemoteFeedWithLocalFallback() async throws -> Paginated<FeedImage> {
+        do {
+            let feed = try await loadAndCacheRemoteFeed()
+            return makeFirstPage(items: feed)
+        } catch {
+            let localFeed = try await loadLocalFeed()
+            return makeFirstPage(items: localFeed)
+        }
+    }
+
+    private func loadAndCacheRemoteFeed() async throws -> [FeedImage] {
+        let feed = try await loadRemoteFeed()
+        await store.schedule { [store] in
+            let localFeedLoader = LocalFeedLoader(store: store, currentDate: Date.init)
+            try? localFeedLoader.save(feed)
+        }
+        return feed
+    }
+
+    private func loadLocalFeed() async throws -> [FeedImage] {
+        try await store.schedule { [store] in
+            let localFeedLoader = LocalFeedLoader(store: store, currentDate: Date.init)
+            return try localFeedLoader.load()
+        }
+    }
+
+    private func loadRemoteFeed(after image: FeedImage? = nil) async throws -> [FeedImage] {
+        let url = FeedEndpoint.get(after: image).url(baseURL: baseURL)
+        let (data, response) = try await httpClient.get(from: url)
+        return try FeedItemsMapper.map(data, from: response)
     }
 
     // MARK: - Store

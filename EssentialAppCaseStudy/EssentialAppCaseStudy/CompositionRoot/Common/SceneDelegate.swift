@@ -107,16 +107,20 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         .eraseToAnyPublisher()
     }
 
-    private func makeRemoteLoadMoreLoader(items: [FeedImage], last: FeedImage?) -> AnyPublisher<Paginated<FeedImage>, Error> {
-        localFeedLoader.loadPublisher()
-            .zip(makeRemoteFeedLoader(after: last))
-            .map { cachedItems, newItems in
-                (cachedItems + newItems, newItems.last)
+    private func makeRemoteLoadMoreLoader(last: FeedImage?) -> AnyPublisher<Paginated<FeedImage>, Error> {
+        Deferred {
+            Future { completion in
+                Task.immediate {
+                    do {
+                        let feed = try await self.loadMoreRemoteFeed(last: last)
+                        completion(.success(feed))
+                    } catch {
+                        completion(.failure(error))
+                    }
+                }
             }
-            .map(makePage)
-            .caching(to: localFeedLoader)
-            .subscribe(on: scheduler)
-            .eraseToAnyPublisher()
+        }
+        .eraseToAnyPublisher()
     }
 
     private func showComments(for image: FeedImage) {
@@ -152,10 +156,24 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             items: items,
             loadMorePublisher: last.map { last in
                 {
-                    self.makeRemoteLoadMoreLoader(items: items, last: last)
+                    self.makeRemoteLoadMoreLoader(last: last)
                 }
             },
         )
+    }
+
+    private func loadMoreRemoteFeed(last: FeedImage?) async throws -> Paginated<FeedImage> {
+        async let cachedItems = loadLocalFeed()
+        async let newItems = loadRemoteFeed(after: last)
+
+        let items = try await cachedItems + newItems
+
+        await store.schedule { [store] in
+            let localFeedLoader = LocalFeedLoader(store: store, currentDate: Date.init)
+            try? localFeedLoader.save(items)
+        }
+
+        return try await makePage(items: items, last: newItems.last)
     }
 
     // MARK: - Feed Image Loader

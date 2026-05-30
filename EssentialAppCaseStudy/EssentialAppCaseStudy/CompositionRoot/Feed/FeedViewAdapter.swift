@@ -57,8 +57,8 @@ final class FeedViewAdapter: ResourceView {
             return cellController
         }
 
-        if let loadMorePublisher = viewModel.loadMorePublisher {
-            let loadMoreAdapter = LoadMorePresentationAdapter(loader: loadMorePublisher)
+        if let loadMore = viewModel.loadMore {
+            let loadMoreAdapter = LoadMorePresentationAdapter(loader: loadMore)
             let loadMoreController = LoadMoreCellController(callback: loadMoreAdapter.loadResource)
 
             loadMoreAdapter.presenter = LoadResourcePresenter(
@@ -83,7 +83,7 @@ final class FeedViewAdapter: ResourceView {
     // MARK: - Helpers
 
     private typealias ImageDataPresentationAdapter = AsyncLoadResourcePresentationAdapter<Data, WeakReferenceVirtualProxy<FeedImageCellController>>
-    private typealias LoadMorePresentationAdapter = LoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>
+    private typealias LoadMorePresentationAdapter = AsyncLoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>
 }
 
 extension UIImage {

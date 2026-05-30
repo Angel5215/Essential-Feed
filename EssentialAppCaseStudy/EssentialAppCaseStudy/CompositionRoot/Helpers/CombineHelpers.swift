@@ -215,44 +215,6 @@ private extension FeedImageDataCache {
     }
 }
 
-// MARK: - Pagination
-
-/// Bridges the closure-based API from the Paginated<Item> to Combine
-public extension Paginated {
-    var loadMorePublisher: (() -> AnyPublisher<Self, Error>)? {
-        loadMore.map { loadMore in
-            {
-                Deferred {
-                    Future(loadMore)
-                }
-                .eraseToAnyPublisher()
-            }
-        }
-    }
-
-    init(items: [Item], loadMorePublisher: (() -> AnyPublisher<Self, Error>)?) {
-        self.init(
-            items: items,
-            loadMore: loadMorePublisher.map { publisher in
-                { completion in
-                    publisher().subscribe(
-                        Subscribers.Sink(
-                            receiveCompletion: { result in
-                                if case let .failure(error) = result {
-                                    completion(.failure(error))
-                                }
-                            },
-                            receiveValue: { result in
-                                completion(.success(result))
-                            },
-                        )
-                    )
-                }
-            },
-        )
-    }
-}
-
 // MARK: - AnyScheduler
 
 typealias AnyDispatchQueueScheduler = AnyScheduler<DispatchQueue.SchedulerTimeType, DispatchQueue.SchedulerOptions>

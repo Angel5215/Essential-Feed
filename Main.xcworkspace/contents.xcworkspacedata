@@ -5,6 +5,12 @@
       location = "group:README.md">
    </FileRef>
    <FileRef
+      location = "group:.github/workflows">
+   </FileRef>
+   <FileRef
+      location = "group:bin">
+   </FileRef>
+   <FileRef
       location = "group:Docs">
    </FileRef>
    <FileSystemSynchronizedGroup

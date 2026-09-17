@@ -1,0 +1,55 @@
+{
+  "default-configuration": "Release",
+  "configurations": [
+    { "name": "Debug", "file": { "anchor": "Prototype", "relative-path": "Configuration/Development.xcconfig" } },
+    { "name": "Release", "file": { "anchor": "Prototype", "relative-path": "Configuration/Release.xcconfig" } },
+  ],
+  "localizations": {
+    "development": "en",
+    "supported": [
+      "Base",
+    ],
+  },
+  "files": [
+    {
+      "kind": "folder",
+      "path": "Prototype",
+      "target-membership": [
+        "Prototype",
+      ],
+      "membership-exceptions": [
+        {
+          "target": "Prototype",
+          "exclusions": [
+            "Info.plist",
+          ],
+        },
+      ],
+    }, {
+      "kind": "group",
+      "name": "Products",
+      "children": [
+        { "path": "<PRODUCTS>/Prototype.app", "id": "FADAEDAB2EFE670D00EDEA27", "type": "wrapper.application", "index": false },
+      ],
+    },
+  ],
+  "targets": [
+    {
+      "name": "Prototype",
+      "id": "FADAEDAA2EFE670D00EDEA27",
+      "product": "Products/Prototype.app",
+      "product-type": "application",
+      "specialized-configurations": [
+        { "name": "Debug", "file": { "anchor": "Prototype", "relative-path": "Configuration/Prototype.xcconfig" } },
+        { "name": "Release", "file": { "anchor": "Prototype", "relative-path": "Configuration/Prototype.xcconfig" } },
+      ],
+      "build-phases": [
+        "compile-sources",
+        "frameworks",
+        "resources",
+      ],
+    },
+  ],
+  "last-upgrade": "26.2",
+  "last-swift-update": "26.2",
+}

@@ -1,0 +1,105 @@
+{
+  "default-configuration": "Release",
+  "configurations": [
+    { "name": "Automation", "file": { "anchor": "Configuration", "relative-path": "Release.xcconfig" } },
+    { "name": "Debug", "file": { "anchor": "Configuration", "relative-path": "Development.xcconfig" } },
+    { "name": "Release", "file": { "anchor": "Configuration", "relative-path": "Release.xcconfig" } },
+  ],
+  "localizations": {
+    "development": "en",
+    "supported": [
+      "Base",
+    ],
+  },
+  "files": [
+    { "kind": "folder", "path": "Configuration" },
+    {
+      "kind": "folder",
+      "path": "EssentialAppCaseStudy",
+      "target-membership": [
+        "EssentialAppCaseStudy",
+      ],
+      "membership-exceptions": [
+        {
+          "target": "EssentialAppCaseStudy",
+          "exclusions": [
+            "Info.plist",
+          ],
+        },
+      ],
+    },
+    { "kind": "folder", "path": "EssentialAppCaseStudyTests", "target-membership": [ "EssentialAppCaseStudyTests" ] },
+    {
+      "kind": "group",
+      "name": "Frameworks",
+      "children": [
+        {
+          "path": "<PRODUCTS>/EssentialFeed.framework",
+          "type": "wrapper.framework",
+          "target-membership": [
+            "EssentialAppCaseStudy/frameworks",
+            { "build-phase": "EssentialAppCaseStudy/copy/Embed Frameworks", "code-sign-on-copy": true, "header-preservation": "remove-on-copy" },
+          ],
+        }, {
+          "path": "<PRODUCTS>/EssentialFeedMobile.framework",
+          "type": "wrapper.framework",
+          "target-membership": [
+            "EssentialAppCaseStudy/frameworks",
+            { "build-phase": "EssentialAppCaseStudy/copy/Embed Frameworks", "code-sign-on-copy": true, "header-preservation": "remove-on-copy" },
+          ],
+        },
+      ],
+    }, {
+      "kind": "group",
+      "name": "Products",
+      "children": [
+        { "path": "<PRODUCTS>/EssentialAppCaseStudy.app", "id": "FABFD72A2F08D40E000D6D19", "type": "wrapper.application", "index": false },
+        { "path": "<PRODUCTS>/EssentialAppCaseStudyTests.xctest", "id": "FABFD7402F08D40F000D6D19", "type": "wrapper.cfbundle", "index": false },
+      ],
+    },
+  ],
+  "targets": [
+    {
+      "name": "EssentialAppCaseStudy",
+      "id": "FABFD7292F08D40E000D6D19",
+      "product": "Products/EssentialAppCaseStudy.app",
+      "product-type": "application",
+      "specialized-configurations": [
+        { "name": "Automation", "file": { "anchor": "Configuration", "relative-path": "EssentialAppCaseStudyAutomation.xcconfig" } },
+        { "name": "Debug", "file": { "anchor": "Configuration", "relative-path": "EssentialAppCaseStudy.xcconfig" } },
+        { "name": "Release", "file": { "anchor": "Configuration", "relative-path": "EssentialAppCaseStudy.xcconfig" } },
+      ],
+      "build-phases": [
+        "compile-sources",
+        "frameworks",
+        "resources",
+        {
+          "kind": "copy",
+          "name": "Embed Frameworks",
+          "bundle-base-path": "frameworks-directory",
+        },
+      ],
+    }, {
+      "name": "EssentialAppCaseStudyTests",
+      "id": "FABFD73F2F08D40F000D6D19",
+      "product": "Products/EssentialAppCaseStudyTests.xctest",
+      "product-type": "bundle.unit-test",
+      "test-host-target": "EssentialAppCaseStudy",
+      "specialized-configurations": [
+        { "name": "Automation", "file": { "anchor": "Configuration", "relative-path": "EssentialAppCaseStudyTests.xcconfig" } },
+        { "name": "Debug", "file": { "anchor": "Configuration", "relative-path": "EssentialAppCaseStudyTests.xcconfig" } },
+        { "name": "Release", "file": { "anchor": "Configuration", "relative-path": "EssentialAppCaseStudyTests.xcconfig" } },
+      ],
+      "dependencies": [
+        "EssentialAppCaseStudy",
+      ],
+      "build-phases": [
+        "compile-sources",
+        "frameworks",
+        "resources",
+      ],
+    },
+  ],
+  "last-upgrade": "26.5",
+  "last-swift-update": "26.2",
+}

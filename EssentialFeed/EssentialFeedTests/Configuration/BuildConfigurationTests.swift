@@ -4,9 +4,9 @@
 //
 
 import Foundation
-import XCTest
+import Testing
 
-final class BuildConfigurationTests: XCTestCase {
+struct BuildConfigurationTests {
     private var projectFile: String {
         URL(fileURLWithPath: (#filePath as NSString).deletingLastPathComponent)
             .appendingPathComponent("../../EssentialFeed.xcodeproj/project.xcproj")
@@ -14,27 +14,29 @@ final class BuildConfigurationTests: XCTestCase {
             .path(percentEncoded: false)
     }
 
-    func test_hasExpectedNumberOfTargets() throws {
+    @Test
+    func `EssentialFeed project has the expected number of targets`() throws {
         let project = try loadProject()
-        let targets = try XCTUnwrap(project["targets"] as? [[String: Any]], "Missing `targets` array")
+        let targets = try #require(project["targets"] as? [[String: Any]], "Missing `targets` array")
 
-        XCTAssertEqual(targets.count, 6, "Expected 6 targets in EssentialFeed.xcodeproj")
+        #expect(targets.count == 6, "Expected 6 targets in EssentialFeed.xcodeproj")
     }
 
-    func test_allConfigurationsUseConfigurationFiles() throws {
+    @Test
+    func `EssentialFeed project configurations all reference configuration files`() throws {
         let project = try loadProject()
 
-        let rootConfigurations = try XCTUnwrap(project["configurations"] as? [[String: Any]], "Missing root `configurations` array")
+        let rootConfigurations = try #require(project["configurations"] as? [[String: Any]], "Missing root `configurations` array")
 
         for configuration in rootConfigurations {
             assertUsesConfigurationFile(configuration, context: "Project")
         }
         assertNoInlineBuildSettings(project, context: "Project")
 
-        let targets = try XCTUnwrap(project["targets"] as? [[String: Any]], "Missing `targets` array")
+        let targets = try #require(project["targets"] as? [[String: Any]], "Missing `targets` array")
         for target in targets {
             let targetName = target["name"] as? String ?? "<unknown target>"
-            let specializedConfigurations = try XCTUnwrap(
+            let specializedConfigurations = try #require(
                 target["specialized-configurations"] as? [[String: Any]],
                 "\(targetName) is missing `specialized-configurations`",
             )
@@ -51,9 +53,9 @@ final class BuildConfigurationTests: XCTestCase {
     private func loadProject() throws -> [String: Any] {
         let rawContent = try String(contentsOfFile: projectFile, encoding: .utf8)
         let strictJSON = removingTrailingCommas(from: rawContent)
-        let data = try XCTUnwrap(strictJSON.data(using: .utf8))
+        let data = try #require(strictJSON.data(using: .utf8))
         let object = try JSONSerialization.jsonObject(with: data)
-        return try XCTUnwrap(object as? [String: Any], "Unexpected root type in \(projectFile)")
+        return try #require(object as? [String: Any], "Unexpected root type in \(projectFile)")
     }
 
     private func removingTrailingCommas(from content: String) -> String {
@@ -63,23 +65,21 @@ final class BuildConfigurationTests: XCTestCase {
         return regex.stringByReplacingMatches(in: content, options: [], range: range, withTemplate: "$1")
     }
 
-    private func assertUsesConfigurationFile(_ configuration: [String: Any], context: String, file: StaticString = #filePath, line: UInt = #line) {
+    private func assertUsesConfigurationFile(_ configuration: [String: Any], context: String, sourceLocation: SourceLocation = #_sourceLocation) {
         let name = configuration["name"] as? String ?? "<unknown configuration>"
-        XCTAssertNotNil(
-            configuration["file"],
+        #expect(
+            configuration["file"] != nil,
             "\(context) configuration '\(name)' is missing a `file` reference to an .xcconfig",
-            file: file,
-            line: line,
+            sourceLocation: sourceLocation,
         )
     }
 
-    private func assertNoInlineBuildSettings(_ object: [String: Any], context: String, file: StaticString = #filePath, line: UInt = #line) {
+    private func assertNoInlineBuildSettings(_ object: [String: Any], context: String, sourceLocation: SourceLocation = #_sourceLocation) {
         guard let buildSettings = object["build-settings"] as? [String: Any], !buildSettings.isEmpty else { return }
 
-        XCTFail(
+        Issue.record(
             "\(context) has inline build-settings overrides: \(buildSettings.keys.sorted().joined(separator: ", "))",
-            file: file,
-            line: line,
+            sourceLocation: sourceLocation,
         )
     }
 }

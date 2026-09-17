@@ -7,94 +7,79 @@ import Foundation
 import XCTest
 
 final class BuildConfigurationTests: XCTestCase {
-    private var pbxprojPath: String {
-        let currentFilePath = (#filePath as NSString).deletingLastPathComponent
-        return URL(fileURLWithPath: currentFilePath)
-            .appendingPathComponent("../../EssentialFeed.xcodeproj/project.pbxproj")
+    private var projectFile: String {
+        URL(fileURLWithPath: (#filePath as NSString).deletingLastPathComponent)
+            .appendingPathComponent("../../EssentialFeed.xcodeproj/project.xcproj")
             .standardizedFileURL
             .path(percentEncoded: false)
     }
 
     func test_hasExpectedNumberOfTargets() throws {
-        let content = try String(contentsOfFile: pbxprojPath, encoding: .utf8)
-        let targetCount = content.components(separatedBy: "isa = PBXNativeTarget;").count - 1
-        XCTAssertEqual(targetCount, 6, "Expected 6 PBXNativeTarget entries in EssentialFeed.xcodeproj")
+        let project = try loadProject()
+        let targets = try XCTUnwrap(project["targets"] as? [[String: Any]], "Missing `targets` array")
+
+        XCTAssertEqual(targets.count, 6, "Expected 6 targets in EssentialFeed.xcodeproj")
     }
 
-    func test_allConfigurationsUseXcconfigFiles() throws {
-        let content = try String(contentsOfFile: pbxprojPath, encoding: .utf8)
-        let configurations = try parseConfigurations(from: content)
+    func test_allConfigurationsUseConfigurationFiles() throws {
+        let project = try loadProject()
 
-        XCTAssertFalse(configurations.isEmpty, "No XCBuildConfiguration entries found")
+        let rootConfigurations = try XCTUnwrap(project["configurations"] as? [[String: Any]], "Missing root `configurations` array")
 
-        for config in configurations {
-            XCTAssertTrue(
-                config.hasBaseConfiguration,
-                "\(config.name) is missing baseConfigurationReference",
+        for configuration in rootConfigurations {
+            assertUsesConfigurationFile(configuration, context: "Project")
+        }
+        assertNoInlineBuildSettings(project, context: "Project")
+
+        let targets = try XCTUnwrap(project["targets"] as? [[String: Any]], "Missing `targets` array")
+        for target in targets {
+            let targetName = target["name"] as? String ?? "<unknown target>"
+            let specializedConfigurations = try XCTUnwrap(
+                target["specialized-configurations"] as? [[String: Any]],
+                "\(targetName) is missing `specialized-configurations`",
             )
-            XCTAssertTrue(
-                config.buildSettings.isEmpty,
-                "\(config.name) has inline buildSettings overrides: \(config.buildSettings.joined(separator: ", "))",
-            )
+
+            for configuration in specializedConfigurations {
+                assertUsesConfigurationFile(configuration, context: targetName)
+            }
+            assertNoInlineBuildSettings(target, context: targetName)
         }
     }
 
     // MARK: - Helpers
 
-    private func parseConfigurations(from content: String) throws -> [ParsedConfiguration] {
-        let pattern = #"isa\s*=\s*XCBuildConfiguration;\s*\n\s*baseConfigurationReferenceAnchor\s*=\s*(\w+)\s*/\*\s*([^*]+)\s*\*/;\s*\n\s*baseConfigurationReferenceRelativePath\s*=\s*([\w.]+)\s*;\s*\n\s*buildSettings\s*=\s*\{([^}]*)\};\s*\n\s*name\s*=\s*([^;]+)\s*;"#
-        let regex = try NSRegularExpression(pattern: pattern, options: [])
-        let nsRange = NSRange(content.startIndex..., in: content)
-
-        var results: [ParsedConfiguration] = []
-        regex.enumerateMatches(in: content, options: [], range: nsRange) { match, _, _ in
-            guard let match, match.numberOfRanges >= 6 else { return }
-
-            let configName = content[Range(match.range(at: 5), in: content)!].trimmingCharacters(in: .whitespacesAndNewlines)
-            let buildSettingsContent = content[Range(match.range(at: 4), in: content)!].trimmingCharacters(in: .whitespacesAndNewlines)
-
-            let settings = buildSettingsContent
-                .components(separatedBy: ";")
-                .map { $0.trimmingCharacters(in: .whitespaces) }
-                .filter { !$0.isEmpty }
-
-            results.append(ParsedConfiguration(
-                name: configName,
-                hasBaseConfiguration: true,
-                buildSettings: settings,
-            ))
-        }
-
-        // Also find configs without baseConfigurationReference
-        let noConfigPattern = #"isa\s*=\s*XCBuildConfiguration;\s*\n(\s*buildSettings\s*=\s*\{([^}]*)\};\s*\n\s*name\s*=\s*([^;]+)\s*;)"#
-        let noConfigRegex = try NSRegularExpression(pattern: noConfigPattern, options: [])
-        noConfigRegex.enumerateMatches(in: content, options: [], range: nsRange) { match, _, _ in
-            guard let match, match.numberOfRanges >= 4 else { return }
-
-            let configName = content[Range(match.range(at: 3), in: content)!].trimmingCharacters(in: .whitespacesAndNewlines)
-            let buildSettingsContent = content[Range(match.range(at: 2), in: content)!].trimmingCharacters(in: .whitespacesAndNewlines)
-
-            let settings = buildSettingsContent
-                .components(separatedBy: ";")
-                .map { $0.trimmingCharacters(in: .whitespaces) }
-                .filter { !$0.isEmpty }
-
-            // Only add if not already found (has baseConfigurationReference)
-            if !results.contains(where: { $0.name == configName }) {
-                results.append(ParsedConfiguration(
-                    name: configName,
-                    hasBaseConfiguration: false,
-                    buildSettings: settings,
-                ))
-            }
-        }
-
-        return results
+    private func loadProject() throws -> [String: Any] {
+        let rawContent = try String(contentsOfFile: projectFile, encoding: .utf8)
+        let strictJSON = removingTrailingCommas(from: rawContent)
+        let data = try XCTUnwrap(strictJSON.data(using: .utf8))
+        let object = try JSONSerialization.jsonObject(with: data)
+        return try XCTUnwrap(object as? [String: Any], "Unexpected root type in \(projectFile)")
     }
 
-    private struct ParsedConfiguration {
-        let name: String
-        let hasBaseConfiguration: Bool
-        let buildSettings: [String]
+    private func removingTrailingCommas(from content: String) -> String {
+        let pattern = #",(\s*[}\]])"#
+        let regex = try! NSRegularExpression(pattern: pattern, options: [])
+        let range = NSRange(content.startIndex..., in: content)
+        return regex.stringByReplacingMatches(in: content, options: [], range: range, withTemplate: "$1")
+    }
+
+    private func assertUsesConfigurationFile(_ configuration: [String: Any], context: String, file: StaticString = #filePath, line: UInt = #line) {
+        let name = configuration["name"] as? String ?? "<unknown configuration>"
+        XCTAssertNotNil(
+            configuration["file"],
+            "\(context) configuration '\(name)' is missing a `file` reference to an .xcconfig",
+            file: file,
+            line: line,
+        )
+    }
+
+    private func assertNoInlineBuildSettings(_ object: [String: Any], context: String, file: StaticString = #filePath, line: UInt = #line) {
+        guard let buildSettings = object["build-settings"] as? [String: Any], !buildSettings.isEmpty else { return }
+
+        XCTFail(
+            "\(context) has inline build-settings overrides: \(buildSettings.keys.sorted().joined(separator: ", "))",
+            file: file,
+            line: line,
+        )
     }
 }

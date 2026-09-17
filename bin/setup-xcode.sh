@@ -2,7 +2,7 @@
 
 set -o pipefail
 
-XCODE_VERSION=26.5
+XCODE_APP=$(ls -d /Applications/Xcode_27*.app | sort -V | tail -n 1)
 
-sudo xcode-select -switch /Applications/Xcode_${XCODE_VERSION}.app
+sudo xcode-select -switch "$XCODE_APP"
 /usr/bin/xcodebuild -version

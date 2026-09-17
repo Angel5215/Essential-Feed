@@ -7,7 +7,7 @@ import EssentialFeed
 import XCTest
 
 @MainActor
-final class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs, Sendable {
+final class CoreDataFeedStoreTests: XCTestCase, FeedStoreSpecs, @unchecked Sendable {
     func test_retrieve_deliversEmptyOnEmptyCache() async throws {
         try await makeSUT { sut in
             assertThatRetrieveDeliversEmptyOnEmptyCache(on: sut)

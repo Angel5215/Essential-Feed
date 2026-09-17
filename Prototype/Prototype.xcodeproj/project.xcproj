@@ -21,6 +21,10 @@
         {
           "target": "Prototype",
           "exclusions": [
+            "Configuration/Common.xcconfig",
+            "Configuration/Development.xcconfig",
+            "Configuration/Prototype.xcconfig",
+            "Configuration/Release.xcconfig",
             "Info.plist",
           ],
         },
@@ -50,6 +54,6 @@
       ],
     },
   ],
-  "last-upgrade": "26.2",
+  "last-upgrade": "27.2",
   "last-swift-update": "26.2",
 }

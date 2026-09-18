@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -o pipefail
+set -euo pipefail
 
 # Helper paths for certificate, provisioning profile and ExportOptions.plist
 CERTIFICATE_PATH=$RUNNER_TEMP/certificate.p12

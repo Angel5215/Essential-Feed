@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -o pipefail
+set -euo pipefail
 
 SIMULATOR_UDID=$(xcrun simctl list devices --json | jq -r \
   --arg runtime "$SIMULATOR_RUNTIME" \
@@ -15,12 +15,17 @@ if [ -z "$SIMULATOR_UDID" ]; then
 fi
 
 echo "Attempting to boot the simulator with UDID: $SIMULATOR_UDID ($SIMULATOR_NAME - $SIMULATOR_RUNTIME)"
-xcrun simctl boot "$SIMULATOR_UDID"
 
-if [ $? -ne 0 ]; then
+BOOT_OUTPUT=$(xcrun simctl boot "$SIMULATOR_UDID" 2>&1) || {
+    if echo "$BOOT_OUTPUT" | grep -q "Unable to boot device in current state: Booted"; then
+        echo "Simulator with UDID: $SIMULATOR_UDID is already booted."
+        exit 0
+    fi
+
     echo "Failed to boot the simulator with UDID: $SIMULATOR_UDID"
+    echo "$BOOT_OUTPUT"
     exit 2
-else
-    echo "Simulator with UDID: $SIMULATOR_UDID is booted successfully."
-    xcrun simctl list devices | grep "Booted"
-fi
+}
+
+echo "Simulator with UDID: $SIMULATOR_UDID is booted successfully."
+xcrun simctl list devices | grep "Booted" || true

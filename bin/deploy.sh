@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -o pipefail
+set -euo pipefail
 
 DERIVED_DATA_PATH=DerivedData
 IPA_FOLDER=$DERIVED_DATA_PATH/ipa

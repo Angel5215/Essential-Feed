@@ -1,0 +1,213 @@
+{
+  "default-configuration": "Release",
+  "configurations": [
+    { "name": "Automation", "file": { "anchor": "Configuration", "relative-path": "Release.xcconfig" } },
+    { "name": "Debug", "file": { "anchor": "Configuration", "relative-path": "Development.xcconfig" } },
+    { "name": "Release", "file": { "anchor": "Configuration", "relative-path": "Release.xcconfig" } },
+  ],
+  "localizations": {
+    "development": "en",
+    "supported": [
+      "Base",
+    ],
+  },
+  "files": [
+    { "kind": "folder", "path": "Configuration" },
+    { "kind": "folder", "path": "EssentialFeed", "target-membership": [ "EssentialFeed" ] },
+    {
+      "kind": "folder",
+      "path": "EssentialFeedTests",
+      "target-membership": [
+        "EssentialFeedTests",
+      ],
+      "membership-exceptions": [
+        {
+          "target": "EssentialFeedAPIEndToEndTests",
+          "inclusions": [
+            "Helpers/Testing+MemoryLeakTracking.swift",
+            "Helpers/XCTestCase+MemoryLeakTracking.swift",
+          ],
+        }, {
+          "target": "EssentialFeedCacheIntegrationTests",
+          "inclusions": [
+            "Feed/Cache/Helpers/FeedCacheTestHelpers.swift",
+            "Helpers/SharedTestHelpers.swift",
+            "Helpers/Testing+MemoryLeakTracking.swift",
+            "Helpers/XCTestCase+MemoryLeakTracking.swift",
+          ],
+        },
+      ],
+    },
+    { "kind": "folder", "path": "EssentialFeedAPIEndToEndTests", "target-membership": [ "EssentialFeedAPIEndToEndTests" ] },
+    { "kind": "folder", "path": "EssentialFeedCacheIntegrationTests", "target-membership": [ "EssentialFeedCacheIntegrationTests" ] },
+    { "kind": "folder", "path": "EssentialFeedMobile", "target-membership": [ "EssentialFeedMobile" ] },
+    {
+      "kind": "folder",
+      "path": "EssentialFeedMobileTests",
+      "target-membership": [
+        "EssentialFeedMobileTests",
+      ],
+      "membership-exceptions": [
+        {
+          "target": "EssentialFeedMobileTests",
+          "exclusions": [
+            "Feed/UI/Snapshots/FEED_WITH_CONTENT_dark.png",
+            "Feed/UI/Snapshots/FEED_WITH_CONTENT_light.png",
+            "Feed/UI/Snapshots/FEED_WITH_CONTENT_light_extraExtraExtraLarge.png",
+            "Feed/UI/Snapshots/FEED_WITH_FAILED_IMAGE_LOADING_dark.png",
+            "Feed/UI/Snapshots/FEED_WITH_FAILED_IMAGE_LOADING_light.png",
+            "Feed/UI/Snapshots/FEED_WITH_LOAD_MORE_ERROR_dark.png",
+            "Feed/UI/Snapshots/FEED_WITH_LOAD_MORE_ERROR_light.png",
+            "Feed/UI/Snapshots/FEED_WITH_LOAD_MORE_ERROR_light_extraExtraExtraLarge.png",
+            "Feed/UI/Snapshots/FEED_WITH_LOAD_MORE_INDICATOR_dark.png",
+            "Feed/UI/Snapshots/FEED_WITH_LOAD_MORE_INDICATOR_light.png",
+            "ImageComments/UI/Snapshots/FailureImages/IMAGE_COMMENTS_dark.png",
+            "ImageComments/UI/Snapshots/FailureImages/IMAGE_COMMENTS_light.png",
+            "ImageComments/UI/Snapshots/FailureImages/IMAGE_COMMENTS_light_extraExtraExtraLarge.png",
+            "ImageComments/UI/Snapshots/IMAGE_COMMENTS_dark.png",
+            "ImageComments/UI/Snapshots/IMAGE_COMMENTS_light.png",
+            "ImageComments/UI/Snapshots/IMAGE_COMMENTS_light_extraExtraExtraLarge.png",
+            "Shared/UI/Snapshots/EMPTY_LIST_dark.png",
+            "Shared/UI/Snapshots/EMPTY_LIST_light.png",
+            "Shared/UI/Snapshots/LIST_WITH_ERROR_MESSAGE_dark.png",
+            "Shared/UI/Snapshots/LIST_WITH_ERROR_MESSAGE_light.png",
+            "Shared/UI/Snapshots/LIST_WITH_ERROR_MESSAGE_light_extraExtraExtraLarge.png",
+          ],
+        },
+      ],
+    },
+    { "kind": "group", "name": "Frameworks" },
+    {
+      "kind": "group",
+      "name": "Products",
+      "children": [
+        {
+          "path": "<PRODUCTS>/EssentialFeed.framework",
+          "id": "FA46E8682FA72C2A00AA5F4C",
+          "type": "wrapper.framework",
+          "index": false,
+          "target-membership": [
+            "EssentialFeedTests/frameworks",
+            "EssentialFeedAPIEndToEndTests/frameworks",
+            "EssentialFeedCacheIntegrationTests/frameworks",
+            "EssentialFeedMobile/frameworks",
+          ],
+        },
+        { "path": "<PRODUCTS>/EssentialFeedTests.xctest", "id": "FA46E8782FA72C7F00AA5F4C", "type": "wrapper.cfbundle", "index": false },
+        { "path": "<PRODUCTS>/EssentialFeedAPIEndToEndTests.xctest", "id": "FA46E8862FA72CAF00AA5F4C", "type": "wrapper.cfbundle", "index": false },
+        { "path": "<PRODUCTS>/EssentialFeedCacheIntegrationTests.xctest", "id": "FA46E8942FA72CBB00AA5F4C", "type": "wrapper.cfbundle", "index": false },
+        { "path": "<PRODUCTS>/EssentialFeedMobile.framework", "id": "FA46E8A32FA72CDC00AA5F4C", "type": "wrapper.framework", "index": false, "target-membership": [ "EssentialFeedMobileTests/frameworks" ] },
+        { "path": "<PRODUCTS>/EssentialFeedMobileTests.xctest", "id": "FA46E8AB2FA72CDC00AA5F4C", "type": "wrapper.cfbundle", "index": false },
+      ],
+    },
+  ],
+  "targets": [
+    {
+      "name": "EssentialFeed",
+      "id": "FA46E8672FA72C2A00AA5F4C",
+      "product": "Products/EssentialFeed.framework",
+      "product-type": "framework",
+      "specialized-configurations": [
+        { "name": "Automation", "file": { "anchor": "Configuration", "relative-path": "EssentialFeed.xcconfig" } },
+        { "name": "Debug", "file": { "anchor": "Configuration", "relative-path": "EssentialFeed.xcconfig" } },
+        { "name": "Release", "file": { "anchor": "Configuration", "relative-path": "EssentialFeed.xcconfig" } },
+      ],
+      "build-phases": [
+        "headers",
+        "compile-sources",
+        "frameworks",
+        "resources",
+      ],
+    }, {
+      "name": "EssentialFeedTests",
+      "id": "FA46E8772FA72C7F00AA5F4C",
+      "product": "Products/EssentialFeedTests.xctest",
+      "product-type": "bundle.unit-test",
+      "specialized-configurations": [
+        { "name": "Automation", "file": { "anchor": "Configuration", "relative-path": "EssentialFeedTests.xcconfig" } },
+        { "name": "Debug", "file": { "anchor": "Configuration", "relative-path": "EssentialFeedTests.xcconfig" } },
+        { "name": "Release", "file": { "anchor": "Configuration", "relative-path": "EssentialFeedTests.xcconfig" } },
+      ],
+      "dependencies": [
+        "EssentialFeed",
+      ],
+      "build-phases": [
+        "compile-sources",
+        "frameworks",
+        "resources",
+      ],
+    }, {
+      "name": "EssentialFeedAPIEndToEndTests",
+      "id": "FA46E8852FA72CAF00AA5F4C",
+      "product": "Products/EssentialFeedAPIEndToEndTests.xctest",
+      "product-type": "bundle.unit-test",
+      "specialized-configurations": [
+        { "name": "Automation", "file": { "anchor": "Configuration", "relative-path": "EssentialFeedAPIEndToEndTests.xcconfig" } },
+        { "name": "Debug", "file": { "anchor": "Configuration", "relative-path": "EssentialFeedAPIEndToEndTests.xcconfig" } },
+        { "name": "Release", "file": { "anchor": "Configuration", "relative-path": "EssentialFeedAPIEndToEndTests.xcconfig" } },
+      ],
+      "dependencies": [
+        "EssentialFeed",
+      ],
+      "build-phases": [
+        "compile-sources",
+        "frameworks",
+        "resources",
+      ],
+    }, {
+      "name": "EssentialFeedCacheIntegrationTests",
+      "id": "FA46E8932FA72CBB00AA5F4C",
+      "product": "Products/EssentialFeedCacheIntegrationTests.xctest",
+      "product-type": "bundle.unit-test",
+      "specialized-configurations": [
+        { "name": "Automation", "file": { "anchor": "Configuration", "relative-path": "EssentialFeedCacheIntegrationTests.xcconfig" } },
+        { "name": "Debug", "file": { "anchor": "Configuration", "relative-path": "EssentialFeedCacheIntegrationTests.xcconfig" } },
+        { "name": "Release", "file": { "anchor": "Configuration", "relative-path": "EssentialFeedCacheIntegrationTests.xcconfig" } },
+      ],
+      "dependencies": [
+        "EssentialFeed",
+      ],
+      "build-phases": [
+        "compile-sources",
+        "frameworks",
+        "resources",
+      ],
+    }, {
+      "name": "EssentialFeedMobile",
+      "id": "FA46E8A22FA72CDC00AA5F4C",
+      "product": "Products/EssentialFeedMobile.framework",
+      "product-type": "framework",
+      "specialized-configurations": [
+        { "name": "Automation", "file": { "anchor": "Configuration", "relative-path": "EssentialFeedMobile.xcconfig" } },
+        { "name": "Debug", "file": { "anchor": "Configuration", "relative-path": "EssentialFeedMobile.xcconfig" } },
+        { "name": "Release", "file": { "anchor": "Configuration", "relative-path": "EssentialFeedMobile.xcconfig" } },
+      ],
+      "build-phases": [
+        "headers",
+        "compile-sources",
+        "frameworks",
+        "resources",
+      ],
+    }, {
+      "name": "EssentialFeedMobileTests",
+      "id": "FA46E8AA2FA72CDC00AA5F4C",
+      "product": "Products/EssentialFeedMobileTests.xctest",
+      "product-type": "bundle.unit-test",
+      "specialized-configurations": [
+        { "name": "Automation", "file": { "anchor": "Configuration", "relative-path": "EssentialFeedMobileTests.xcconfig" } },
+        { "name": "Debug", "file": { "anchor": "Configuration", "relative-path": "EssentialFeedMobileTests.xcconfig" } },
+        { "name": "Release", "file": { "anchor": "Configuration", "relative-path": "EssentialFeedMobileTests.xcconfig" } },
+      ],
+      "dependencies": [
+        "EssentialFeedMobile",
+      ],
+      "build-phases": [
+        "compile-sources",
+        "frameworks",
+        "resources",
+      ],
+    },
+  ],
+  "last-upgrade": "26.5",
+  "last-swift-update": "26.5",
+}

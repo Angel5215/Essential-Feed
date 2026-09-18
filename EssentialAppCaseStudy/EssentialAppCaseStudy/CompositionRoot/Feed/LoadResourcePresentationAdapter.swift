@@ -33,11 +33,15 @@ final class LoadResourcePresentationAdapter<Resource, View: ResourceView> {
 
             do {
                 if let resource = try await self?.loader() {
-                    if Task.isCancelled { return }
+                    if Task.isCancelled {
+                        return
+                    }
                     self?.presenter?.didFinishLoading(with: resource)
                 }
             } catch {
-                if Task.isCancelled { return }
+                if Task.isCancelled {
+                    return
+                }
                 self?.presenter?.didFinishLoading(with: error)
             }
         }

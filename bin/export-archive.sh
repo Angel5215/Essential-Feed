@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -o pipefail
+set -euo pipefail
 
 DERIVED_DATA_PATH=DerivedData
 ARCHIVE_PATH=$DERIVED_DATA_PATH/Archive/EssentialAppCaseStudy.xcarchive

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -o pipefail
+set -euo pipefail
 
 PROJECT_DIRECTORY=EssentialAppCaseStudy
 

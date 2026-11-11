@@ -35,7 +35,7 @@ public enum FeedUIComposer {
     // MARK: - Helpers
 
     private static func makeFeedViewController(title: String) -> ListViewController {
-        let feedController = UIStoryboard.feed.instantiateInitialViewController() as! ListViewController
+        let feedController = UIStoryboard.feed.instantiateInitialViewController(as: ListViewController.self)
         feedController.title = title
         return feedController
     }

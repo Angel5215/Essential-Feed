@@ -19,7 +19,10 @@ public enum FeedEndpoint {
                 URLQueryItem(name: "limit", value: "10"),
                 image.map { URLQueryItem(name: "after_id", value: $0.id.uuidString) },
             ].compactMap(\.self)
-            return components.url!
+            guard let url = components.url else {
+                fatalError("Invalid feed URL components: \(components)")
+            }
+            return url
         }
     }
 }

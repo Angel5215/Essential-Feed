@@ -27,7 +27,7 @@ public enum CommentsUIComposer {
     // MARK: - Helpers
 
     private static func makeCommentsViewController(title: String) -> ListViewController {
-        let controller = UIStoryboard.imageComments.instantiateInitialViewController() as! ListViewController
+        let controller = UIStoryboard.imageComments.instantiateInitialViewController(as: ListViewController.self)
         controller.title = title
         return controller
     }

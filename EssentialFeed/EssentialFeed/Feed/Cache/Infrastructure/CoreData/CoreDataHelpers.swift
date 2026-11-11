@@ -26,3 +26,12 @@ extension NSManagedObjectModel {
         }
     }
 }
+
+extension NSManagedObject {
+    static var entityName: String {
+        guard let name = entity().name else {
+            fatalError("\(Self.self) has no entity name in the managed object model")
+        }
+        return name
+    }
+}

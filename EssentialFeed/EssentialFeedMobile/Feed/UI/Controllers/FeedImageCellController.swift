@@ -6,7 +6,7 @@
 import EssentialFeed
 import UIKit
 
-public protocol FeedImageCellControllerDelegate {
+public protocol FeedImageCellControllerImageLoading {
     func didRequestImage()
     func didCancelImageRequest()
 }
@@ -14,17 +14,17 @@ public protocol FeedImageCellControllerDelegate {
 public final class FeedImageCellController: NSObject {
     public typealias ResourceViewModel = UIImage
     private let viewModel: FeedImageViewModel
-    private let delegate: FeedImageCellControllerDelegate
+    private let imageLoader: FeedImageCellControllerImageLoading
     private var cell: FeedImageCell?
     private var selection: () -> Void
 
     public init(
         viewModel: FeedImageViewModel,
-        delegate: FeedImageCellControllerDelegate,
+        imageLoader: FeedImageCellControllerImageLoading,
         selection: @escaping () -> Void,
     ) {
         self.viewModel = viewModel
-        self.delegate = delegate
+        self.imageLoader = imageLoader
         self.selection = selection
     }
 }
@@ -37,23 +37,24 @@ extension FeedImageCellController: UITableViewDataSource, UITableViewDelegate, U
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        cell = tableView.dequeueReusableCell()
-        cell?.locationContainer.isHidden = !viewModel.hasLocation
-        cell?.locationLabel.text = viewModel.location
-        cell?.descriptionLabel.text = viewModel.description
-        cell?.feedImageContainer.isShimmering = true
-        cell?.feedImageRetryButton.isHidden = true
+        let cell: FeedImageCell = tableView.dequeueReusableCell()
+        self.cell = cell
+        cell.locationContainer.isHidden = !viewModel.hasLocation
+        cell.locationLabel.text = viewModel.location
+        cell.descriptionLabel.text = viewModel.description
+        cell.feedImageContainer.isShimmering = true
+        cell.feedImageRetryButton.isHidden = true
 
-        cell?.onRetry = { [weak self] in
-            self?.delegate.didRequestImage()
+        cell.onRetry = { [weak self] in
+            self?.imageLoader.didRequestImage()
         }
 
-        cell?.onReuse = { [weak self] in
+        cell.onReuse = { [weak self] in
             self?.releaseCellForReuse()
         }
 
-        delegate.didRequestImage()
-        return cell!
+        imageLoader.didRequestImage()
+        return cell
     }
 
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -61,7 +62,7 @@ extension FeedImageCellController: UITableViewDataSource, UITableViewDelegate, U
     }
 
     public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        delegate.didRequestImage()
+        imageLoader.didRequestImage()
     }
 
     public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -74,7 +75,7 @@ extension FeedImageCellController: UITableViewDataSource, UITableViewDelegate, U
 
     private func cancelLoad() {
         releaseCellForReuse()
-        delegate.didCancelImageRequest()
+        imageLoader.didCancelImageRequest()
     }
 
     private func releaseCellForReuse() {

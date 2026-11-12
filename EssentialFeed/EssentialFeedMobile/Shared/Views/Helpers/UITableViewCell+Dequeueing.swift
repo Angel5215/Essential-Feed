@@ -8,6 +8,9 @@ import UIKit
 extension UITableView {
     func dequeueReusableCell<Cell: UITableViewCell>() -> Cell {
         let identifier = String(describing: Cell.self)
-        return dequeueReusableCell(withIdentifier: identifier) as! Cell
+        guard let cell = dequeueReusableCell(withIdentifier: identifier) as? Cell else {
+            fatalError("No \(Cell.self) registered for identifier \(identifier)")
+        }
+        return cell
     }
 }

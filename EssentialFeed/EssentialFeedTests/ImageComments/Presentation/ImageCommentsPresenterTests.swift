@@ -3,8 +3,8 @@
 // Copyright © 2026 Ángel Vázquez. All rights reserved.
 //
 
-import XCTest
 @_spi(Bundle) import EssentialFeed
+import XCTest
 
 @MainActor
 final class ImageCommentsPresenterTests: XCTestCase {

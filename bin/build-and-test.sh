@@ -13,4 +13,4 @@ xcodebuild clean build test \
     -resultBundlePath "$RESULT_BUNDLE_PATH" \
     CODE_SIGN_IDENTITY="" \
     CODE_SIGNING_REQUIRED=NO \
-    ONLY_ACTIVE_ARCH=YES | xcbeautify --disable-logging --renderer github-actions --preserve-unbeautified
+    ONLY_ACTIVE_ARCH=YES | xcbeautify --disable-logging --renderer github-actions

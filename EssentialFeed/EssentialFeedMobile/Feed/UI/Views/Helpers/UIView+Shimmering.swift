@@ -7,16 +7,16 @@ import UIKit
 
 extension UIView {
     public var isShimmering: Bool {
+        get {
+            layer.mask is ShimmeringLayer
+        }
+
         set {
             if newValue {
                 startShimmering()
             } else {
                 stopShimmering()
             }
-        }
-
-        get {
-            layer.mask is ShimmeringLayer
         }
     }
 

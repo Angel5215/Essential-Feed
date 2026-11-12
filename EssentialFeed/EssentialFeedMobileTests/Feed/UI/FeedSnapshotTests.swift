@@ -105,7 +105,7 @@ final class FeedSnapshotTests: XCTestCase {
 
     private func feedWith(loadMore: LoadMoreCellController) -> [CellController] {
         let stub = feedWithContent().last!
-        let cellController = FeedImageCellController(viewModel: stub.viewModel, delegate: stub, selection: {})
+        let cellController = FeedImageCellController(viewModel: stub.viewModel, imageLoader: stub, selection: {})
         stub.controller = cellController
 
         return [
@@ -120,7 +120,7 @@ final class FeedSnapshotTests: XCTestCase {
 private extension ListViewController {
     func display(_ stubs: [ImageStub]) {
         let cells: [CellController] = stubs.map { stub in
-            let cellController = FeedImageCellController(viewModel: stub.viewModel, delegate: stub, selection: {})
+            let cellController = FeedImageCellController(viewModel: stub.viewModel, imageLoader: stub, selection: {})
             stub.controller = cellController
             return CellController(id: UUID(), dataSource: cellController)
         }
@@ -128,7 +128,7 @@ private extension ListViewController {
     }
 }
 
-private final class ImageStub: FeedImageCellControllerDelegate {
+private final class ImageStub: FeedImageCellControllerImageLoading {
     let viewModel: FeedImageViewModel
     let image: UIImage?
     weak var controller: FeedImageCellController?

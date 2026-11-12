@@ -19,9 +19,9 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
     override public func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
-        onViewDidAppear = { vc in
-            vc.onViewDidAppear = nil
-            vc.refresh()
+        onViewDidAppear = { controller in
+            controller.onViewDidAppear = nil
+            controller.refresh()
         }
     }
 

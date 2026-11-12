@@ -39,7 +39,7 @@ extension ManagedFeedImage {
     }
 
     static func first(with url: URL, in context: NSManagedObjectContext) throws -> ManagedFeedImage? {
-        let request = NSFetchRequest<ManagedFeedImage>(entityName: entity().name!)
+        let request = NSFetchRequest<ManagedFeedImage>(entityName: entityName)
         request.predicate = NSPredicate(format: "%K = %@", argumentArray: [#keyPath(ManagedFeedImage.url), url])
         request.returnsObjectsAsFaults = false
         request.fetchLimit = 1
